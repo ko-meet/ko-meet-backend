@@ -1,0 +1,64 @@
+package com.backend.komeet.service.user;
+
+import lombok.RequiredArgsConstructor;
+import com.backend.komeet.config.JwtProvider;
+import com.backend.komeet.domain.User;
+import com.backend.komeet.dto.TokenIssuanceDto;
+import com.backend.komeet.dto.UserSignInDto;
+import com.backend.komeet.dto.request.UserSignInRequest;
+import com.backend.komeet.exception.CustomException;
+import com.backend.komeet.repository.UserRepository;
+import org.springframework.data.util.Pair;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+
+import static com.backend.komeet.enums.UserStatus.ACTIVE;
+import static com.backend.komeet.exception.ErrorCode.*;
+
+/**
+ * 사용자 로그인 서비스
+ */
+@RequiredArgsConstructor
+@Service
+public class UserSignInService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+
+    /**
+     * 사용자 로그인
+     *
+     * @param userSignInRequest 사용자 로그인 요청
+     * @return 사용자 로그인 응답
+     */
+    public UserSignInDto signIn(UserSignInRequest userSignInRequest,
+                                CompletableFuture<Pair<String, String>> country) {
+
+        Pair<String, String> location = country.join();
+
+        User user = userRepository.findByEmail(userSignInRequest.getEmail())
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+
+        if (!passwordEncoder.matches(userSignInRequest.getPassword(), user.getPassword())) {
+            throw new CustomException(PASSWORD_NOT_MATCH);
+        }
+
+        if (!user.getUserStatus().equals(ACTIVE)) {
+            throw new CustomException(USER_STATUS_NOT_ACTIVE);
+        }
+
+        String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(user));
+        String refreshToken = jwtProvider.issueRefreshToken();
+
+        return UserSignInDto.from(
+                user,
+                accessToken,
+                refreshToken,
+                user.getCountry().getCountryName().equals(location.getFirst()) &&
+                        user.getRegion().equals(location.getSecond())
+        );
+    }
+
+}
