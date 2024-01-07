@@ -1,4 +1,4 @@
-package com.community.komeet.service.user;
+package com.backend.komeet.service.user.service.user;
 
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.UserSignUpRequest;

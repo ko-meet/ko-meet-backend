@@ -1,4 +1,4 @@
-package com.community.komeet.service.user;
+package com.backend.komeet.service.user.service.user;
 
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.domain.User;

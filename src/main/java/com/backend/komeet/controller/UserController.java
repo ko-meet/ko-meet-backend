@@ -3,10 +3,7 @@ package com.backend.komeet.controller;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.UserDto;
 import com.backend.komeet.dto.UserSignInDto;
-import com.backend.komeet.dto.request.UserEmailRequest;
-import com.backend.komeet.dto.request.UserInfoUpdateRequest;
-import com.backend.komeet.dto.request.UserSignInRequest;
-import com.backend.komeet.dto.request.UserSignUpRequest;
+import com.backend.komeet.dto.request.*;
 import com.backend.komeet.dto.response.UserSignInResponse;
 import com.backend.komeet.service.external.EmailService;
 import com.backend.komeet.service.external.GeocoderService;
@@ -24,11 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.enums.EmailComponents.EMAIL_SIGN_UP_CONTENT;
-import static com.backend.komeet.enums.EmailComponents.EMAIL_SIGN_UP_SUBJECT;
+import static com.backend.komeet.enums.EmailComponents.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * 사용자 관련 컨트롤러
@@ -161,4 +156,20 @@ public class UserController {
         return ResponseEntity.status(OK).build();
     }
 
+    @PatchMapping("/password/reset")
+    @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호 재설정 진행")
+    public ResponseEntity<Void> resetPassword(
+            @Valid @RequestBody UserPasswordResetRequest passwordResetRequest) {
+
+        String temporaryPassword =
+                userInformationService.resetPassword(passwordResetRequest);
+
+        emailService.sendEmail(
+                passwordResetRequest.getEmail(),
+                PASSWORD_RESET_SUBJECT,
+                String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
+        );
+
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
 }
