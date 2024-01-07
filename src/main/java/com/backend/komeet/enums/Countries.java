@@ -23,7 +23,7 @@ public enum Countries {
     CHINA("중국","CN"),
     JAPAN("일본","JP"),
     SOUTH_KOREA("대한민국","KR"),
-    AUSTRALIA("호주","AU"),
+    AUSTRALIA("오스트레일리아","AU"),
     NEW_ZEALAND("뉴질랜드","NZ"),
     GUAM("괌","GU"),
     SAI_PAN("사이판","MP"),
