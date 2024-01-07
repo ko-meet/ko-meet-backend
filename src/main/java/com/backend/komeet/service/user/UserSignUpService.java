@@ -1,19 +1,19 @@
 package com.backend.komeet.service.user;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.UserDto;
 import com.backend.komeet.dto.request.UserSignUpRequest;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.util.CountryUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static com.backend.komeet.enums.UserStatus.ACTIVE;
 import static com.backend.komeet.exception.ErrorCode.*;
@@ -40,12 +40,12 @@ public class UserSignUpService {
 
         validateUserNotExists(userSignUpRequest.getEmail());
 
-        Pair<String, String> response = fetchLocation(country);
-
         String encodedPassword =
                 passwordEncoder.encode(userSignUpRequest.getPassword());
+
+        Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
         String region =
-                extractCity(response, userSignUpRequest.getCountry().getCountryName());
+                CountryUtil.extractCity(countryPair, userSignUpRequest.getCountry().getCountryName());
 
         User user = userRepository.save(
                 User.from(userSignUpRequest, encodedPassword, region)
@@ -67,34 +67,6 @@ public class UserSignUpService {
     }
 
     /**
-     * 사용자의 위치 정보를 가져옴
-     *
-     * @param country CompletableFuture 객체
-     * @return 나라와 도시 정보
-     */
-    private Pair<String, String> fetchLocation(
-            CompletableFuture<Pair<String, String>> country) {
-
-        return country
-                .orTimeout(5, TimeUnit.SECONDS) // 5초 이내에 완료되지 않으면 타임아웃
-                .exceptionally(throwable -> Pair.of("Error", "Timeout"))
-                .join();
-    }
-
-    /**
-     * 도시 정보를 추출
-     *
-     * @param response 외부 API 응답
-     * @return 도시 정보
-     */
-    private String extractCity(Pair<String, String> response, String country) {
-        if (!response.getFirst().equals(country)) {
-            throw new CustomException(LOCATION_NOT_MATCH);
-        }
-        return response.getSecond();
-    }
-
-    /**
      * 이메일로 사용자 정보 가져오기
      *
      * @param email 사용자 이메일
@@ -108,6 +80,7 @@ public class UserSignUpService {
 
     /**
      * 사용자 이메일 인증
+     *
      * @param userSeq 사용자 시퀀스
      */
     @Transactional

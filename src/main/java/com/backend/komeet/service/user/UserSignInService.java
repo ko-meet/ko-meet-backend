@@ -1,6 +1,5 @@
 package com.backend.komeet.service.user;
 
-import lombok.RequiredArgsConstructor;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.TokenIssuanceDto;
@@ -8,6 +7,8 @@ import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.request.UserSignInRequest;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.util.CountryUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,6 @@ public class UserSignInService {
     public UserSignInDto signIn(UserSignInRequest userSignInRequest,
                                 CompletableFuture<Pair<String, String>> country) {
 
-        Pair<String, String> location = country.join();
-
         User user = userRepository.findByEmail(userSignInRequest.getEmail())
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
 
@@ -52,12 +51,14 @@ public class UserSignInService {
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(user));
         String refreshToken = jwtProvider.issueRefreshToken();
 
+        Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
+
         return UserSignInDto.from(
                 user,
                 accessToken,
                 refreshToken,
-                user.getCountry().getCountryName().equals(location.getFirst()) &&
-                        user.getRegion().equals(location.getSecond())
+                user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
+                        user.getRegion().equals(countryPair.getSecond())
         );
     }
 
