@@ -2,6 +2,7 @@ package com.backend.komeet.service.user;
 
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.UserInfoUpdateRequest;
+import com.backend.komeet.dto.request.UserPasswordChangeRequest;
 import com.backend.komeet.dto.request.UserPasswordResetRequest;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.komeet.exception.ErrorCode.PASSWORD_NOT_MATCH;
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 @RequiredArgsConstructor
@@ -69,5 +71,21 @@ public class UserInformationService {
         user.setPassword(passwordEncoder.encode(temporaryPassword));
 
         return temporaryPassword;
+    }
+    @Transactional
+    public void changePassword(Long userSeq,
+                               UserPasswordChangeRequest userPasswordChangeRequest){
+        User user = userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+
+        if(!passwordEncoder.matches(
+                userPasswordChangeRequest.getExistingPassword(), user.getPassword())
+        ){
+            throw new CustomException(PASSWORD_NOT_MATCH);
+        }
+
+        user.setPassword(passwordEncoder.encode(
+                userPasswordChangeRequest.getNewPassword()));
+
     }
 }

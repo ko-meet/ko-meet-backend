@@ -172,4 +172,17 @@ public class UserController {
 
         return ResponseEntity.status(NO_CONTENT).build();
     }
+
+    @PatchMapping("/password/change")
+    @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
+    public ResponseEntity<Void> changePassword(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
+
+        Long userSeq = jwtProvider.getIdFromToken(token);
+
+        userInformationService.changePassword(userSeq, userPasswordChangeRequest);
+
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
 }
