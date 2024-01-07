@@ -5,7 +5,6 @@ import com.backend.komeet.dto.request.UserPasswordResetRequest;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.repository.UserRepository;
 import com.backend.komeet.service.user.UserInformationService;
-import com.backend.komeet.util.UUIDUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
