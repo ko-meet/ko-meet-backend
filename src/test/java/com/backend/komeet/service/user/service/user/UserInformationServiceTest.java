@@ -1,6 +1,7 @@
 package com.backend.komeet.service.user.service.user;
 
 import com.backend.komeet.domain.User;
+import com.backend.komeet.dto.request.UserPasswordChangeRequest;
 import com.backend.komeet.dto.request.UserPasswordResetRequest;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.repository.UserRepository;
@@ -34,16 +35,16 @@ class UserInformationServiceTest {
                 new UserInformationService(userRepository, passwordEncoder);
     }
 
+    User user = User.builder()
+            .email("test@test.test")
+            .password("test")
+            .country(Countries.SOUTH_KOREA)
+            .build();
+
     @Test
     @DisplayName("성공")
     void resetPassword_Success() {
         //given
-        User user = User.builder()
-                .email("test@test.test")
-                .password("test")
-                .country(Countries.SOUTH_KOREA)
-                .build();
-
         UserPasswordResetRequest userPasswordResetRequest =
                 UserPasswordResetRequest.builder()
                         .email("test@test.test")
@@ -61,4 +62,27 @@ class UserInformationServiceTest {
         Assertions.assertThat(tempPassword).isNotEqualTo("test");
     }
 
+    @Test
+    @DisplayName("성공 - 비밀번호 변경")
+    void changePassword_Success() {
+        //given
+        UserPasswordChangeRequest userPasswordChangeRequest =
+                UserPasswordChangeRequest.builder()
+                        .existingPassword("test")
+                        .newPassword("test2")
+                        .build();
+
+        when(userRepository.findById(user.getSeq()))
+                .thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("test", user.getPassword()))
+                .thenReturn(true);
+        when(passwordEncoder.encode("test2"))
+                .thenReturn("encodedPw");
+        //when
+        userInformationService.changePassword(user.getSeq(), userPasswordChangeRequest);
+
+        //then
+        Assertions.assertThat(user.getPassword()).isEqualTo("encodedPw");
+
+    }
 }
