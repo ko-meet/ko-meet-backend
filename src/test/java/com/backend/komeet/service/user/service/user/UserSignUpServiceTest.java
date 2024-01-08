@@ -1,12 +1,12 @@
-package com.backend.komeet.service.user;
+package com.backend.komeet.service.user.service.user;
 
-import org.assertj.core.api.Assertions;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.UserSignUpRequest;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.service.user.UserSignUpService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.exception.ErrorCode.*;
+import static com.backend.komeet.exception.ErrorCode.EXISTING_USER;
 import static org.mockito.Mockito.*;
 
 @DisplayName("사용자 회원가입 서비스 테스트")
@@ -72,13 +72,13 @@ public class UserSignUpServiceTest {
 
         //when & then
         Assertions.assertThatThrownBy(() ->
-                userSignUpService.signUp(
+                        userSignUpService.signUp(
                                 request,
                                 CompletableFuture.completedFuture(
                                         Pair.of("대한민국", "test")
                                 )))
-                        .hasMessage(EXISTING_USER.getMessage())
-                        .isInstanceOf(CustomException.class);
+                .hasMessage(EXISTING_USER.getMessage())
+                .isInstanceOf(CustomException.class);
 
     }
 }

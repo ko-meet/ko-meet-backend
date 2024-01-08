@@ -1,4 +1,4 @@
-package com.backend.komeet.service.user;
+package com.backend.komeet.service.user.service.user;
 
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.domain.User;
@@ -9,6 +9,7 @@ import com.backend.komeet.enums.Countries;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.service.user.UserSignInService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ class UserSignInServiceTest {
     void testSignIn_Success() {
         // Given
         UserSignInRequest signInRequest =
-                new UserSignInRequest("test@test.com", "test");
+                new UserSignInRequest("test@test.com", "test",0.0,0.0);
         CompletableFuture<Pair<String, String>> country =
                 CompletableFuture.completedFuture(Pair.of("CountryName", "CityName"));
 
@@ -88,7 +89,7 @@ class UserSignInServiceTest {
     void testSignIn_InvalidPassword() {
         // Given
         UserSignInRequest signInRequest =
-                new UserSignInRequest("test@example.com", "password");
+                new UserSignInRequest("test@example.com", "password",0.0,0.0);
         User user = new User();
         CompletableFuture<Pair<String, String>> country =
                 CompletableFuture.completedFuture(Pair.of("CountryName", "CityName"));

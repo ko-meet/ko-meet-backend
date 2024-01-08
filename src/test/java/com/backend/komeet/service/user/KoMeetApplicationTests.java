@@ -1,4 +1,4 @@
-package com.backend.komeet;
+package com.backend.komeet.service.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
