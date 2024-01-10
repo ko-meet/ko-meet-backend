@@ -76,9 +76,11 @@ public class PostUpdateService {
                             List<String> addList,
                             List<String> deleteList) {
 
-        if (!addList.isEmpty() || !deleteList.isEmpty()) {
-            deleteList.forEach(originList::remove);
+        if (addList != null && !addList.isEmpty()) {
             originList.addAll(addList);
+        }
+        if (deleteList != null && !deleteList.isEmpty()) {
+            deleteList.forEach(originList::remove);
         }
     }
 
