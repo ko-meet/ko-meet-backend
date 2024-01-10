@@ -1,16 +1,16 @@
 package com.backend.komeet.domain;
 
 import com.backend.komeet.dto.request.PostUploadRequest;
+import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.enums.Countries;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.backend.komeet.enums.PostStatus.*;
 
 /**
  * 게시물 엔티티
@@ -27,8 +27,10 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
+    @Setter
     private String title;
 
+    @Setter
     private String content;
 
     @ManyToOne(targetEntity = User.class)
@@ -37,8 +39,10 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Setter
     private Long viewCount;
 
+    @Setter
     private Long likeCount;
 
     @ElementCollection
@@ -47,13 +51,15 @@ public class Post extends BaseEntity {
     @ElementCollection
     private List<String> attachments;
 
+    @Setter
     private String isPublic;
-
-    private String isActive;
 
     private Countries country;
 
     private String region;
+
+    @Setter
+    private PostStatus status;
 
     public static Post from(PostUploadRequest postUploadRequest, User user) {
         return Post.builder()
@@ -62,12 +68,12 @@ public class Post extends BaseEntity {
                 .tags(postUploadRequest.getTags())
                 .attachments(postUploadRequest.getAttachments())
                 .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
-                .isActive("Y")
                 .country(user.getCountry())
                 .region(user.getRegion())
                 .likeCount(0L)
                 .viewCount(0L)
                 .user(user)
+                .status(NORMAL)
                 .build();
     }
 }

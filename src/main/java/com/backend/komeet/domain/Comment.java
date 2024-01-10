@@ -1,6 +1,6 @@
 package com.backend.komeet.domain;
 
-import com.backend.komeet.enums.CommentStatus;
+import com.backend.komeet.enums.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +42,6 @@ public class Comment extends BaseEntity {
     private int downVotes;
 
     @Enumerated(EnumType.STRING)
-    private CommentStatus status;
+    private PostStatus status;
 
 }
