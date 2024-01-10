@@ -2,7 +2,6 @@ package com.backend.komeet.controller;
 
 import com.backend.komeet.dto.ImageDto;
 import com.backend.komeet.dto.request.ImageRequest;
-import com.backend.komeet.enums.ImageDirectory;
 import com.backend.komeet.service.external.ImageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
