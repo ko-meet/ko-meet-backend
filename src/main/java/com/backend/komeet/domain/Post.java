@@ -1,6 +1,6 @@
 package com.backend.komeet.domain;
 
-import com.backend.komeet.dto.request.PostCreateRequest;
+import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.enums.Countries;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,13 +55,13 @@ public class Post extends BaseEntity {
 
     private String region;
 
-    public static Post from(PostCreateRequest postCreateRequest, User user) {
+    public static Post from(PostUploadRequest postUploadRequest, User user) {
         return Post.builder()
-                .title(postCreateRequest.getTitle())
-                .content(postCreateRequest.getContent())
-                .tags(postCreateRequest.getTags())
-                .attachments(postCreateRequest.getAttachments())
-                .isPublic(postCreateRequest.getIsPublic() ? "Y" : "N")
+                .title(postUploadRequest.getTitle())
+                .content(postUploadRequest.getContent())
+                .tags(postUploadRequest.getTags())
+                .attachments(postUploadRequest.getAttachments())
+                .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
                 .isActive("Y")
                 .country(user.getCountry())
                 .region(user.getRegion())

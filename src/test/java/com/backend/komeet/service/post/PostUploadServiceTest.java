@@ -1,7 +1,7 @@
 package com.backend.komeet.service.post;
 
 import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.request.PostCreateRequest;
+import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.repository.PostRepository;
 import com.backend.komeet.repository.UserRepository;
@@ -41,7 +41,7 @@ class PostUploadServiceTest {
     @DisplayName("성공")
     void createPost() {
         // given
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+        PostUploadRequest postUploadRequest = PostUploadRequest.builder()
                 .title("제목")
                 .content("내용")
                 .attachments(List.of("test"))
@@ -52,7 +52,7 @@ class PostUploadServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // when
-        postUploadService.createPost(1L, postCreateRequest);
+        postUploadService.uploadPost(1L, postUploadRequest);
         // then
         verify(postRepository, times(1)).save(Mockito.any());
     }

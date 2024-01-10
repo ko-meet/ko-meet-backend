@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostCreateRequest {
+public class PostUploadRequest {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
