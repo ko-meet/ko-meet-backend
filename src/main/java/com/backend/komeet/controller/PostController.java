@@ -1,7 +1,9 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.config.JwtProvider;
+import com.backend.komeet.dto.request.PostUpdateRequest;
 import com.backend.komeet.dto.request.PostUploadRequest;
+import com.backend.komeet.service.post.PostUpdateService;
 import com.backend.komeet.service.post.PostUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +15,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * 게시물 관련 API를 정의한 컨트롤러
@@ -23,6 +26,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class PostController {
     private final PostUploadService postUploadService;
+    private final PostUpdateService postUpdateService;
     private final JwtProvider jwtProvider;
 
     @PostMapping
@@ -36,5 +40,18 @@ public class PostController {
         postUploadService.uploadPost(userId, postUploadRequest);
 
         return ResponseEntity.status(CREATED).build();
+    }
+
+    @PatchMapping
+    @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
+    public ResponseEntity<Void> updatePost(
+            @RequestHeader(AUTHORIZATION) String token,
+            @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
+
+        Long userId = jwtProvider.getIdFromToken(token);
+
+        postUpdateService.updatePost(userId, postUpdateRequest);
+
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }

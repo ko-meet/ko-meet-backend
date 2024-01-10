@@ -25,7 +25,11 @@ public enum ErrorCode {
     LOCATION_NOT_MATCH(BAD_REQUEST,"현재 위치가 입력하신 위치와 일치하지 않습니다."),
 
     //image
-    IMAGE_UPLOAD_FAILED(BAD_REQUEST, "이미지 업로드에 실패하였습니다.");
+    IMAGE_UPLOAD_FAILED(BAD_REQUEST, "이미지 업로드에 실패하였습니다."),
+
+    //post
+    POST_NOT_FOUND(NOT_FOUND,"존재하지 않는 게시물입니다."),
+    NO_AUTHORITY(BAD_REQUEST,"본인이 작성한 글만 수정하거나 삭제할 수 있습니다.");
 
     private final HttpStatus status;
     private final String message;
