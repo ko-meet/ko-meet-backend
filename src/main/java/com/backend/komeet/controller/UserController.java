@@ -4,13 +4,13 @@ import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.UserDto;
 import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.request.*;
-import com.backend.komeet.dto.response.UserSignInResponse;
 import com.backend.komeet.service.external.EmailService;
 import com.backend.komeet.service.external.GeocoderService;
 import com.backend.komeet.service.external.RedisService;
 import com.backend.komeet.service.user.UserInformationService;
 import com.backend.komeet.service.user.UserSignInService;
 import com.backend.komeet.service.user.UserSignUpService;
+import com.backend.komeet.dto.response.ApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class UserController {
      */
     @PostMapping
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
 
         CompletableFuture<Pair<String, String>> country = geocoderService.getCountry(
@@ -65,7 +65,7 @@ public class UserController {
                 String.format(EMAIL_SIGN_UP_CONTENT, userSeq)
         );
 
-        return ResponseEntity.status(CREATED).build();
+        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
 
     /**
@@ -76,7 +76,7 @@ public class UserController {
      */
     @PostMapping("/authentication-mail")
     @ApiOperation(value = "이메일 재 인증", notes = "이메일 재 인증 진행")
-    public ResponseEntity<Void> reAuthenticationMail(
+    public ResponseEntity<ApiResponse> reAuthenticationMail(
             @Valid @RequestBody UserEmailRequest userEmailRequest) {
 
         UserDto user =
@@ -88,7 +88,7 @@ public class UserController {
                 String.format(EMAIL_SIGN_UP_CONTENT, user.getSeq())
         );
 
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
     /**
@@ -99,11 +99,11 @@ public class UserController {
      */
     @GetMapping("/{userSeq}/verification")
     @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
-    public ResponseEntity<Void> verifyEmail(@PathVariable Long userSeq) {
+    public ResponseEntity<ApiResponse> verifyEmail(@PathVariable Long userSeq) {
 
         userSignUpService.verifyEmail(userSeq);
 
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
     /**
@@ -114,7 +114,7 @@ public class UserController {
      */
     @PostMapping("/sign-in")
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
-    public ResponseEntity<UserSignInResponse> signIn(
+    public ResponseEntity<ApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest userSignInRequest) {
 
         UserDto userDto
@@ -133,12 +133,12 @@ public class UserController {
                 userSignInDto.getRefreshToken()
         );
 
-        return ResponseEntity.status(OK).body(UserSignInResponse.from(userSignInDto));
+        return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
     @PatchMapping("/information")
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
-    public ResponseEntity<Void> updateInformation(
+    public ResponseEntity<ApiResponse> updateInformation(
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
 
@@ -153,12 +153,12 @@ public class UserController {
                 userSeq, country, userInfoUpdateRequest
         );
 
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
     @PatchMapping("/password/reset")
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호 재설정 진행")
-    public ResponseEntity<Void> resetPassword(
+    public ResponseEntity<ApiResponse> resetPassword(
             @Valid @RequestBody UserPasswordResetRequest passwordResetRequest) {
 
         String temporaryPassword =
@@ -170,12 +170,12 @@ public class UserController {
                 String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
         );
 
-        return ResponseEntity.status(NO_CONTENT).build();
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
     @PatchMapping("/password/change")
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
-    public ResponseEntity<Void> changePassword(
+    public ResponseEntity<ApiResponse> changePassword(
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
 
@@ -183,6 +183,6 @@ public class UserController {
 
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
 
-        return ResponseEntity.status(NO_CONTENT).build();
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 }
