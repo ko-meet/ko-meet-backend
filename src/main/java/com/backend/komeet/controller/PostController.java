@@ -34,7 +34,7 @@ public class PostController {
 
     @PostMapping
     @ApiOperation(value = "게시물 작성", notes = "게시물을 작성합니다.")
-    public ResponseEntity<Void> createPost(
+    public ResponseEntity<ApiResponse> createPost(
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody PostUploadRequest postUploadRequest) {
 
@@ -42,12 +42,12 @@ public class PostController {
 
         postUploadService.uploadPost(userId, postUploadRequest);
 
-        return ResponseEntity.status(CREATED).build();
+        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
 
     @PatchMapping
     @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
-    public ResponseEntity<Void> updatePost(
+    public ResponseEntity<ApiResponse> updatePost(
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
 
@@ -55,7 +55,7 @@ public class PostController {
 
         postUpdateService.updatePost(userId, postUpdateRequest);
 
-        return ResponseEntity.status(NO_CONTENT).build();
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
     @DeleteMapping("/{postSeq}")
