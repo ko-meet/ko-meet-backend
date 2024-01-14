@@ -3,6 +3,8 @@ package com.backend.komeet.controller;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.request.PostUpdateRequest;
 import com.backend.komeet.dto.request.PostUploadRequest;
+import com.backend.komeet.dto.response.ApiResponse;
+import com.backend.komeet.service.post.PostDeleteService;
 import com.backend.komeet.service.post.PostUpdateService;
 import com.backend.komeet.service.post.PostUploadService;
 import io.swagger.annotations.Api;
@@ -27,6 +29,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class PostController {
     private final PostUploadService postUploadService;
     private final PostUpdateService postUpdateService;
+    private final PostDeleteService postDeleteService;
     private final JwtProvider jwtProvider;
 
     @PostMapping
@@ -53,5 +56,18 @@ public class PostController {
         postUpdateService.updatePost(userId, postUpdateRequest);
 
         return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/{postSeq}")
+    @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
+    public ResponseEntity<ApiResponse> deletePost(
+            @PathVariable Long postSeq,
+            @RequestHeader(AUTHORIZATION) String token) {
+
+        Long userId = jwtProvider.getIdFromToken(token);
+
+        postDeleteService.deletePost(userId, postSeq);
+
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 }
