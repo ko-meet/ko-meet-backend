@@ -70,6 +70,7 @@ public class Post extends BaseEntity {
                 .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
                 .country(user.getCountry())
                 .region(user.getRegion())
+                .comments(new ArrayList<>())
                 .likeCount(0L)
                 .viewCount(0L)
                 .user(user)

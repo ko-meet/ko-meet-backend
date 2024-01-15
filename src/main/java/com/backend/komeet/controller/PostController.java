@@ -45,15 +45,16 @@ public class PostController {
         return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
 
-    @PatchMapping
+    @PatchMapping("/{postSeq}")
     @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
     public ResponseEntity<ApiResponse> updatePost(
+            @PathVariable Long postSeq,
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
 
         Long userId = jwtProvider.getIdFromToken(token);
 
-        postUpdateService.updatePost(userId, postUpdateRequest);
+        postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
 
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }

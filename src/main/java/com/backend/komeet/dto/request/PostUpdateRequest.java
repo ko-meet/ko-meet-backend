@@ -17,7 +17,6 @@ import java.util.List;
 @Builder
 public class PostUpdateRequest {
 
-    private Long seq;
     private String title;
     private String content;
     private List<String> deleteTags = new ArrayList<>();

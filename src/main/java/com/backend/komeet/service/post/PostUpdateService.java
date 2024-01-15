@@ -33,9 +33,12 @@ public class PostUpdateService {
      * @param postUpdateRequest 게시물 수정 요청 데이터
      */
     @Transactional
-    public void updatePost(Long userId, PostUpdateRequest postUpdateRequest) {
+    public void updatePost(Long userId,
+                           Long postSeq,
+                           PostUpdateRequest postUpdateRequest) {
+
         User user = getUser(userId);
-        Post post = getPost(postUpdateRequest.getSeq());
+        Post post = getPost(postSeq);
 
         if (!post.getUser().equals(user)) {
             throw new CustomException(ErrorCode.NO_AUTHORITY);
