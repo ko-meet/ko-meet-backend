@@ -27,16 +27,10 @@ public class UserSignUpRequest {
     @Email(message = "이메일 형식에 맞게 입력해주세요.")
     private String email;
 
-    @NotNull(message = "전화번호를 입력해주세요.")
-    private Countries country;
+    @NotNull(message = "국가를 입력해주세요.")
+    private String country;
 
-    @NotNull(message = "위도를 입력해주세요.")
-    @DecimalMin(value = "-90", message = "유효한 위도 값을 입력해주세요.")
-    @DecimalMax(value = "90", message = "유효한 위도 값을 입력해주세요.")
-    private Double latitude;
+    private String region;
 
-    @NotNull(message = "경도를 입력해주세요.")
-    @DecimalMin(value = "-180", message = "유효한 경도 값을 입력해주세요.")
-    @DecimalMax(value = "180", message = "유효한 경도 값을 입력해주세요.")
-    private Double longitude;
+    private String profileImage;
 }

@@ -62,17 +62,21 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
+    @Column
+    @Setter
+    private String imageUrl;
+
     public static User from(UserSignUpRequest userSignUpRequest,
-                            String encodedPassword,
-                            String region) {
+                            String encodedPassword) {
         return User.builder()
                 .nickName(userSignUpRequest.getNickName())
                 .email(userSignUpRequest.getEmail())
                 .password(encodedPassword)
-                .country(userSignUpRequest.getCountry())
-                .region(region)
+                .country(Countries.getCountry(userSignUpRequest.getCountry()))
+                .region(userSignUpRequest.getRegion())
                 .userRole(UserRole.ROLE_USER)
                 .userStatus(UserStatus.PENDING)
+                .imageUrl(userSignUpRequest.getProfileImage())
                 .build();
     }
 }

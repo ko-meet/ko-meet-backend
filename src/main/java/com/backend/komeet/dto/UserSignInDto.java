@@ -15,9 +15,10 @@ import com.backend.komeet.domain.User;
 @Builder
 public class UserSignInDto {
     private String email;
-    private String nickName;
+    private String nickname;
     private String accessToken;
-    private String refreshToken;
+    private String country;
+    private String userProfileUrl;
     private Boolean isLocationMatch;
 
     /**
@@ -30,14 +31,14 @@ public class UserSignInDto {
      */
     public static UserSignInDto from(User user,
                                      String accessToken,
-                                     String refreshToken,
                                      boolean isLocationMatch) {
 
         return UserSignInDto.builder()
                 .email(user.getEmail())
-                .nickName(user.getNickName())
+                .nickname(user.getNickName())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .country(user.getCountry().getCountryName())
+                .userProfileUrl(user.getImageUrl())
                 .isLocationMatch(isLocationMatch)
                 .build();
     }

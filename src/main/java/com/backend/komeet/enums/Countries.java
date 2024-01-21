@@ -31,4 +31,13 @@ public enum Countries {
 
     private final String countryName;
     private final String countryCode;
+
+    public static Countries getCountry(String countryName) {
+        for (Countries country : Countries.values()) {
+            if (country.getCountryName().equals(countryName)) {
+                return country;
+            }
+        }
+        return null;
+    }
 }

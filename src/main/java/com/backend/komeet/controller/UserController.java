@@ -52,12 +52,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
 
-        CompletableFuture<Pair<String, String>> country = geocoderService.getCountry(
-                userSignUpRequest.getLatitude(),
-                userSignUpRequest.getLongitude()
-        );
-
-        Long userSeq = userSignUpService.signUp(userSignUpRequest, country);
+        Long userSeq = userSignUpService.signUp(userSignUpRequest);
 
         emailService.sendEmail(
                 userSignUpRequest.getEmail(),

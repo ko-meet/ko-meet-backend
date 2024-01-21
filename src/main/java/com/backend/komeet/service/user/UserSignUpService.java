@@ -5,18 +5,15 @@ import com.backend.komeet.dto.UserDto;
 import com.backend.komeet.dto.request.UserSignUpRequest;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
-import com.backend.komeet.util.CountryUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.CompletableFuture;
-
 import static com.backend.komeet.enums.UserStatus.ACTIVE;
-import static com.backend.komeet.exception.ErrorCode.*;
+import static com.backend.komeet.exception.ErrorCode.EXISTING_USER;
+import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
  * 사용자 회원가입 서비스
@@ -32,23 +29,17 @@ public class UserSignUpService {
      * 사용자 회원가입
      *
      * @param userSignUpRequest 사용자 회원가입 요청
-     * @param country
      */
     @Transactional
-    public Long signUp(UserSignUpRequest userSignUpRequest,
-                       CompletableFuture<Pair<String, String>> country) {
+    public Long signUp(UserSignUpRequest userSignUpRequest) {
 
         validateUserNotExists(userSignUpRequest.getEmail());
 
         String encodedPassword =
                 passwordEncoder.encode(userSignUpRequest.getPassword());
 
-        Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
-        String region =
-                CountryUtil.extractCity(countryPair, userSignUpRequest.getCountry().getCountryName());
-
         User user = userRepository.save(
-                User.from(userSignUpRequest, encodedPassword, region)
+                User.from(userSignUpRequest, encodedPassword)
         );
 
         return user.getSeq();

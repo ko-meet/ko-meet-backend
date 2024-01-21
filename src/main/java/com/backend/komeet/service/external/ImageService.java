@@ -3,7 +3,6 @@ package com.backend.komeet.service.external;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.backend.komeet.dto.ImageDto;
-import com.backend.komeet.enums.ImageDirectory;
 import com.backend.komeet.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,14 +29,14 @@ public class ImageService {
      * 파일 업로드
      *
      * @param multipartFile  파일
-     * @param imageDirectory 이미지 타입에 대한 경로
+     * @param imagePath 이미지 타입에 대한 경로
      * @return 업로드한 파일의 URL
      */
     public ImageDto saveFile(MultipartFile multipartFile,
-                             ImageDirectory imageDirectory) {
+                             String imagePath) {
 
         // 파일 이름에 이미지 타입에 대한 경로 및 UUID와 원래 파일의 확장자를 포함
-        String originalFileName = imageDirectory.getString() + "/" +
+        String originalFileName = imagePath + "/" +
                 UUID.randomUUID()
                         .toString()
                         .replace("-", "")
