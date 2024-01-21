@@ -123,11 +123,6 @@ public class UserController {
         UserSignInDto userSignInDto =
                 userSignInService.signIn(userSignInRequest, country);
 
-        redisService.saveRefreshToken(
-                userSignInDto.getEmail(),
-                userSignInDto.getRefreshToken()
-        );
-
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
