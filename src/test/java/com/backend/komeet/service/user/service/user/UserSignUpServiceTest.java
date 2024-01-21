@@ -40,7 +40,7 @@ public class UserSignUpServiceTest {
     UserSignUpRequest request = UserSignUpRequest.builder()
             .email("test@test.com")
             .nickName("test")
-            .country("SOUTH_KOREA")
+            .country(Countries.SOUTH_KOREA)
             .password("test")
             .build();
 
