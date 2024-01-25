@@ -72,20 +72,25 @@ public class UserInformationService {
 
         return temporaryPassword;
     }
+
     @Transactional
     public void changePassword(Long userSeq,
-                               UserPasswordChangeRequest userPasswordChangeRequest){
+                               UserPasswordChangeRequest userPasswordChangeRequest) {
         User user = userRepository.findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
 
-        if(!passwordEncoder.matches(
+        if (!passwordEncoder.matches(
                 userPasswordChangeRequest.getExistingPassword(), user.getPassword())
-        ){
+        ) {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
 
         user.setPassword(passwordEncoder.encode(
                 userPasswordChangeRequest.getNewPassword()));
 
+    }
+
+    public Boolean checkNickname(String nickname) {
+        return !userRepository.findByNickName(nickname).isPresent();
     }
 }

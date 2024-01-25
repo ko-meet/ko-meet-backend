@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backend.komeet.enums.PostStatus.*;
+
 /**
  * 댓글 엔티티
  */
@@ -27,7 +29,7 @@ public class Comment extends BaseEntity {
     private Long seq;
 
     @ManyToOne
-    private User author;
+    private User user;
 
     private String content;
 
@@ -44,4 +46,15 @@ public class Comment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
+    public static Comment from(User user, Post post, String content) {
+        return Comment.builder()
+                .user(user)
+                .post(post)
+                .content(content)
+                .upVotes(0)
+                .downVotes(0)
+                .replies(new ArrayList<>())
+                .status(NORMAL)
+                .build();
+    }
 }

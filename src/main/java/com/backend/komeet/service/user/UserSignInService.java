@@ -49,14 +49,12 @@ public class UserSignInService {
         }
 
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(user));
-        String refreshToken = jwtProvider.issueRefreshToken();
 
         Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
 
         return UserSignInDto.from(
                 user,
                 accessToken,
-                refreshToken,
                 user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
                         user.getRegion().equals(countryPair.getSecond())
         );

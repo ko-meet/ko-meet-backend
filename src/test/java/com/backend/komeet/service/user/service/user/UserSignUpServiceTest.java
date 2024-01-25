@@ -40,9 +40,7 @@ public class UserSignUpServiceTest {
     UserSignUpRequest request = UserSignUpRequest.builder()
             .email("test@test.com")
             .nickName("test")
-            .country(Countries.SOUTH_KOREA)
-            .longitude(0.0)
-            .latitude(0.0)
+            .country("SOUTH_KOREA")
             .password("test")
             .build();
 
@@ -56,8 +54,8 @@ public class UserSignUpServiceTest {
         when(userRepository.save(any())).thenReturn(mock(User.class));
 
         //when
-        userSignUpService.signUp(request, CompletableFuture.completedFuture(Pair.of("대한민국", "test"))
-        );
+        userSignUpService.signUp(request);
+
 
         //then
         verify(userRepository, times(1)).save(any());
@@ -73,10 +71,7 @@ public class UserSignUpServiceTest {
         //when & then
         Assertions.assertThatThrownBy(() ->
                         userSignUpService.signUp(
-                                request,
-                                CompletableFuture.completedFuture(
-                                        Pair.of("대한민국", "test")
-                                )))
+                                request))
                 .hasMessage(EXISTING_USER.getMessage())
                 .isInstanceOf(CustomException.class);
 

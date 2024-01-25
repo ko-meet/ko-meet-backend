@@ -3,7 +3,6 @@ package com.backend.komeet.service.post;
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.PostUpdateRequest;
-import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.PostRepository;
@@ -33,9 +32,12 @@ public class PostUpdateService {
      * @param postUpdateRequest 게시물 수정 요청 데이터
      */
     @Transactional
-    public void updatePost(Long userId, PostUpdateRequest postUpdateRequest) {
+    public void updatePost(Long userId,
+                           Long postSeq,
+                           PostUpdateRequest postUpdateRequest) {
+
         User user = getUser(userId);
-        Post post = getPost(postUpdateRequest.getSeq());
+        Post post = getPost(postSeq);
 
         if (!post.getUser().equals(user)) {
             throw new CustomException(ErrorCode.NO_AUTHORITY);

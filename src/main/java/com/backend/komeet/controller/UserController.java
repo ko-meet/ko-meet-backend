@@ -52,12 +52,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
 
-        CompletableFuture<Pair<String, String>> country = geocoderService.getCountry(
-                userSignUpRequest.getLatitude(),
-                userSignUpRequest.getLongitude()
-        );
-
-        Long userSeq = userSignUpService.signUp(userSignUpRequest, country);
+        Long userSeq = userSignUpService.signUp(userSignUpRequest);
 
         emailService.sendEmail(
                 userSignUpRequest.getEmail(),
@@ -128,11 +123,6 @@ public class UserController {
         UserSignInDto userSignInDto =
                 userSignInService.signIn(userSignInRequest, country);
 
-        redisService.saveRefreshToken(
-                userSignInDto.getEmail(),
-                userSignInDto.getRefreshToken()
-        );
-
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
@@ -184,5 +174,16 @@ public class UserController {
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
 
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+    }
+
+    @GetMapping("/nicknames")
+    @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
+    public ResponseEntity<ApiResponse> checkNickname(
+            @RequestParam String nickname) {
+
+        Boolean isNicknameUnique =
+                userInformationService.checkNickname(nickname);
+
+        return ResponseEntity.status(OK).body(new ApiResponse(isNicknameUnique));
     }
 }
