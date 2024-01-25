@@ -18,23 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
     private final RedisTemplate<String, String> stringRedisTemplate;
 
-    private final static String KEY_TOKEN = "token: ";
-
-    /**
-     * 사용자 이메일과 리프레시 토큰을 저장하는 메서드입니다.
-     *
-     * @param account      사용자 계정
-     * @param refreshToken 리프레시 토큰
-     */
-    @Transactional
-    public void saveRefreshToken(String account, String refreshToken) {
-        // 이메일을 기반으로 한 식별키를 생성합니다.
-        String key = KEY_TOKEN + account;
-
-        // 생성된 식별키와 리프레시 토큰을 저장하며, 토큰의 유효 기간은 1440분(24시간)으로 설정합니다.
-        saveKeyAndValue(key, refreshToken, 1440);
-    }
-
     /**
      * Redis에 문자열 형식의 값을 저장하는 메서드.
      *
@@ -48,14 +31,4 @@ public class RedisService {
         stringRedisTemplate.expire(key, expireTime, TimeUnit.MINUTES);
     }
 
-    /**
-     * 로그아웃 시 사용자 리프레시토큰을 삭제하는 메서드입니다.
-     *
-     * @param account 사용자 계정
-     */
-    @Transactional
-    public void deleteRefreshToken(String account) {
-        String key = KEY_TOKEN + account;
-        stringRedisTemplate.delete(key);
-    }
 }

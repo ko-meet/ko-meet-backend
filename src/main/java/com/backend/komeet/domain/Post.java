@@ -51,6 +51,9 @@ public class Post extends BaseEntity {
     @ElementCollection
     private List<String> attachments;
 
+    @ElementCollection
+    private List<Long> likeUsers;
+
     @Setter
     private String isPublic;
 
@@ -70,6 +73,7 @@ public class Post extends BaseEntity {
                 .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
                 .country(user.getCountry())
                 .region(user.getRegion())
+                .comments(new ArrayList<>())
                 .likeCount(0L)
                 .viewCount(0L)
                 .user(user)

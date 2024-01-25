@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ImageRequest {
-    private String imageDirectory;
-    private String imagePath;
+public class CommentUploadRequest {
+    @NotNull(message = "댓글 내용을 입력해주세요.")
+    private String content;
 }

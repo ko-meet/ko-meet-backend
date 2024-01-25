@@ -58,7 +58,6 @@ class PostUpdateServiceTest {
     void updatePost() {
         // given
         PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .seq(1L)
                 .title("새제목")
                 .content("새내용")
                 .isPublic(false)
@@ -67,7 +66,7 @@ class PostUpdateServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
         // when
-        postUpdateService.updatePost(1L, postUpdateRequest);
+        postUpdateService.updatePost(1L, 1L, postUpdateRequest);
         // then
         assertThat(post.getContent()).isEqualTo("새내용");
     }
