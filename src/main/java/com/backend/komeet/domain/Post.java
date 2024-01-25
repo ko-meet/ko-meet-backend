@@ -51,6 +51,9 @@ public class Post extends BaseEntity {
     @ElementCollection
     private List<String> attachments;
 
+    @ElementCollection
+    private List<Long> likeUsers;
+
     @Setter
     private String isPublic;
 

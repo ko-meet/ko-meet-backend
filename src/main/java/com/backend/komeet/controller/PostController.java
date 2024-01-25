@@ -5,6 +5,7 @@ import com.backend.komeet.dto.request.PostUpdateRequest;
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.service.post.PostDeleteService;
+import com.backend.komeet.service.post.PostLikeService;
 import com.backend.komeet.service.post.PostUpdateService;
 import com.backend.komeet.service.post.PostUploadService;
 import io.swagger.annotations.Api;
@@ -30,6 +31,7 @@ public class PostController {
     private final PostUploadService postUploadService;
     private final PostUpdateService postUpdateService;
     private final PostDeleteService postDeleteService;
+    private final PostLikeService postLikeService;
     private final JwtProvider jwtProvider;
 
     @PostMapping
@@ -68,6 +70,19 @@ public class PostController {
         Long userId = jwtProvider.getIdFromToken(token);
 
         postDeleteService.deletePost(userId, postSeq);
+
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+    }
+
+    @PatchMapping("/{postSeq}/like")
+    @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
+    public ResponseEntity<ApiResponse> likePost(
+            @PathVariable Long postSeq,
+            @RequestHeader(AUTHORIZATION) String token) {
+
+        Long userId = jwtProvider.getIdFromToken(token);
+
+        postLikeService.likePost(userId, postSeq);
 
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }

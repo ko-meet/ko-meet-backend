@@ -3,7 +3,6 @@ package com.backend.komeet.service.post;
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.PostUpdateRequest;
-import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.PostRepository;

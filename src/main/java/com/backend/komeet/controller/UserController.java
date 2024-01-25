@@ -175,4 +175,15 @@ public class UserController {
 
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
+
+    @GetMapping("/nicknames")
+    @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
+    public ResponseEntity<ApiResponse> checkNickname(
+            @RequestParam String nickname) {
+
+        Boolean isNicknameUnique =
+                userInformationService.checkNickname(nickname);
+
+        return ResponseEntity.status(OK).body(new ApiResponse(isNicknameUnique));
+    }
 }
