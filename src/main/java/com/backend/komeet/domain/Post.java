@@ -1,11 +1,9 @@
 package com.backend.komeet.domain;
 
 import com.backend.komeet.dto.request.PostUploadRequest;
-import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.enums.Countries;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -48,27 +46,20 @@ public class Post extends BaseEntity {
     private Long likeCount;
 
     @ElementCollection
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> tags;
 
     @ElementCollection
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 
     @ElementCollection
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> likeUsers;
 
     @Setter
     private String isPublic;
 
-    @Enumerated(EnumType.STRING)
     private Countries country;
 
     private String region;
-
-    @Enumerated(EnumType.STRING)
-    private Categories category;
 
     @Setter
     private PostStatus status;
@@ -82,7 +73,6 @@ public class Post extends BaseEntity {
                 .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
                 .country(user.getCountry())
                 .region(user.getRegion())
-                .category(postUploadRequest.getCategory())
                 .comments(new ArrayList<>())
                 .likeCount(0L)
                 .viewCount(0L)
