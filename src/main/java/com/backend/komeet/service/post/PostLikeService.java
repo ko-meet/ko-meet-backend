@@ -25,15 +25,17 @@ public class PostLikeService {
      * @param postSeq 게시물 식별자
      */
     @Async
-    public void likePost(Long userSeq, Long postSeq) {
+    public Long likePost(Long userSeq, Long postSeq) {
         int maxRetries = 3;
         int retries = 0;
         long retryIntervalMillis = 1000; // 1초 간격으로 재시도
+        Long likeCount = null;
 
         while (retries <= maxRetries) {
             try {
-                if (processLike(userSeq, postSeq)) {
-                    return;
+                likeCount = processLike(userSeq, postSeq);
+                if (likeCount != null) {
+                    break;
                 } else {
                     log.error("Failed to acquire lock for postSeq: {}", postSeq);
                 }
@@ -49,6 +51,7 @@ public class PostLikeService {
                 }
             }
         }
+        return likeCount;
     }
 
     /**
@@ -59,12 +62,14 @@ public class PostLikeService {
      * @return 작업 성공 여부
      * @throws CustomException 작업 실패
      */
-    private boolean processLike(Long userSeq, Long postSeq) throws CustomException {
+    private Long processLike(Long userSeq, Long postSeq) throws CustomException {
         Post post = getPost(postSeq);
 
         boolean lockAcquired = false;
         try {
-            lockAcquired = redisDistributedLock.acquireLock(LOCK_KEY, postSeq.toString(), 10);
+            lockAcquired = redisDistributedLock.acquireLock(
+                    LOCK_KEY, postSeq.toString(), 10
+            );
             if (lockAcquired) {
                 if (post.getLikeUsers().remove(userSeq)) {
                     post.setLikeCount(post.getLikeCount() - 1);
@@ -72,9 +77,9 @@ public class PostLikeService {
                     post.getLikeUsers().add(userSeq);
                     post.setLikeCount(post.getLikeCount() + 1);
                 }
-                return true;
+                return postRepository.save(post).getLikeCount();
             } else {
-                return false;
+                return null;
             }
         } finally {
             if (lockAcquired) {
