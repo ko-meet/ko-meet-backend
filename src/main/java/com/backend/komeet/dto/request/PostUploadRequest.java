@@ -1,5 +1,6 @@
 package com.backend.komeet.dto.request;
 
+import com.backend.komeet.enums.Categories;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,4 +30,6 @@ public class PostUploadRequest {
 
     @NotNull(message = "전체공개 여부를 입력해주세요.")
     private Boolean isPublic;
+
+    private Categories category;
 }
