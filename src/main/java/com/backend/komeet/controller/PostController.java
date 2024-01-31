@@ -4,6 +4,7 @@ import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.request.PostUpdateRequest;
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
+import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.SortingMethods;
 import com.backend.komeet.service.post.PostDeleteService;
@@ -85,21 +86,23 @@ public class PostController {
 
         Long likeCount = postLikeService.likePost(userId, postSeq);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(likeCount));
+        return ResponseEntity.status(OK).body(new ApiResponse(likeCount));
     }
 
     @GetMapping
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
     public ResponseEntity<ApiResponse> getPosts(
             @RequestParam(required = false) String country,
-            @RequestParam(required = false) SortingMethods sortingMethod,
+            @RequestParam(required = false) String sortingMethod,
             @RequestParam(required = false) String isPublic,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer page) {
 
         return ResponseEntity.ok().body(new ApiResponse(postUploadService.getPosts(
                 Countries.valueOf(country),
-                sortingMethod,
+                SortingMethods.valueOf(sortingMethod),
                 isPublic,
+                Categories.valueOf(category),
                 page == null ? 0 : page
         )));
     }
