@@ -13,5 +13,4 @@ public enum Categories {
     QNA("qna");
 
     private final String category;
-
 }
