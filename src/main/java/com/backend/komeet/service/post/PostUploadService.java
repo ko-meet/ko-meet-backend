@@ -4,6 +4,7 @@ import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.PostDto;
 import com.backend.komeet.dto.request.PostUploadRequest;
+import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.SortingMethods;
 import com.backend.komeet.exception.CustomException;
@@ -42,37 +43,22 @@ public class PostUploadService {
 
     /**
      * 게시물을 조회하는 메서드
-     * @param country 국가
+     *
+     * @param country       국가
      * @param sortingMethod 정렬 방식
-     * @param isPublic 공개 여부
+     * @param isPublic      공개 여부
      * @return 조회된 게시물
      */
     public Page<PostDto> getPosts(Countries country,
                                   SortingMethods sortingMethod,
                                   String isPublic,
+                                  Categories category,
                                   Integer page) {
 
-        Sort sort;
-        switch (sortingMethod) {
-            case CREATED_DATE:
-                sort = Sort.by(Sort.Direction.DESC, "createdAt");
-                break;
-            case VIEW_COUNT:
-                sort = Sort.by(Sort.Direction.DESC, "viewCount");
-                break;
-            case LIKE_COUNT:
-                sort = Sort.by(Sort.Direction.DESC, "likeCount");
-                break;
-            case COMMENT_COUNT:
-                sort = Sort.by(Sort.Direction.DESC, "commentCount");
-                break;
-            default:
-                sort = Sort.unsorted(); // 또는 기본 정렬을 지정
-                break;
-        }
+        Pageable pageable = PageRequest.of(page, 10);
 
-        Pageable pageable = PageRequest.of(page, 10,sort);
-
-        return postRepository.getPosts(country, sortingMethod, isPublic, pageable);
+        return postRepository.getPosts(
+                country, sortingMethod, isPublic, category, pageable
+        );
     }
 }

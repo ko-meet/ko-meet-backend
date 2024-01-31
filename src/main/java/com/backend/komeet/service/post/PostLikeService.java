@@ -9,6 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +32,7 @@ public class PostLikeService {
      * @param postSeq 게시물 식별자
      */
     @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long likePost(Long userSeq, Long postSeq) {
         int maxRetries = 3;
         int retries = 0;
@@ -51,6 +59,33 @@ public class PostLikeService {
                 }
             }
         }
+        // 4번까지 시도하여 값을 받을 때까지 대기
+        int maxAttempts = 4;
+        int attempts = 0;
+        long waitIntervalMillis = 1000; // 1초 간격으로 재시도
+        while (attempts < maxAttempts) {
+            try {
+                // CompletableFuture를 통해 작업이 완료될 때까지 대기
+                CompletableFuture<Long> future = CompletableFuture.completedFuture(likeCount);
+                likeCount = future.get(1, TimeUnit.SECONDS);
+                if (likeCount != null) {
+                    break;
+                }
+            } catch (TimeoutException | InterruptedException | ExecutionException e) {
+                log.error("Failed to get likeCount for postSeq: {}", postSeq);
+            }
+            attempts++;
+            try {
+                Thread.sleep(waitIntervalMillis);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (likeCount == null) {
+            throw new RuntimeException("작업이 완료되지 않았습니다.");
+        }
+
         return likeCount;
     }
 
