@@ -98,7 +98,6 @@ public class PostLikeService {
      * @throws CustomException 작업 실패
      */
     private Long processLike(Long userSeq, Long postSeq) throws CustomException {
-
         Post post = getPost(postSeq);
 
         boolean lockAcquired = false;

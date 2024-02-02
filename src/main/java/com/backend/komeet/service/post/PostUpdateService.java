@@ -107,4 +107,17 @@ public class PostUpdateService {
         return postRepository.findById(seq)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
     }
+
+    /**
+     * 조회수를 증가시키는 메서드
+     *
+     * @param postSeq 게시물 식별자
+     */
+    @Transactional
+    public void increaseViewCount(Long postSeq) {
+        Post post = postRepository.findById(postSeq)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        post.setViewCount(post.getViewCount() + 1);
+    }
 }
