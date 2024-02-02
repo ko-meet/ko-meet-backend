@@ -106,4 +106,23 @@ public class PostController {
                 page == null ? 0 : page
         )));
     }
+
+    @PatchMapping("/{postSeq}/view")
+    @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
+    public ResponseEntity<ApiResponse> increaseViewCount(
+            @PathVariable Long postSeq) {
+
+        postUpdateService.increaseViewCount(postSeq);
+
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+    }
+
+    @GetMapping("/{postSeq}")
+    @ApiOperation(value = "게시물 상세 조회", notes = "게시물 상세 정보를 조회합니다.")
+    public ResponseEntity<ApiResponse> getPost(
+            @PathVariable Long postSeq) {
+
+        return ResponseEntity.status(OK)
+                .body(new ApiResponse(postUploadService.getPost(postSeq)));
+    }
 }
