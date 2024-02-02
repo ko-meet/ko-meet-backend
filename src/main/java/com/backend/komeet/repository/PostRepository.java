@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * 게시판 레포지토리
  */
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, PostQRepository  {
 }
