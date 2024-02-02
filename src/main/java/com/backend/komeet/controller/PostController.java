@@ -106,7 +106,7 @@ public class PostController {
                 page == null ? 0 : page
         )));
     }
-
+  
     @PatchMapping("/{postSeq}/view")
     @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
     public ResponseEntity<ApiResponse> increaseViewCount(
