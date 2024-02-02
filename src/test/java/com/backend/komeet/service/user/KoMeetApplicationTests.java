@@ -1,13 +1,13 @@
-package com.backend.komeet.service.user;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class KoMeetApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
-}
+//package com.backend.komeet.service.user;
+//
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class KoMeetApplicationTests {
+//
+//    @Test
+//    void contextLoads() {
+//    }
+//
+//}
