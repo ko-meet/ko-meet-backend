@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Countries {
+    ALL("전체","ALL"),
     MALAYSIA("말레이시아","MY"),
     SINGAPORE("싱가포르","SG"),
     INDONESIA("인도네시아","ID"),
