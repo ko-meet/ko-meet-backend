@@ -31,7 +31,6 @@ public class ImageController {
                                                    @RequestParam String imagePath) {
         ImageDto imageDto =
                 imageService.saveFile(multipartFile, imagePath);
-
         return ResponseEntity.status(OK).body(new ApiResponse(imageDto.getImageUrl()));
     }
 
