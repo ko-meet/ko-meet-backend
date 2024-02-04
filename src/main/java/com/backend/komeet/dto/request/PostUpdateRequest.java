@@ -19,10 +19,10 @@ public class PostUpdateRequest {
 
     private String title;
     private String content;
-    private List<String> deleteTags = new ArrayList<>();
-    private List<String> addTags = new ArrayList<>();
-    private List<String> deleteAttachments = new ArrayList<>();
-    private List<String> addAttachments = new ArrayList<>();
+    private List<String> deleteTags;
+    private List<String> addTags;
+    private List<String> deleteAttachments;
+    private List<String> addAttachments;
     private Boolean isPublic;
 
 }
