@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,19 +37,15 @@ public class JwtProvider {
     private String issuer;
     private SecretKey secretKey;
 
-    private static final long ONE_HOUR = 60 * 60 * 1000L;
-    private static final long ONE_WEEK = 7 * 24 * 60 * 60 * 1000L;
-
-    /**
-     * Bean이 초기화된 후 자동으로 호출
-     * SecretKey를 생성하여 초기화
-     * Keys.secretKeyFor(SignatureAlgorithm.HS256)를 통해 HS256 알고리즘 사용
-     * SecretKey를 생성하고 이를 인스턴스 변수인 secretKey에 할당
-     */
+    @Value("${token.secret-key}")
+    private String secretKeyString;
     @PostConstruct
     public void init() {
-        secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKeyString));
     }
+
+    private static final long ONE_DAY = 24 * 60 * 60 * 1000L;
+    private static final long SIX_MONTH = 6 * 30 * 24 * 60 * 60 * 1000L;
 
     /**
      * 주어진 TokenIssuanceDto를 사용하여 액세스 토큰을 발급합니다.
@@ -180,7 +177,7 @@ public class JwtProvider {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(
                         new Date(System.currentTimeMillis() +
-                                (claims == null ? ONE_WEEK : ONE_HOUR)))
+                                (claims == null ? SIX_MONTH : ONE_DAY)))
                 .signWith(secretKey)
                 .compact();
     }

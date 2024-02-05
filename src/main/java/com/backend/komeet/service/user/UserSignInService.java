@@ -7,6 +7,7 @@ import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.request.UserSignInRequest;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.service.external.RedisService;
 import com.backend.komeet.util.CountryUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
@@ -27,6 +28,10 @@ public class UserSignInService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final RedisService redisService;
+
+    final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
+    final String TOKEN_PREFIX = "Refresh: ";
 
     /**
      * 사용자 로그인
@@ -49,12 +54,18 @@ public class UserSignInService {
         }
 
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(user));
+        String refreshToken = jwtProvider.issueRefreshToken();
+
+        redisService.saveKeyAndValue(
+                TOKEN_PREFIX + refreshToken, user.getEmail(), REFRESH_TOKEN_EXPIRE_TIME
+        );
 
         Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
 
         return UserSignInDto.from(
                 user,
                 accessToken,
+                refreshToken,
                 user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
                         user.getRegion().equals(countryPair.getSecond())
         );
