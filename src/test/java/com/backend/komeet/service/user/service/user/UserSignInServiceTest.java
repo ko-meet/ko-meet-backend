@@ -9,6 +9,7 @@ import com.backend.komeet.enums.Countries;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.service.external.RedisService;
 import com.backend.komeet.service.user.UserSignInService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,13 +41,18 @@ class UserSignInServiceTest {
     @Mock
     private JwtProvider jwtProvider;
 
+    @Mock
+    private RedisService redisService;
+
 
     private UserSignInService userSignInService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userSignInService = new UserSignInService(userRepository, passwordEncoder, jwtProvider);
+        userSignInService = new UserSignInService(
+                userRepository, passwordEncoder, jwtProvider,redisService
+        );
     }
 
     User user = User.builder()

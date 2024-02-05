@@ -25,10 +25,20 @@ public class RedisService {
      * @param value      Redis에 저장할 값
      * @param expireTime 키와 값의 만료 시간(분 단위)
      */
-    private void saveKeyAndValue(String key, String value, int expireTime) {
+    public void saveKeyAndValue(String key, String value, int expireTime) {
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         ops.set(key, value);
         stringRedisTemplate.expire(key, expireTime, TimeUnit.MINUTES);
     }
 
+    /**
+     * Redis에 저장된 값을 가져오는 메서드.
+     *
+     * @param refreshToken Redis에 저장된 키
+     * @return Redis에 저장된 값
+     */
+    public String getValueByKey(String refreshToken) {
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        return ops.get(refreshToken);
+    }
 }
