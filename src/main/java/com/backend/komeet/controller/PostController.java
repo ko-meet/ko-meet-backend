@@ -99,7 +99,7 @@ public class PostController {
             @RequestParam(required = false) Integer page) {
 
         return ResponseEntity.ok().body(new ApiResponse(postUploadService.getPosts(
-                Countries.valueOf(country),
+                Countries.getCountry(country),
                 SortingMethods.valueOf(sortingMethod),
                 isPublic,
                 Categories.valueOf(category),
