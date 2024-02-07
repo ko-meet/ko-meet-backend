@@ -14,6 +14,7 @@ import com.backend.komeet.domain.User;
 @NoArgsConstructor
 @Builder
 public class UserSignInDto {
+    private Long userSeq;
     private String email;
     private String nickname;
     private String accessToken;
@@ -36,6 +37,7 @@ public class UserSignInDto {
                                      boolean isLocationMatch) {
 
         return UserSignInDto.builder()
+                .userSeq(user.getSeq())
                 .email(user.getEmail())
                 .nickname(user.getNickName())
                 .accessToken(accessToken == null ? "" : accessToken)
