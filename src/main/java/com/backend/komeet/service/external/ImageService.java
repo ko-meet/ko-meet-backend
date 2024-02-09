@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.backend.komeet.exception.ErrorCode.IMAGE_UPLOAD_FAILED;
@@ -28,36 +30,75 @@ public class ImageService {
     /**
      * 파일 업로드
      *
-     * @param multipartFile  파일
+     * @param multipartFiles  파일
      * @param imagePath 이미지 타입에 대한 경로
      * @return 업로드한 파일의 URL
      */
-    public ImageDto saveFile(MultipartFile multipartFile,
-                             String imagePath) {
+    public ImageDto saveFiles(List<MultipartFile> multipartFiles, String imagePath) {
+        List<String> imageUrls = new ArrayList<>();
 
-        // 파일 이름에 이미지 타입에 대한 경로 및 UUID와 원래 파일의 확장자를 포함
-        String originalFileName = imagePath + "/" +
+        multipartFiles.forEach(multipartFile ->
+            imageUrls.add(saveFileAndGetUrl(multipartFile, imagePath))
+        );
+
+        return ImageDto.builder()
+                .imageUrl(imageUrls)
+                .build();
+    }
+
+    /**
+     * 파일 업로드
+     * @param multipartFile 파일
+     * @param imagePath 이미지 타입에 대한 경로
+     * @return 업로드한 파일의 URL
+     */
+    private String saveFileAndGetUrl(MultipartFile multipartFile, String imagePath) {
+        String originalFileName = generateFileName(multipartFile, imagePath);
+        uploadFileToS3(multipartFile, originalFileName);
+        return generateFileUrl(originalFileName);
+    }
+
+    /**
+     * 파일 이름 생성
+     * @param multipartFile 파일
+     * @param imagePath 이미지 타입에 대한 경로
+     * @return 파일 이름
+     */
+    private String generateFileName(MultipartFile multipartFile, String imagePath) {
+        return imagePath + "/" +
                 UUID.randomUUID()
                         .toString()
                         .replace("-", "")
                         .substring(0, 16)
                 + "." + getFileExtension(multipartFile);
+    }
 
+    /**
+     * 파일 업로드
+     *
+     * @param multipartFile    파일
+     * @param originalFileName 파일 이름
+     */
+    private void uploadFileToS3(MultipartFile multipartFile, String originalFileName) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        // 파일 업로드
         try {
             amazonS3.putObject(bucket, originalFileName, multipartFile.getInputStream(), metadata);
         } catch (IOException e) {
             throw new CustomException(IMAGE_UPLOAD_FAILED);
         }
+    }
 
-        // 업로드한 파일의 URL 반환
-        return ImageDto.builder()
-                .imageUrl(amazonS3.getUrl(bucket, originalFileName).toString())
-                .build();
+    /**
+     * 파일 URL 생성
+     *
+     * @param originalFileName 파일 이름
+     * @return 파일 URL
+     */
+    private String generateFileUrl(String originalFileName) {
+        return amazonS3.getUrl(bucket, originalFileName).toString();
     }
 
     /**
