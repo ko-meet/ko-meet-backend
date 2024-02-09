@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 이미지 DTO
  */
@@ -14,5 +16,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ImageDto {
 
-    private String imageUrl;
+    private List<String> imageUrl;
 }

@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -27,10 +29,10 @@ public class ImageController {
 
     @PostMapping
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
-    public ResponseEntity<ApiResponse> uploadImage(MultipartFile multipartFile,
+    public ResponseEntity<ApiResponse> uploadImage(List<MultipartFile> multipartFile,
                                                    @RequestParam String imagePath) {
         ImageDto imageDto =
-                imageService.saveFile(multipartFile, imagePath);
+                imageService.saveFiles(multipartFile, imagePath);
         return ResponseEntity.status(OK).body(new ApiResponse(imageDto.getImageUrl()));
     }
 
