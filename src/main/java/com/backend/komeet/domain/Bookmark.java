@@ -19,7 +19,7 @@ public class Bookmark extends BaseEntity {
     private Long bookmarkSeq;
     private Long userSeq;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Post> bookmarkPosts;
 
 }
