@@ -59,6 +59,10 @@ public class Post extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> likeUsers;
 
+    @ElementCollection
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<Long> bookmarkUsers;
+
     @Setter
     private String isPublic;
 
