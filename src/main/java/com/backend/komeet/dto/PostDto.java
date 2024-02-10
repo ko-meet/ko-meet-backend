@@ -29,6 +29,7 @@ public class PostDto {
     private List<String> tags;
     private List<String> attachments;
     private List<Long> likeUsers;
+    private List<Long> bookmarkUsers;
     private String isPublic;
     private String country;
     private String region;
@@ -48,6 +49,7 @@ public class PostDto {
                 .likeCount(post.getLikeCount())
                 .tags(post.getTags())
                 .attachments(post.getAttachments())
+                .bookmarkUsers(post.getBookmarkUsers())
                 .likeUsers(post.getLikeUsers())
                 .isPublic(post.getIsPublic())
                 .country(post.getUser().getCountry().getCountryName())
