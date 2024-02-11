@@ -150,14 +150,21 @@ public class UserInformationService {
      * @param token 토큰
      * @return 토큰
      */
-    public String refreshToken(String token) {
+    public Pair<String,String> refreshToken(String token) {
         String userEmail = redisService.getValueByKey(TOKEN_PREFIX + token);
         if (userEmail == null) {
             throw new CustomException(USER_INFO_NOT_FOUND);
         }
-        return jwtProvider.issueAccessToken(TokenIssuanceDto.from(
+        String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(
                 userRepository.findByEmail(userEmail)
-                        .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
-        ));
+                        .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))));
+
+        String refreshToken = jwtProvider.issueRefreshToken();
+
+        redisService.deleteValueByKey(TOKEN_PREFIX + token);
+        redisService.saveKeyAndValue(
+                TOKEN_PREFIX + refreshToken, userEmail, REFRESH_TOKEN_EXPIRE_TIME);
+
+        return Pair.of(accessToken, refreshToken);
     }
 }

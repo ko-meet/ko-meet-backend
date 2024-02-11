@@ -41,4 +41,8 @@ public class RedisService {
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         return ops.get(refreshToken);
     }
+
+    public void deleteValueByKey(String refreshToken) {
+        stringRedisTemplate.delete(refreshToken);
+    }
 }
