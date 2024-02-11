@@ -3,6 +3,7 @@ package com.backend.komeet.controller;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.response.ApiResponse;
+import com.backend.komeet.dto.response.RefreshTokenResponse;
 import com.backend.komeet.service.external.GeocoderService;
 import com.backend.komeet.service.user.UserInformationService;
 import io.swagger.annotations.Api;
@@ -50,8 +51,13 @@ public class AuthController {
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급 진행")
     public ResponseEntity<ApiResponse> refresh(
             @RequestParam("token") String refreshToken) {
-        String newAccessToken =
+        Pair<String,String> newAccessToken =
                 userInformationService.refreshToken(refreshToken);
-        return ResponseEntity.status(OK).body(new ApiResponse(newAccessToken));
+
+        RefreshTokenResponse refreshTokenResponse = RefreshTokenResponse.from(
+                newAccessToken.getFirst(),
+                newAccessToken.getSecond()
+        );
+        return ResponseEntity.status(OK).body(new ApiResponse(refreshTokenResponse));
     }
 }
