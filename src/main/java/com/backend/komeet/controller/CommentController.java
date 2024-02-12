@@ -23,7 +23,7 @@ public class CommentController {
     private final CommentUploadService commentUploadService;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/{postSeq}")
+    @PostMapping("/posts/{postSeq}")
     @ApiOperation(value = "댓글 작성", notes = "댓글을 작성합니다.")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long postSeq,
