@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -23,7 +24,7 @@ public class PostDto {
     private Long userSeq;
     private String userProfileUrl;
     private String userNickName;
-    private List<Comment> comments;
+    private List<CommentDto> comments;
     private Long viewCount;
     private Long likeCount;
     private List<String> tags;
@@ -44,7 +45,12 @@ public class PostDto {
                 .content(post.getContent())
                 .userSeq(post.getUser().getSeq())
                 .userProfileUrl(post.getUser().getImageUrl())
-                .comments(post.getComments())
+                .comments(
+                        post.getComments()
+                                .stream()
+                                .map(CommentDto::from)
+                                .collect(Collectors.toList())
+                )
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .tags(post.getTags())
