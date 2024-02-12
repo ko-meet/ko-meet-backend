@@ -1,6 +1,7 @@
 package com.backend.komeet.domain;
 
 import com.backend.komeet.enums.PostStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "post_seq")
+    @JsonIgnore
     private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
