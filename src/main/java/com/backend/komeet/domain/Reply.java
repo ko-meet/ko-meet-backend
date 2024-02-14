@@ -1,6 +1,7 @@
 package com.backend.komeet.domain;
 
 import com.backend.komeet.enums.PostStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Reply {
 
     @ManyToOne
     @JoinColumn(name = "comment_seq")
+    @JsonIgnore
     private Comment comment;
 
     private int upVotes;
@@ -37,4 +39,15 @@ public class Reply {
 
     @Enumerated(EnumType.STRING)
     private PostStatus status;
+
+    public static Reply from(User user, Comment comment, String content) {
+        return Reply.builder()
+                .author(user)
+                .comment(comment)
+                .content(content)
+                .upVotes(0)
+                .downVotes(0)
+                .status(PostStatus.NORMAL)
+                .build();
+    }
 }

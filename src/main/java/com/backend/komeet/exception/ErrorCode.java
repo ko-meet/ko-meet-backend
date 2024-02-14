@@ -30,7 +30,9 @@ public enum ErrorCode {
     //post
     POST_NOT_FOUND(NOT_FOUND, "존재하지 않는 게시물입니다."),
     NO_AUTHORITY(BAD_REQUEST, "본인이 작성한 글만 수정하거나 삭제할 수 있습니다."),
-    ALREADY_DELETED_POST(BAD_REQUEST, "이미 삭제된 게시물입니다.");
+    ALREADY_DELETED_POST(BAD_REQUEST, "이미 삭제된 게시물입니다."),
+
+    COMMENT_NOT_FOUND(NOT_FOUND, "존재하지 않는 댓글입니다.");
 
     private final HttpStatus status;
     private final String message;
