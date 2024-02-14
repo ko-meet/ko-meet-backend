@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 댓글 DTO
@@ -22,7 +23,7 @@ public class CommentDto {
     private Long seq;
     private UserDto user;
     private String content;
-    private List<Reply> replies = new ArrayList<>();
+    private List<ReplyDto> replies = new ArrayList<>();
     private int upVotes;
     private int downVotes;
     private PostStatus status;
@@ -32,7 +33,12 @@ public class CommentDto {
                 .seq(comments.getSeq())
                 .user(UserDto.from(comments.getUser()))
                 .content(comments.getContent())
-                .replies(comments.getReplies())
+                .replies(
+                        comments.getReplies()
+                                .stream()
+                                .map(ReplyDto::from)
+                                .collect(Collectors.toList())
+                )
                 .upVotes(comments.getUpVotes())
                 .downVotes(comments.getDownVotes())
                 .status(comments.getStatus())

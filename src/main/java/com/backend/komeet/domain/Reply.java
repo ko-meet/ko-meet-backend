@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Builder
 @DynamicUpdate
 @Entity
-public class Reply {
+public class Reply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
