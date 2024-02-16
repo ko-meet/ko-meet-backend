@@ -1,13 +1,13 @@
 package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.Comment;
-import com.backend.komeet.domain.Reply;
 import com.backend.komeet.enums.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +27,7 @@ public class CommentDto {
     private int upVotes;
     private int downVotes;
     private PostStatus status;
+    private LocalDateTime createdAt;
 
     public static CommentDto from(Comment comments) {
         return CommentDto.builder()
@@ -42,6 +43,7 @@ public class CommentDto {
                 .upVotes(comments.getUpVotes())
                 .downVotes(comments.getDownVotes())
                 .status(comments.getStatus())
+                .createdAt(comments.getCreatedAt())
                 .build();
     }
 }
