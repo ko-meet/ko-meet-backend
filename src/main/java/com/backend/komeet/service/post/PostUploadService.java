@@ -3,6 +3,7 @@ package com.backend.komeet.service.post;
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.PostDto;
+import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
@@ -75,7 +76,20 @@ public class PostUploadService {
     public PostDto getPost(Long postSeq) {
         return PostDto.from(
                 postRepository.findById(postSeq).orElseThrow(
-                        ()-> new CustomException(POST_NOT_FOUND))
+                        () -> new CustomException(POST_NOT_FOUND))
         );
+    }
+
+    /**
+     * 게시물 검색 메서드
+     *
+     * @param keyword 검색어
+     * @param page
+     * @return 검색된 게시물
+     */
+    @Transactional(readOnly = true)
+    public Page<SearchResultDto> searchKeyword(String keyword, Integer page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return postRepository.searchPostsByKeyword(keyword, pageable);
     }
 }
