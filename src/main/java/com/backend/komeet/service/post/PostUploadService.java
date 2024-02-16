@@ -2,7 +2,6 @@ package com.backend.komeet.service.post;
 
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.PostDetailDto;
 import com.backend.komeet.dto.PostDto;
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.enums.Categories;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,8 +72,8 @@ public class PostUploadService {
      * @return 조회된 게시물
      */
     @Transactional(readOnly = true)
-    public PostDetailDto getPost(Long postSeq) {
-        return PostDetailDto.from(
+    public PostDto getPost(Long postSeq) {
+        return PostDto.from(
                 postRepository.findById(postSeq).orElseThrow(
                         ()-> new CustomException(POST_NOT_FOUND))
         );
