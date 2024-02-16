@@ -2,6 +2,7 @@ package com.backend.komeet.repository;
 
 import com.backend.komeet.domain.QPost;
 import com.backend.komeet.dto.PostDto;
+import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.SortingMethods;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +35,11 @@ public class PostQRepositoryImpl implements PostQRepository {
 
         Predicate predicate = null;
 
-        if(category.equals(Categories.ALL) && country.equals(Countries.ALL)) {
+        if (category.equals(Categories.ALL) && country.equals(Countries.ALL)) {
             predicate = post.isPublic.eq(isPublic);
-        }else if(category.equals(Categories.ALL)) {
+        } else if (category.equals(Categories.ALL)) {
             predicate = post.country.eq(country).and(post.isPublic.eq(isPublic));
-        }else if(country.equals(Countries.ALL)) {
+        } else if (country.equals(Countries.ALL)) {
             predicate = post.category.eq(category).and(post.isPublic.eq(isPublic));
         }
 
@@ -47,9 +47,7 @@ public class PostQRepositoryImpl implements PostQRepository {
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
 
         // 전체 결과 개수 계산
-        long total = jpaQueryFactory.selectFrom(post)
-                .where(predicate)
-                .fetchCount();
+        Long total = getLength(predicate);
 
         // 데이터 조회 및 정렬
         List<PostDto> results = jpaQueryFactory.selectFrom(post)
@@ -60,6 +58,32 @@ public class PostQRepositoryImpl implements PostQRepository {
                 .fetch()
                 .stream()
                 .map(PostDto::from)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+    @Override
+    public Page<SearchResultDto> searchPostsByKeyword(String keyword, Pageable pageable) {
+        QPost post = QPost.post;
+
+        // 검색 조건 설정
+        Predicate predicate = post.content.contains(keyword).or(post.title.contains(keyword));
+
+        // 전체 결과 개수 계산
+        Long total = getLength(predicate);
+
+        // 정렬 조건 설정
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(SortingMethods.CREATED_DATE, post);
+
+        List<SearchResultDto> results = jpaQueryFactory.selectFrom(post)
+                .where(predicate)
+                .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(i -> SearchResultDto.from(i, keyword))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, total);
@@ -80,4 +104,10 @@ public class PostQRepositoryImpl implements PostQRepository {
         }
     }
 
+    private Long getLength(Predicate predicate) {
+        QPost post = QPost.post;
+        return jpaQueryFactory.selectFrom(post)
+                .where(predicate)
+                .fetchCount();
+    }
 }

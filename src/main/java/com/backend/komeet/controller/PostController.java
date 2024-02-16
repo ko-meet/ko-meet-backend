@@ -1,6 +1,7 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.config.JwtProvider;
+import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.dto.request.PostUpdateRequest;
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
@@ -14,6 +15,7 @@ import com.backend.komeet.service.post.PostUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,5 +126,15 @@ public class PostController {
 
         return ResponseEntity.status(OK)
                 .body(new ApiResponse(postUploadService.getPost(postSeq)));
+    }
+
+    @GetMapping("/search")
+    @ApiOperation(value = "게시물 검색", notes = "게시물을 검색합니다.")
+    public ResponseEntity<ApiResponse> searchPosts(
+            @RequestParam(required = true) String keyword,
+            @RequestParam(required = true) Integer page) {
+        Page<SearchResultDto> list =
+                postUploadService.searchKeyword(keyword, page);
+        return ResponseEntity.status(OK).body(new ApiResponse(list));
     }
 }

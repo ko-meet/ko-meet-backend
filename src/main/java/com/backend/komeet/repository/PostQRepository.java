@@ -1,6 +1,7 @@
 package com.backend.komeet.repository;
 
 import com.backend.komeet.dto.PostDto;
+import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.SortingMethods;
@@ -13,4 +14,6 @@ public interface PostQRepository {
                            String isPublic,
                            Categories category,
                            Pageable pageable);
+
+    Page<SearchResultDto> searchPostsByKeyword(String keyword, Pageable pageable);
 }
