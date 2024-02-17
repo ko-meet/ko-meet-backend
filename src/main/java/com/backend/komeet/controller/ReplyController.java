@@ -4,6 +4,7 @@ import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.request.CommentUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.service.comment.CommentUploadService;
+import com.backend.komeet.service.reply.ReplyLikeService;
 import com.backend.komeet.service.reply.ReplyUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class ReplyController {
     private final ReplyUploadService replyUploadService;
+    private final ReplyLikeService replyLikeService;
     private final JwtProvider jwtProvider;
 
     @PostMapping("/comments/{commentSeq}")
@@ -34,6 +36,19 @@ public class ReplyController {
         Long userId = jwtProvider.getIdFromToken(token);
 
         replyUploadService.uploadComment(userId, commentSeq, commentUploadRequest);
+
+        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+    }
+
+    @PatchMapping("/{replySeq}/like")
+    @ApiOperation(value = "대댓글 좋아요", notes = "대댓글에 좋아요를 누릅니다.")
+    public ResponseEntity<ApiResponse> likeReply(
+            @PathVariable Long replySeq,
+            @RequestHeader(AUTHORIZATION) String token) {
+
+        Long userId = jwtProvider.getIdFromToken(token);
+
+        replyLikeService.likeReply(userId, replySeq);
 
         return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
