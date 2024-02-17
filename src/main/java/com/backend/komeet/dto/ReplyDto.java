@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class ReplyDto {
     private String content;
     private int upVotes;
     private int downVotes;
+    private List<Long> likeUsers;
     private PostStatus status;
     private LocalDateTime createdAt;
 
@@ -29,6 +31,7 @@ public class ReplyDto {
                 .content(reply.getContent())
                 .upVotes(reply.getUpVotes())
                 .downVotes(reply.getDownVotes())
+                .likeUsers(reply.getLikeUsers())
                 .status(reply.getStatus())
                 .createdAt(reply.getCreatedAt())
                 .build();
