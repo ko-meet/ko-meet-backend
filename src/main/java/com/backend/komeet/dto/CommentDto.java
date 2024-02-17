@@ -26,6 +26,7 @@ public class CommentDto {
     private List<ReplyDto> replies = new ArrayList<>();
     private int upVotes;
     private int downVotes;
+    private List<Long> likeUsers;
     private PostStatus status;
     private LocalDateTime createdAt;
 
@@ -42,6 +43,7 @@ public class CommentDto {
                 )
                 .upVotes(comments.getUpVotes())
                 .downVotes(comments.getDownVotes())
+                .likeUsers(comments.getLikeUsers())
                 .status(comments.getStatus())
                 .createdAt(comments.getCreatedAt())
                 .build();
