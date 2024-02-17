@@ -86,9 +86,9 @@ public class PostController {
 
         Long userId = jwtProvider.getIdFromToken(token);
 
-        Long likeCount = postLikeService.likePost(userId, postSeq);
+        postLikeService.likePost(userId, postSeq);
 
-        return ResponseEntity.status(OK).body(new ApiResponse(likeCount));
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
     @GetMapping
