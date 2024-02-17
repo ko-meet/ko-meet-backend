@@ -30,6 +30,7 @@ public class ReplyDto {
                 .upVotes(reply.getUpVotes())
                 .downVotes(reply.getDownVotes())
                 .status(reply.getStatus())
+                .createdAt(reply.getCreatedAt())
                 .build();
     }
 }
