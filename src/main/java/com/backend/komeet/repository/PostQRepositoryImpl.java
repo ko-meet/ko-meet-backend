@@ -89,6 +89,26 @@ public class PostQRepositoryImpl implements PostQRepository {
         return new PageImpl<>(results, pageable, total);
     }
 
+    @Override
+    public Page<PostDto> getMyPosts(Long userId, Pageable pageable) {
+        QPost post = QPost.post;
+        Predicate predicate = post.user.seq.eq(userId);
+        Long total = getLength(predicate);
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(SortingMethods.CREATED_DATE, post);
+
+        List<PostDto> results = jpaQueryFactory.selectFrom(post)
+                .where(predicate)
+                .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(PostDto::from)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
     private OrderSpecifier<?> getOrderSpecifier(SortingMethods sortingMethod, QPost post) {
         switch (sortingMethod) {
             case CREATED_DATE:
