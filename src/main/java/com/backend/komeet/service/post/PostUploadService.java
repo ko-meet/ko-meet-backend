@@ -92,4 +92,16 @@ public class PostUploadService {
         Pageable pageable = PageRequest.of(page, 15);
         return postRepository.searchPostsByKeyword(keyword, pageable);
     }
+
+    /**
+     * 내 게시물 목록 조회 메서드
+     * @param userId 사용자 식별자
+     * @param page 페이지 번호
+     * @return 내 게시물 목록
+     */
+    @Transactional(readOnly = true)
+    public Page<PostDto> getMyPosts(Long userId, Integer page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return postRepository.getMyPosts(userId, pageable);
+    }
 }
