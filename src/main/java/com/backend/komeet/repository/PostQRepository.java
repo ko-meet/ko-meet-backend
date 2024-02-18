@@ -16,4 +16,6 @@ public interface PostQRepository {
                            Pageable pageable);
 
     Page<SearchResultDto> searchPostsByKeyword(String keyword, Pageable pageable);
+
+    Page<PostDto> getMyPosts(Long userId, Pageable pageable);
 }

@@ -137,4 +137,17 @@ public class PostController {
                 postUploadService.searchKeyword(keyword, page);
         return ResponseEntity.status(OK).body(new ApiResponse(list));
     }
+
+    @GetMapping("/my")
+    @ApiOperation(value = "내 게시물 목록 조회", notes = "내 게시물 목록을 조회합니다.")
+    public ResponseEntity<ApiResponse> getMyPosts(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestParam(required = true) Integer page) {
+
+        Long userId = jwtProvider.getIdFromToken(token);
+
+        return ResponseEntity.ok().body(
+                new ApiResponse(postUploadService.getMyPosts(userId, page))
+        );
+    }
 }
