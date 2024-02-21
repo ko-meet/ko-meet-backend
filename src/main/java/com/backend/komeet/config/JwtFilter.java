@@ -25,6 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String[] ALL_WHITELIST = {
             "/api/v1/users/**",
             "/api/v1/locations",
+            "/ws/**",
             "/swagger-ui/index.html",
             "/swagger-ui/**",
             "/v2/api-docs",

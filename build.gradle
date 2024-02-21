@@ -68,7 +68,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     //s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.13'
-
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 def generatedDir =  "$buildDir/main/generated"
