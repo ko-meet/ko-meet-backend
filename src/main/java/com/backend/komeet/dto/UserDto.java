@@ -23,6 +23,7 @@ public class UserDto {
     private Long seq;
     private String nickName;
     private String email;
+    private String profileImage;
     private Long reportedCount;
     private Date reportedDate;
     private Countries country;
@@ -35,6 +36,7 @@ public class UserDto {
                 .seq(user.getSeq())
                 .nickName(user.getNickName())
                 .email(user.getEmail())
+                .profileImage(user.getImageUrl())
                 .reportedCount(user.getReportedCount())
                 .reportedDate(user.getReportedDate())
                 .country(user.getCountry())
