@@ -131,6 +131,7 @@ public class PostController {
     @GetMapping("/search")
     @ApiOperation(value = "게시물 검색", notes = "게시물을 검색합니다.")
     public ResponseEntity<ApiResponse> searchPosts(
+            @RequestHeader(AUTHORIZATION) String token,
             @RequestParam(required = true) String keyword,
             @RequestParam(required = true) Integer page) {
         Page<SearchResultDto> list =
