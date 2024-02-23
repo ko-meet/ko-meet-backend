@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -48,6 +49,25 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
         return new PageImpl<>(results, pageable, total);
     }
+
+    /**
+     * 채팅방을 조회하는 메서드
+     * @param user1 사용자1
+     * @param user2 사용자2
+     * @return 채팅방
+     */
+    public Optional<ChatRoomDto> getChatRoom(User user1, User user2) {
+        QChatRoom chatRoom = QChatRoom.chatRoom;
+        Predicate predicate =
+                chatRoom.sender.eq(user1).and(chatRoom.recipient.eq(user2))
+                        .or(chatRoom.sender.eq(user2).and(chatRoom.recipient.eq(user1)));
+
+        return Optional.ofNullable(jpaQueryFactory.selectFrom(chatRoom)
+                .where(predicate)
+                .fetchOne())
+                .map(ChatRoomDto::from);
+    }
+
     /**
      * 전체 결과 개수를 조회하는 메서드
      * @param predicate 조건

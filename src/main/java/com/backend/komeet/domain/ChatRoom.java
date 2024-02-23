@@ -31,4 +31,10 @@ public class ChatRoom extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Chat> chats;
 
+    public static ChatRoom from(User sender, User recipient) {
+        return ChatRoom.builder()
+                .sender(sender)
+                .recipient(recipient)
+                .build();
+    }
 }

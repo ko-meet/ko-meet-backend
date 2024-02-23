@@ -45,4 +45,14 @@ public class ChatController {
         Page<ChatDto> chatList = chatService.getChats(chatRoomSeq, userSeq, page);
         return ResponseEntity.status(OK).body(new ApiResponse(chatList));
     }
+
+    @ApiOperation(value = "채팅방 생성", notes = "채팅방을 생성합니다.")
+    @PostMapping("/rooms")
+    public ResponseEntity<ApiResponse> createChatRoom(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestParam Long counterpartSeq) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        Long chatRoomSeq = chatRoomService.createChatRoom(userSeq, counterpartSeq);
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+    }
 }
