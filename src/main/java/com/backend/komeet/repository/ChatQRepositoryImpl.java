@@ -23,7 +23,7 @@ public class ChatQRepositoryImpl implements ChatQRepository {
     /**
      * 채팅 목록을 조회 하는 메서드
      *
-     * @param charRoomSeq 채팅방 식별자
+     * @param counterpartSeq 채팅방 식별자
      * @param userSeq     사용자 식별자
      * @param pageable    페이지 정보
      * @return 채팅방 목록
