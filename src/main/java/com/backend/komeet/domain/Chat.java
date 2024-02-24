@@ -42,4 +42,19 @@ public class Chat extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 
+    public static Chat from(ChatRoom chatRoom,
+                            String content,
+                            Long senderSeq,
+                            Long recipientSeq,
+                            Boolean readStatus,
+                            List<String> attachments) {
+        return Chat.builder()
+                .chatRoom(chatRoom)
+                .content(content)
+                .senderSeq(senderSeq)
+                .recipientSeq(recipientSeq)
+                .readStatus(readStatus)
+                .attachments(attachments)
+                .build();
+    }
 }

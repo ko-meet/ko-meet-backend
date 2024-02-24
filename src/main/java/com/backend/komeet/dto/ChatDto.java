@@ -20,10 +20,8 @@ public class ChatDto {
     private Long id;
     private Long chatRoomSeq;
     private String content;
-    private String counterpartNickname;
-    private String counterpartProfileImage;
-    private Long senderSeq;
-    private Long recipientSeq;
+    private UserDto sender;
+    private UserDto recipient;
     private Boolean readStatus;
     private List<String> attachments;
     private LocalDateTime createdAt;
@@ -33,13 +31,21 @@ public class ChatDto {
      * @param chat Chat 객체
      * @return ChatDto 객체
      */
-    public static ChatDto from(Chat chat) {
+    public static ChatDto from(Chat chat, Long userSeq) {
         return ChatDto.builder()
                 .id(chat.getSeq())
                 .chatRoomSeq(chat.getChatRoom().getSeq())
                 .content(chat.getContent())
-                .senderSeq(chat.getSenderSeq())
-                .recipientSeq(chat.getRecipientSeq())
+                .sender(
+                        chat.getChatRoom().getSender().getSeq().equals(userSeq) ?
+                        UserDto.from(chat.getChatRoom().getSender()) :
+                        UserDto.from(chat.getChatRoom().getRecipient())
+                        )
+                .recipient(
+                        !chat.getChatRoom().getSender().getSeq().equals(userSeq) ?
+                                UserDto.from(chat.getChatRoom().getSender()) :
+                                UserDto.from(chat.getChatRoom().getRecipient())
+                )
                 .readStatus(chat.getReadStatus())
                 .attachments(chat.getAttachments())
                 .createdAt(chat.getCreatedAt())

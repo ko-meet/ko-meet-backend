@@ -3,6 +3,7 @@ package com.backend.komeet.controller;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.ChatDto;
 import com.backend.komeet.dto.ChatRoomDto;
+import com.backend.komeet.dto.request.ChatContentRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.service.chat.ChatRoomService;
 import com.backend.komeet.service.chat.ChatService;
@@ -53,6 +54,17 @@ public class ChatController {
             @RequestParam Long counterpartSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         Long chatRoomSeq = chatRoomService.createChatRoom(userSeq, counterpartSeq);
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+    }
+
+    @ApiOperation(value = "채팅 추가", notes = "채팅을 추가합니다.")
+    @PostMapping("/rooms/{chatRoomSeq}")
+    public ResponseEntity<ApiResponse> addChat(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long chatRoomSeq,
+            @RequestBody ChatContentRequest content) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        chatService.addChat(chatRoomSeq, userSeq, content);
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 }
