@@ -45,4 +45,12 @@ public class UserDto {
                 .userStatus(user.getUserStatus())
                 .build();
     }
+
+    public static UserDto from(Long seq, String nickName, String profileImage){
+        return UserDto.builder()
+                .seq(seq)
+                .nickName(nickName)
+                .profileImage(profileImage)
+                .build();
+    }
 }

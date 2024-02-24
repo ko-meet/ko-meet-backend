@@ -33,7 +33,21 @@ public class Chat extends BaseEntity {
     private Long senderSeq;
 
     @Column(nullable = false)
+    private String senderNickName;
+
+    @Column(nullable = false)
+    private String senderProfileImage;
+
+    @Column(nullable = false)
     private Long recipientSeq;
+
+    @Column(nullable = false)
+    private String recipientNickName;
+
+    @Column(nullable = false)
+    private String recipientProfileImage;
+
+    @Column(nullable = false)
 
     @Column(nullable = false)
     private Boolean readStatus;
@@ -42,4 +56,23 @@ public class Chat extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 
+    public static Chat from(ChatRoom chatRoom,
+                            String content,
+                            User sender,
+                            User recipient,
+                            Boolean readStatus,
+                            List<String> attachments) {
+        return Chat.builder()
+                .chatRoom(chatRoom)
+                .content(content)
+                .senderSeq(sender.getSeq())
+                .senderNickName(sender.getNickName())
+                .senderProfileImage(sender.getImageUrl())
+                .recipientSeq(recipient.getSeq())
+                .recipientNickName(recipient.getNickName())
+                .recipientProfileImage(recipient.getImageUrl())
+                .readStatus(readStatus)
+                .attachments(attachments)
+                .build();
+    }
 }

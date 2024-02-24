@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 채팅방 관련 DTO
@@ -20,10 +21,8 @@ public class ChatDto {
     private Long id;
     private Long chatRoomSeq;
     private String content;
-    private String counterpartNickname;
-    private String counterpartProfileImage;
-    private Long senderSeq;
-    private Long recipientSeq;
+    private UserDto sender;
+    private UserDto recipient;
     private Boolean readStatus;
     private List<String> attachments;
     private LocalDateTime createdAt;
@@ -38,8 +37,16 @@ public class ChatDto {
                 .id(chat.getSeq())
                 .chatRoomSeq(chat.getChatRoom().getSeq())
                 .content(chat.getContent())
-                .senderSeq(chat.getSenderSeq())
-                .recipientSeq(chat.getRecipientSeq())
+                .sender(UserDto.from(
+                        chat.getSenderSeq(),
+                        chat.getSenderNickName(),
+                        chat.getSenderProfileImage())
+                )
+                .recipient(UserDto.from(
+                        chat.getRecipientSeq(),
+                        chat.getRecipientNickName(),
+                        chat.getRecipientProfileImage())
+                )
                 .readStatus(chat.getReadStatus())
                 .attachments(chat.getAttachments())
                 .createdAt(chat.getCreatedAt())
