@@ -2,10 +2,7 @@ package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.Reply;
 import com.backend.komeet.enums.PostStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
