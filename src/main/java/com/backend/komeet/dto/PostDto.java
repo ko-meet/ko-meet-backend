@@ -1,14 +1,9 @@
 package com.backend.komeet.dto;
 
-import com.backend.komeet.domain.Comment;
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.enums.Categories;
-import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.PostStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

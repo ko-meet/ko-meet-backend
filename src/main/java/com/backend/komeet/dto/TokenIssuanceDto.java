@@ -1,7 +1,6 @@
 package com.backend.komeet.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.UserRole;

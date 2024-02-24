@@ -1,9 +1,6 @@
 package com.backend.komeet.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -46,8 +43,6 @@ public class Chat extends BaseEntity {
 
     @Column(nullable = false)
     private String recipientProfileImage;
-
-    @Column(nullable = false)
 
     @Column(nullable = false)
     private Boolean readStatus;
