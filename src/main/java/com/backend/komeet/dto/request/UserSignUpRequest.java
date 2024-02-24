@@ -1,7 +1,7 @@
 package com.backend.komeet.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.backend.komeet.enums.Countries;

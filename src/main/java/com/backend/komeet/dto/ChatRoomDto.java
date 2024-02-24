@@ -1,10 +1,7 @@
 package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.ChatRoom;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
