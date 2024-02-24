@@ -23,19 +23,22 @@ public class ChatQRepositoryImpl implements ChatQRepository {
     /**
      * 채팅 목록을 조회 하는 메서드
      *
-     * @param counterpartSeq 채팅방 식별자
+     * @param chatRoomSeq 채팅방 식별자
      * @param userSeq     사용자 식별자
      * @param pageable    페이지 정보
      * @return 채팅방 목록
      */
     @Override
-    public Page<ChatDto> getChats(Long counterpartSeq, Long userSeq, Pageable pageable) {
+    public Page<ChatDto> getChats(Long chatRoomSeq, Long userSeq, Pageable pageable) {
 
         QChat chat = QChat.chat;
-        Predicate predicate = chat.chatRoom.sender.seq.eq(counterpartSeq).and(chat.chatRoom.recipient.seq.eq(userSeq))
-                .or(chat.chatRoom.sender.seq.eq(userSeq).and(chat.chatRoom.recipient.seq.eq(counterpartSeq)));
+        Predicate predicate =
+                chat.chatRoom.seq.eq(chatRoomSeq)
+                        .and(chat.senderSeq.eq(userSeq)
+                                .or(chat.recipientSeq.eq(userSeq))
+                        );
         Long total = getLength(predicate);
-        OrderSpecifier<?> orderSpecifier = chat.createdAt.desc();
+        OrderSpecifier<?> orderSpecifier = chat.createdAt.asc();
 
         List<ChatDto> results = jpaQueryFactory.selectFrom(chat)
                 .where(predicate)
@@ -44,7 +47,7 @@ public class ChatQRepositoryImpl implements ChatQRepository {
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
-                .map(ChatDto::from)
+                .map(chatItem -> ChatDto.from(chatItem))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, total);
