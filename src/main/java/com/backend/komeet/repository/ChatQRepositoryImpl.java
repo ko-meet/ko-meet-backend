@@ -47,7 +47,7 @@ public class ChatQRepositoryImpl implements ChatQRepository {
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
-                .map(chatItem -> ChatDto.from(chatItem, userSeq))
+                .map(chatItem -> ChatDto.from(chatItem))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, total);
