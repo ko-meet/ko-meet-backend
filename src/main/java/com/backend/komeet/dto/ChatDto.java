@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 채팅방 관련 DTO
@@ -31,20 +32,20 @@ public class ChatDto {
      * @param chat Chat 객체
      * @return ChatDto 객체
      */
-    public static ChatDto from(Chat chat, Long userSeq) {
+    public static ChatDto from(Chat chat) {
         return ChatDto.builder()
                 .id(chat.getSeq())
                 .chatRoomSeq(chat.getChatRoom().getSeq())
                 .content(chat.getContent())
-                .sender(
-                        chat.getChatRoom().getSender().getSeq().equals(userSeq) ?
-                        UserDto.from(chat.getChatRoom().getSender()) :
-                        UserDto.from(chat.getChatRoom().getRecipient())
-                        )
-                .recipient(
-                        !chat.getChatRoom().getSender().getSeq().equals(userSeq) ?
-                                UserDto.from(chat.getChatRoom().getSender()) :
-                                UserDto.from(chat.getChatRoom().getRecipient())
+                .sender(UserDto.from(
+                        chat.getSenderSeq(),
+                        chat.getSenderNickName(),
+                        chat.getSenderProfileImage())
+                )
+                .recipient(UserDto.from(
+                        chat.getRecipientSeq(),
+                        chat.getRecipientNickName(),
+                        chat.getRecipientProfileImage())
                 )
                 .readStatus(chat.getReadStatus())
                 .attachments(chat.getAttachments())
