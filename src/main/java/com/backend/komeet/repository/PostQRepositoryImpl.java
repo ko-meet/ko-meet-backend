@@ -6,6 +6,7 @@ import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.enums.Categories;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.SortingMethods;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,15 +34,20 @@ public class PostQRepositoryImpl implements PostQRepository {
 
         QPost post = QPost.post;
 
-        Predicate predicate = null;
+        BooleanBuilder predicateBuilder = new BooleanBuilder();
 
-        if (category.equals(Categories.ALL) && country.equals(Countries.ALL)) {
-            predicate = post.isPublic.eq(isPublic);
-        } else if (category.equals(Categories.ALL)) {
-            predicate = post.country.eq(country).and(post.isPublic.eq(isPublic));
-        } else if (country.equals(Countries.ALL)) {
-            predicate = post.category.eq(category).and(post.isPublic.eq(isPublic));
+        if (!category.equals(Categories.ALL) || !country.equals(Countries.ALL)) {
+            if (!category.equals(Categories.ALL)) {
+                predicateBuilder.and(post.category.eq(category));
+            }
+            if (!country.equals(Countries.ALL)) {
+                predicateBuilder.and(post.country.eq(country));
+            }
         }
+
+        predicateBuilder.and(post.isPublic.eq(isPublic));
+
+        Predicate predicate = predicateBuilder.getValue();
 
         // 정렬 조건 설정
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
