@@ -45,6 +45,7 @@ public class Chat extends BaseEntity {
     private String recipientProfileImage;
 
     @Column(nullable = false)
+    @Setter
     private Boolean readStatus;
 
     @ElementCollection

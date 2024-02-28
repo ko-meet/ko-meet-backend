@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ChatQRepository {
-    Page<ChatDto> getChats(Long charRoomSeq, Long userSeq, Pageable pageable);
+    Page<ChatDto> getChats(Long counterpartSeq, Long userSeq, Pageable pageable);
 }
