@@ -35,7 +35,7 @@ public class ChatService {
      */
     @Transactional(readOnly = true)
     public Page<ChatDto> getChats(Long chatRoomSeq, Long userSeq, Integer page) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, 50);
         return chatRepository.getChats(chatRoomSeq, userSeq, pageable);
     }
 
