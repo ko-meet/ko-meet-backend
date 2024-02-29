@@ -38,7 +38,7 @@ public class ChatQRepositoryImpl implements ChatQRepository {
                                 .or(chat.recipientSeq.eq(userSeq))
                         );
         Long total = getLength(predicate);
-        OrderSpecifier<?> orderSpecifier = chat.createdAt.asc();
+        OrderSpecifier<?> orderSpecifier = chat.createdAt.desc();
 
         List<ChatDto> results = jpaQueryFactory.selectFrom(chat)
                 .where(predicate)
@@ -47,7 +47,7 @@ public class ChatQRepositoryImpl implements ChatQRepository {
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
-                .map(chatItem -> ChatDto.from(chatItem))
+                .map(ChatDto::from)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, total);
