@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UserInfoUpdateRequest {
-
     private String nickName;
+    private String profileImage;
     private Countries country;
     private Double latitude;
     private Double longitude;
