@@ -60,6 +60,9 @@ public class UserInformationService {
             user.setCountry(userInfoUpdateRequest.getCountry());
             user.setImageUrl(userInfoUpdateRequest.getProfileImage());
         }
+        if (userInfoUpdateRequest.getProfileImage() != null) {
+            user.setImageUrl(userInfoUpdateRequest.getProfileImage());
+        }
     }
 
     /**
@@ -128,7 +131,7 @@ public class UserInformationService {
 
         Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
 
-        if(user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
+        if (user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
                 user.getRegion().equals(countryPair.getSecond())) {
             isLocationMatch = true;
         }
@@ -141,7 +144,7 @@ public class UserInformationService {
         );
 
         return UserSignInDto.from(
-            user,accessToken,refreshToken,isLocationMatch
+                user, accessToken, refreshToken, isLocationMatch
         );
     }
 
@@ -151,7 +154,7 @@ public class UserInformationService {
      * @param token 토큰
      * @return 토큰
      */
-    public Pair<String,String> refreshToken(String token) {
+    public Pair<String, String> refreshToken(String token) {
         String userEmail = redisService.getValueByKey(TOKEN_PREFIX + token);
         if (userEmail == null) {
             throw new CustomException(USER_INFO_NOT_FOUND);
