@@ -58,6 +58,7 @@ public class UserInformationService {
                     CountryUtil.fetchLocation(country);
             user.setRegion(countryPair.getSecond());
             user.setCountry(userInfoUpdateRequest.getCountry());
+            user.setImageUrl(userInfoUpdateRequest.getProfileImage());
         }
     }
 
