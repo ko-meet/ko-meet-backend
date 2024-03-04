@@ -9,6 +9,8 @@ import com.backend.komeet.enums.SortingMethods;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -74,7 +76,9 @@ public class PostQRepositoryImpl implements PostQRepository {
         QPost post = QPost.post;
 
         // 검색 조건 설정
-        Predicate predicate = post.content.contains(keyword).or(post.title.contains(keyword));
+        Predicate predicate = post.content.contains(keyword)
+                .or(post.title.contains(keyword))
+                .or(post.tags.any().contains(keyword));
 
         // 전체 결과 개수 계산
         Long total = getLength(predicate);
