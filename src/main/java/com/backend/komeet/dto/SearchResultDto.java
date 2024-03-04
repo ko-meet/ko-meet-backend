@@ -1,21 +1,42 @@
 package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.Post;
+import com.backend.komeet.enums.Categories;
+import com.backend.komeet.enums.PostStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class SearchResultDto {
-    private Long postSeq;
-    private String country;
-    private String author;
+    private Long seq;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
+    private Long userSeq;
+    private Long likeCount;
+    private Long viewCount;
+    private String isPublic;
+    private String userProfileUrl;
+    private String userNickName;
+    private Integer commentCounts;
+    private List<String> tags;
+    private List<String> attachments;
+    private List<Long> likeUsers;
+    private List<Long> bookmarkUsers;
+    private String country;
+    private String region;
+    private Categories category;
+    private PostStatus status;
+    private String keyword;
+    private String createdAt;
 
     /**
      * 게시물을 검색 결과로 변환하는 메서드
@@ -33,12 +54,26 @@ public class SearchResultDto {
         );
 
         return SearchResultDto.builder()
-                .postSeq(post.getSeq())
-                .country(post.getCountry().name())
-                .author(post.getUser().getNickName())
+                .seq(post.getSeq())
                 .title(titleResult)
                 .content(contentResult)
-                .createdAt(post.getCreatedAt())
+                .userSeq(post.getUser().getSeq())
+                .userProfileUrl(post.getUser().getImageUrl())
+                .userNickName(post.getUser().getNickName())
+                .commentCounts(post.getComments().size())
+                .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
+                .tags(extractTags(post.getTags(),keyword))
+                .attachments(post.getAttachments())
+                .likeUsers(post.getLikeUsers())
+                .bookmarkUsers(post.getBookmarkUsers())
+                .isPublic(post.getIsPublic())
+                .country(post.getUser().getCountry().getCountryName())
+                .status(post.getStatus())
+                .region(post.getUser().getRegion())
+                .category(post.getCategory())
+                .keyword(keyword)
+                .createdAt(post.getCreatedAt().toString())
                 .build();
     }
 
@@ -64,6 +99,33 @@ public class SearchResultDto {
             return text.substring(0, Math.min(text.length(), after));
         }
     }
+
+    /**
+     * 키워드를 기준으로 태그를 추출하는 메서드
+     * @param tags 태그 목록
+     * @param keyword 키워드
+     * @return 추출된 태그 목록
+     */
+    private static List<String> extractTags(List<String> tags, String keyword) {
+        List<String> result = new ArrayList<>();
+        List<String> shuffledTags = new ArrayList<>(tags);
+        for (String tag : tags) {
+            if (tag.contains(keyword)) {
+                result.add(tag);
+                shuffledTags.remove(tag);
+                break;
+            }
+        }
+        if (result.isEmpty()) {
+            return result;
+        }
+        Collections.shuffle(shuffledTags);
+        for (int i = 0; i < Math.min(2, shuffledTags.size()); i++) {
+            result.add(shuffledTags.get(i));
+        }
+        return result;
+    }
+
 
 
 }
