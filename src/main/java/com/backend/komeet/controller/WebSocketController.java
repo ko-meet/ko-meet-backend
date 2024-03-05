@@ -31,6 +31,7 @@ public class WebSocketController {
     @MessageMapping("/chat/read")
     public ReadChatDto markMessageAsRead(@Payload ReadChatDto readChatDto) {
         chatService.markAsRead(readChatDto.getChatSeq(), readChatDto.getUserSeq());
+        messagingTemplate.convertAndSend("/topic/readChat", readChatDto);
         return readChatDto;
     }
 }
