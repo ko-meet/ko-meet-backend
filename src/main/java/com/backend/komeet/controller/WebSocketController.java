@@ -1,7 +1,9 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.domain.Chat;
+import com.backend.komeet.domain.ChatRoom;
 import com.backend.komeet.dto.ChatDto;
+import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.dto.ReadChatDto;
 import com.backend.komeet.dto.request.ChatContentRequest;
 import com.backend.komeet.dto.request.ChatRequest;
@@ -11,6 +13,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Controller
@@ -24,6 +28,14 @@ public class WebSocketController {
         ChatDto chatDto = ChatDto.from(chat);
         messagingTemplate.convertAndSend(
                 "/topic/room/" + chatRequest.getChatRoomSeq(), chatDto
+        );
+        ChatRoomDto chatRoomDto = ChatRoomDto.from(chat.getChatRoom());
+        Long recipientSeq =
+                Objects.equals(chatRequest.getSenderSeq(), chat.getChatRoom().getRecipient().getSeq()) ?
+                        chat.getChatRoom().getSender().getSeq() : chat.getChatRoom().getRecipient().getSeq();
+        messagingTemplate.convertAndSend(
+                "/topic/updateChatRoomList/" + recipientSeq,
+                chatRoomDto
         );
         return chatDto;
     }
