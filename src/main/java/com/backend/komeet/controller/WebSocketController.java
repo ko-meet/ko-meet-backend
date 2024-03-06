@@ -1,14 +1,14 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.domain.Chat;
-import com.backend.komeet.domain.ChatRoom;
 import com.backend.komeet.dto.ChatDto;
 import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.dto.ReadChatDto;
-import com.backend.komeet.dto.request.ChatContentRequest;
 import com.backend.komeet.dto.request.ChatRequest;
+import com.backend.komeet.service.chat.ChatRoomService;
 import com.backend.komeet.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,6 +20,7 @@ import java.util.Objects;
 @Controller
 public class WebSocketController {
     private final ChatService chatService;
+    private final ChatRoomService chatRoomService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat/send")
@@ -29,13 +30,14 @@ public class WebSocketController {
         messagingTemplate.convertAndSend(
                 "/topic/room/" + chatRequest.getChatRoomSeq(), chatDto
         );
-        ChatRoomDto chatRoomDto = ChatRoomDto.from(chat.getChatRoom());
-        Long recipientSeq =
-                Objects.equals(chatRequest.getSenderSeq(), chat.getChatRoom().getRecipient().getSeq()) ?
-                        chat.getChatRoom().getSender().getSeq() : chat.getChatRoom().getRecipient().getSeq();
+
+        Pair<ChatRoomDto,Long> result = chatRoomService.getChatRoomAndRecipient(
+                chatRequest.getChatRoomSeq(), chatRequest.getSenderSeq()
+        );
+
         messagingTemplate.convertAndSend(
-                "/topic/updateChatRoomList/" + recipientSeq,
-                chatRoomDto
+                "/topic/updateChatRoomList/" + result.getSecond(),
+                result.getFirst()
         );
         return chatDto;
     }
