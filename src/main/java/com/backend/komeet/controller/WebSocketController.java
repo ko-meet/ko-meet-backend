@@ -1,7 +1,6 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.domain.Chat;
-import com.backend.komeet.domain.ChatRoom;
 import com.backend.komeet.dto.ChatDto;
 import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.dto.ReadChatDto;

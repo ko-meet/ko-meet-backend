@@ -48,12 +48,18 @@ public class SearchResultDto {
      */
     public static SearchResultDto from(Post post, String keyword) {
         String contentResult = extractKeyword(
-                post.getContent(), keyword, 50, 5
-        );
+                post.getContent(),
+                keyword,
+                50,
+                Math.min(10, post.getContent().length() / 2)
+        ).trim();
 
         String titleResult = extractKeyword(
-                post.getTitle(), keyword, 20, 5
-        );
+                post.getTitle(),
+                keyword,
+                20,
+                Math.min(10, post.getTitle().length() / 2)
+        ).trim();
 
         return SearchResultDto.builder()
                 .seq(post.getSeq())
@@ -97,7 +103,10 @@ public class SearchResultDto {
         if (keywordIndex != -1) {
             int start = Math.max(keywordIndex - before, 0);
             int end = Math.min(keywordIndex + keyword.length() + after, text.length());
-            return text.substring(start, end);
+            text = text.substring(start, end);
+            text = (start != 0) ? "..." + text : text;
+            text = (end != text.length()) ? text + "..." : text;
+            return text;
         } else {
             return text.substring(0, Math.min(text.length(), after));
         }
