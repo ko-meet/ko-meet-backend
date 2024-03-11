@@ -14,8 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = "Chat API", description = "채킹 관련 API")
 @RequestMapping("/api/v1/chat/")
