@@ -1,7 +1,10 @@
 package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.ChatRoom;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -35,13 +38,13 @@ public class ChatRoomDto {
                 )
                 .unreadCountForSender(
                         (int) chatRoom.getChats().stream()
-                                .filter(chat -> chat.getSenderSeq().equals(chatRoom.getRecipient().getSeq()))
+                                .filter(chat -> chat.getSender().getSeq().equals(chatRoom.getRecipient().getSeq()))
                                 .filter(chat -> !chat.getReadStatus())
                                 .count()
                 )
                 .unreadCountForRecipient(
                         (int) chatRoom.getChats().stream()
-                                .filter(chat -> chat.getSenderSeq().equals(chatRoom.getSender().getSeq()))
+                                .filter(chat -> chat.getSender().getSeq().equals(chatRoom.getSender().getSeq()))
                                 .filter(chat -> !chat.getReadStatus())
                                 .count()
                 )

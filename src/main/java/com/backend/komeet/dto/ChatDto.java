@@ -1,11 +1,13 @@
 package com.backend.komeet.dto;
 
 import com.backend.komeet.domain.Chat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 채팅방 관련 DTO
@@ -26,6 +28,7 @@ public class ChatDto {
 
     /**
      * ChatDto 객체를 Chat 객체로 변환하는 메서드
+     *
      * @param chat Chat 객체
      * @return ChatDto 객체
      */
@@ -34,16 +37,8 @@ public class ChatDto {
                 .id(chat.getSeq())
                 .chatRoomSeq(chat.getChatRoom().getSeq())
                 .content(chat.getContent())
-                .sender(UserDto.from(
-                        chat.getSenderSeq(),
-                        chat.getSenderNickName(),
-                        chat.getSenderProfileImage())
-                )
-                .recipient(UserDto.from(
-                        chat.getRecipientSeq(),
-                        chat.getRecipientNickName(),
-                        chat.getRecipientProfileImage())
-                )
+                .sender(UserDto.from(chat.getSender()))
+                .recipient(UserDto.from(chat.getRecipient()))
                 .readStatus(chat.getReadStatus())
                 .attachments(chat.getAttachments())
                 .createdAt(chat.getCreatedAt())
