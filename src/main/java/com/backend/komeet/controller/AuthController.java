@@ -29,6 +29,7 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final GeocoderService geocoderService;
     private final UserInformationService userInformationService;
+
     @GetMapping("/user")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보 조회 진행")
     public ResponseEntity<ApiResponse> getUser(
@@ -42,7 +43,7 @@ public class AuthController {
         Long userSeq = jwtProvider.getIdFromToken(token);
 
         UserSignInDto userSignInDto =
-                userInformationService.getUser(userSeq,country);
+                userInformationService.getUser(userSeq, country);
 
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
@@ -51,7 +52,7 @@ public class AuthController {
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급 진행")
     public ResponseEntity<ApiResponse> refresh(
             @RequestParam("token") String refreshToken) {
-        Pair<String,String> newAccessToken =
+        Pair<String, String> newAccessToken =
                 userInformationService.refreshToken(refreshToken);
 
         RefreshTokenResponse refreshTokenResponse = RefreshTokenResponse.from(
