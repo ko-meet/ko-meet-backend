@@ -34,8 +34,8 @@ public class ChatQRepositoryImpl implements ChatQRepository {
         QChat chat = QChat.chat;
         Predicate predicate =
                 chat.chatRoom.seq.eq(chatRoomSeq)
-                        .and(chat.senderSeq.eq(userSeq)
-                                .or(chat.recipientSeq.eq(userSeq))
+                        .and(chat.sender.seq.eq(userSeq)
+                                .or(chat.recipient.seq.eq(userSeq))
                         );
         Long total = getLength(predicate);
         OrderSpecifier<?> orderSpecifier = chat.createdAt.desc();

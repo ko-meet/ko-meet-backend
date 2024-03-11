@@ -100,7 +100,7 @@ public class ChatService {
                 () -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND)
         );
 
-        if (chat.getRecipientSeq().equals(userSeq)) {
+        if (chat.getRecipient().getSeq().equals(userSeq)) {
             chat.setReadStatus(true);
         }
     }

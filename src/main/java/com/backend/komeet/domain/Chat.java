@@ -26,23 +26,13 @@ public class Chat extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Long senderSeq;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "sender_seq", nullable = false)
+    private User sender;
 
-    @Column(nullable = false)
-    private String senderNickName;
-
-    @Column(nullable = false)
-    private String senderProfileImage;
-
-    @Column(nullable = false)
-    private Long recipientSeq;
-
-    @Column(nullable = false)
-    private String recipientNickName;
-
-    @Column(nullable = false)
-    private String recipientProfileImage;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "recipient_seq", nullable = false)
+    private User recipient;
 
     @Column(nullable = false)
     @Setter
@@ -61,12 +51,8 @@ public class Chat extends BaseEntity {
         return Chat.builder()
                 .chatRoom(chatRoom)
                 .content(content)
-                .senderSeq(sender.getSeq())
-                .senderNickName(sender.getNickName())
-                .senderProfileImage(sender.getImageUrl())
-                .recipientSeq(recipient.getSeq())
-                .recipientNickName(recipient.getNickName())
-                .recipientProfileImage(recipient.getImageUrl())
+                .sender(sender)
+                .recipient(recipient)
                 .readStatus(readStatus)
                 .attachments(attachments)
                 .build();

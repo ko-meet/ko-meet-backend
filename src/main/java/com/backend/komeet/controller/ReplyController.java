@@ -3,7 +3,6 @@ package com.backend.komeet.controller;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.request.CommentUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
-import com.backend.komeet.service.comment.CommentUploadService;
 import com.backend.komeet.service.reply.ReplyLikeService;
 import com.backend.komeet.service.reply.ReplyUploadService;
 import io.swagger.annotations.Api;

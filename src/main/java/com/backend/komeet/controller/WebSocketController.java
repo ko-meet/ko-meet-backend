@@ -14,8 +14,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import java.util.Objects;
-
 @RequiredArgsConstructor
 @Controller
 public class WebSocketController {
@@ -30,7 +28,7 @@ public class WebSocketController {
         messagingTemplate.convertAndSend(
                 "/topic/room/" + chatRequest.getChatRoomSeq(), chatDto
         );
-        Pair<ChatRoomDto,Long> result = chatRoomService.getChatRoomAndRecipient(
+        Pair<ChatRoomDto, Long> result = chatRoomService.getChatRoomAndRecipient(
                 chatRequest.getChatRoomSeq(), chatRequest.getSenderSeq()
         );
 
