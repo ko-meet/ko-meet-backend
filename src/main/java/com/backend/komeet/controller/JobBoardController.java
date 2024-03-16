@@ -32,6 +32,13 @@ public class JobBoardController {
     private final JobBoardDetailService jobBoardDetailService;
     private final JwtProvider jwtProvider;
 
+    /**
+     * 구인구직 게시글 업로드
+     *
+     * @param token           토큰
+     * @param jobBoardRequest {@link JobBoardUploadRequest} 구인구직 게시글 업로드 요청
+     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 업로드 결과
+     */
     @PostMapping
     @ApiOperation(value = "구인구직 게시글 업로드", notes = "구인구직 게시글을 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadJobBoard(
@@ -42,5 +49,33 @@ public class JobBoardController {
         JobBoardDto jobBoardDto =
                 jobBoardUploadService.postJobBoard(jobBoardRequest, userSeq);
         return ResponseEntity.status(OK).body(new ApiResponse(jobBoardDto));
+    }
+
+    /**
+     * 구인구직 게시글 상세 조회
+     *
+     * @param token         토큰
+     * @param country       국가
+     * @param sortingMethod 정렬 방식
+     * @param industry      {@link Industry} 업종
+     * @param experience    {@link Experience} 경력
+     * @param page          페이지
+     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 조회 결과
+     */
+    @GetMapping
+    @ApiOperation(value = "구인구직 게시글 조회", notes = "구인구직 게시글을 조회합니다.")
+    public ResponseEntity<ApiResponse> searchJobBoard(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String sortingMethod,
+            @RequestParam(required = false) Industry industry,
+            @RequestParam(required = false) Experience experience,
+            @RequestParam(required = false) Integer page
+    ) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        Page<JobBoardDto> jobBoards = jobBoardSearchService.getJobBoards(
+                country, sortingMethod, industry, experience, page, userSeq
+        );
+        return ResponseEntity.status(OK).body(new ApiResponse(jobBoards));
     }
 }

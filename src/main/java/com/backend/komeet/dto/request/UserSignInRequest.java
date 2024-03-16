@@ -1,6 +1,10 @@
 package com.backend.komeet.dto.request;
 
-import lombok.*;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +17,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(value = "UserSignInRequest", description = "사용자 로그인 요청 DTO")
 public class UserSignInRequest {
     @NotBlank(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식에 맞게 입력해주세요.")

@@ -10,6 +10,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
+    /**
+     * WebClient.Builder를 Bean으로 등록
+     *
+     * @return WebClient.Builder 인스턴스
+     */
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();

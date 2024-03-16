@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * 구인 게시판 상세 조회 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

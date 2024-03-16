@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 게시물 좋아요 관련 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

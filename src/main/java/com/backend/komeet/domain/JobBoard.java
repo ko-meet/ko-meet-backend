@@ -101,6 +101,13 @@ public class JobBoard extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
+    /**
+     * 게시물 팩토리 메서드
+     *
+     * @param postUploadRequest 게시물 업로드 요청 DTO
+     * @param user              사용자
+     * @return JobBoard
+     */
     public static JobBoard from(JobBoardUploadRequest postUploadRequest,
                                 User user) {
         return JobBoard.builder()

@@ -30,6 +30,14 @@ public class AuthController {
     private final GeocoderService geocoderService;
     private final UserInformationService userInformationService;
 
+    /**
+     * 사용자 정보 조회
+     *
+     * @param token     토큰
+     * @param latitude  위도
+     * @param longitude 경도
+     * @return {@link ResponseEntity<ApiResponse>} 사용자 정보
+     */
     @GetMapping("/user")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보 조회 진행")
     public ResponseEntity<ApiResponse> getUser(
@@ -48,6 +56,12 @@ public class AuthController {
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
+    /**
+     * 토큰 재발급
+     *
+     * @param refreshToken 리프레시 토큰
+     * @return {@link ResponseEntity<ApiResponse>} 토큰 재발급 결과
+     */
     @GetMapping("/refresh")
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급 진행")
     public ResponseEntity<ApiResponse> refresh(

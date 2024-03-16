@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
+/**
+ * 구인구직 게시판 업로드 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

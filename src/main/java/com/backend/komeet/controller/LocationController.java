@@ -17,6 +17,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * 위치 관련 컨트롤러
+ */
 @Api(tags = "Location API", description = "위치 관련 API")
 @RequestMapping("/api/v1/locations")
 @RequiredArgsConstructor
@@ -24,6 +27,13 @@ import static org.springframework.http.HttpStatus.OK;
 public class LocationController {
     private final GeocoderService geocoderService;
 
+    /**
+     * 위치 정보
+     *
+     * @param latitude  위도
+     * @param longitude 경도
+     * @return {@link ResponseEntity<ApiResponse>} 위치 정보
+     */
     @GetMapping
     @ApiOperation(value = "위치 정보", notes = "위치 정보를 가져옵니다.")
     public ResponseEntity<ApiResponse> getLocation(@RequestParam Double latitude,

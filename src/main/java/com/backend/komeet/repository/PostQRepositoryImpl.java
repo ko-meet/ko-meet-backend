@@ -9,8 +9,6 @@ import com.backend.komeet.enums.SortingMethods;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +19,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 게시글 관련 Querydsl 레포지토리 구현체
+ */
 @RequiredArgsConstructor
 @Repository
 public class PostQRepositoryImpl implements PostQRepository {

@@ -1,7 +1,12 @@
 package com.backend.komeet.enums;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 정렬 관련 상수
+ */
+@Getter
 @RequiredArgsConstructor
 public enum SortingMethods {
     CREATED_DATE("createdDate"),

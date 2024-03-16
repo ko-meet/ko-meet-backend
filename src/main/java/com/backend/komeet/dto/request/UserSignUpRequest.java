@@ -1,12 +1,15 @@
 package com.backend.komeet.dto.request;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
-import lombok.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.backend.komeet.enums.Countries;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 사용자 회원가입 요청 DTO
@@ -15,6 +18,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(value = "UserSignUpRequest", description = "사용자 회원가입 요청 DTO")
 public class UserSignUpRequest {
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickName;

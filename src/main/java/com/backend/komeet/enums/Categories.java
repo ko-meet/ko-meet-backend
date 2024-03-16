@@ -3,6 +3,9 @@ package com.backend.komeet.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 카테고리 관련 상수
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Categories {

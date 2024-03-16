@@ -5,17 +5,23 @@ import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.Experience;
 import com.backend.komeet.enums.Industry;
 import com.backend.komeet.enums.PostStatus;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 구인구직 게시물 업로드 요청 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(value = "JobBoardUploadRequest", description = "구인구직 게시물 업로드 요청 DTO")
 public class JobBoardUploadRequest {
     private Long seq;
     private String title;

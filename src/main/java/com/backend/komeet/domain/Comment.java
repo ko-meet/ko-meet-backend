@@ -51,6 +51,14 @@ public class Comment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
+    /**
+     * 댓글 팩토리 메서드
+     *
+     * @param user    작성자
+     * @param post    게시글
+     * @param content 내용
+     * @return Comment
+     */
     public static Comment from(User user, Post post, String content) {
         return Comment.builder()
                 .user(user)

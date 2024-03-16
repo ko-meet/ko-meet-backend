@@ -1,7 +1,11 @@
 package com.backend.komeet.dto.request;
 
 import com.backend.komeet.enums.Categories;
-import lombok.*;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(value = "PostUploadRequest", description = "게시물 생성 요청 DTO")
 public class PostUploadRequest {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;

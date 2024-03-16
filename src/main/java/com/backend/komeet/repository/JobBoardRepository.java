@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * 구인구직 게시판 레포지토리
  */
 @Repository
-public interface JobBoardRepository extends JpaRepository<JobBoard, Long> {
+public interface JobBoardRepository extends JpaRepository<JobBoard, Long>, JobBoardQRepository {
 }

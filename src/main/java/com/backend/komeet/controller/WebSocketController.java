@@ -14,6 +14,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+/**
+ * WebSocket 컨트롤러
+ */
 @RequiredArgsConstructor
 @Controller
 public class WebSocketController {
@@ -21,6 +24,12 @@ public class WebSocketController {
     private final ChatRoomService chatRoomService;
     private final SimpMessagingTemplate messagingTemplate;
 
+    /**
+     * 메시지 전송
+     *
+     * @param chatRequest 채팅 요청
+     * @return {@link ChatDto} 채팅 DTO
+     */
     @MessageMapping("/chat/send")
     public ChatDto sendMessage(@Payload ChatRequest chatRequest) {
         Chat chat = chatService.saveChat(chatRequest);// 메시지 저장
@@ -39,6 +48,12 @@ public class WebSocketController {
         return chatDto;
     }
 
+    /**
+     * 메시지 읽음 처리
+     *
+     * @param readChatDto 읽음 처리 요청
+     * @return {@link ReadChatDto} 읽음 처리 DTO
+     */
     @MessageMapping("/chat/read")
     public ReadChatDto markMessageAsRead(@Payload ReadChatDto readChatDto) {
         chatService.markAsRead(readChatDto.getChatSeq(), readChatDto.getUserSeq());

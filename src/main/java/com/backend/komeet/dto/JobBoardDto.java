@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 구인구직 게시판 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

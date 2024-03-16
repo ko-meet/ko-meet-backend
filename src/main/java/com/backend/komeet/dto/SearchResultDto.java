@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 검색 결과 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
