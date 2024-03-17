@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 검색 결과 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,18 +51,12 @@ public class SearchResultDto {
      */
     public static SearchResultDto from(Post post, String keyword) {
         String contentResult = extractKeyword(
-                post.getContent(),
-                keyword,
-                50,
-                Math.min(10, post.getContent().length() / 2)
-        ).trim();
+                post.getContent(), keyword, 50, 5
+        );
 
         String titleResult = extractKeyword(
-                post.getTitle(),
-                keyword,
-                20,
-                Math.min(10, post.getTitle().length() / 2)
-        ).trim();
+                post.getTitle(), keyword, 20, 5
+        );
 
         return SearchResultDto.builder()
                 .seq(post.getSeq())
@@ -103,10 +100,7 @@ public class SearchResultDto {
         if (keywordIndex != -1) {
             int start = Math.max(keywordIndex - before, 0);
             int end = Math.min(keywordIndex + keyword.length() + after, text.length());
-            text = text.substring(start, end);
-            text = (start != 0) ? "..." + text : text;
-            text = (end != text.length()) ? text + "..." : text;
-            return text;
+            return text.substring(start, end);
         } else {
             return text.substring(0, Math.min(text.length(), after));
         }

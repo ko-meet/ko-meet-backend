@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.exception.ErrorCode.COMMENT_NOT_FOUND;
 
+/**
+ * 대댓글 좋아요 관련 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

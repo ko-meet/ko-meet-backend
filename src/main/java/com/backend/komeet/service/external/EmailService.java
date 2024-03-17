@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * 이메일 발송 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

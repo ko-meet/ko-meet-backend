@@ -38,6 +38,13 @@ public class PostController {
     private final PostLikeService postLikeService;
     private final JwtProvider jwtProvider;
 
+    /**
+     * 게시물 작성
+     *
+     * @param token             토큰
+     * @param postUploadRequest {@link PostUploadRequest} 게시물 작성 요청
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 작성 결과
+     */
     @PostMapping
     @ApiOperation(value = "게시물 작성", notes = "게시물을 작성합니다.")
     public ResponseEntity<ApiResponse> createPost(
@@ -51,6 +58,14 @@ public class PostController {
         return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
 
+    /**
+     * 게시물 수정
+     *
+     * @param postSeq           게시물 번호
+     * @param token             토큰
+     * @param postUpdateRequest {@link PostUpdateRequest} 게시물 수정 요청
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 수정 결과
+     */
     @PatchMapping("/{postSeq}")
     @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
     public ResponseEntity<ApiResponse> updatePost(
@@ -65,6 +80,13 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 게시물 삭제
+     *
+     * @param postSeq 게시물 번호
+     * @param token   토큰
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 삭제 결과
+     */
     @DeleteMapping("/{postSeq}")
     @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
     public ResponseEntity<ApiResponse> deletePost(
@@ -78,6 +100,13 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 게시물 좋아요
+     *
+     * @param postSeq 게시물 번호
+     * @param token   토큰
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 좋아요 결과
+     */
     @PatchMapping("/{postSeq}/like")
     @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
     public ResponseEntity<ApiResponse> likePost(
@@ -91,6 +120,16 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 게시물 목록 조회
+     *
+     * @param country       국가
+     * @param sortingMethod 정렬 방식
+     * @param isPublic      공개 여부
+     * @param category      {@link Categories} 카테고리
+     * @param page          페이지
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 목록
+     */
     @GetMapping
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
     public ResponseEntity<ApiResponse> getPosts(
@@ -109,6 +148,12 @@ public class PostController {
         )));
     }
 
+    /**
+     * 게시물 조회수 증가
+     *
+     * @param postSeq 게시물 번호
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 조회수 증가 결과
+     */
     @PatchMapping("/{postSeq}/view")
     @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
     public ResponseEntity<ApiResponse> increaseViewCount(
@@ -119,6 +164,12 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 게시물 상세 조회
+     *
+     * @param postSeq 게시물 번호
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 상세 정보
+     */
     @GetMapping("/{postSeq}")
     @ApiOperation(value = "게시물 상세 조회", notes = "게시물 상세 정보를 조회합니다.")
     public ResponseEntity<ApiResponse> getPost(
@@ -128,6 +179,14 @@ public class PostController {
                 .body(new ApiResponse(postUploadService.getPost(postSeq)));
     }
 
+    /**
+     * 게시물 검색
+     *
+     * @param token   토큰
+     * @param keyword 검색어
+     * @param page    페이지
+     * @return {@link ResponseEntity<ApiResponse>} 게시물 검색 결과
+     */
     @GetMapping("/search")
     @ApiOperation(value = "게시물 검색", notes = "게시물을 검색합니다.")
     public ResponseEntity<ApiResponse> searchPosts(
@@ -139,6 +198,13 @@ public class PostController {
         return ResponseEntity.status(OK).body(new ApiResponse(list));
     }
 
+    /**
+     * 내 게시물 목록 조회
+     *
+     * @param token 토큰
+     * @param page  페이지
+     * @return {@link ResponseEntity<ApiResponse>} 내 게시물 목록
+     */
     @GetMapping("/my")
     @ApiOperation(value = "내 게시물 목록 조회", notes = "내 게시물 목록을 조회합니다.")
     public ResponseEntity<ApiResponse> getMyPosts(

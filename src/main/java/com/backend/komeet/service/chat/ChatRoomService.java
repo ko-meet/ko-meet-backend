@@ -19,6 +19,9 @@ import java.util.Objects;
 
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
+/**
+ * 채팅방 서비스
+ */
 @RequiredArgsConstructor
 @Service
 public class ChatRoomService {

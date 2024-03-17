@@ -24,6 +24,9 @@ import java.util.concurrent.CompletableFuture;
 import static com.backend.komeet.exception.ErrorCode.PASSWORD_NOT_MATCH;
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
+/**
+ * 사용자 정보 관련 서비스
+ */
 @RequiredArgsConstructor
 @Service
 public class UserInformationService {
