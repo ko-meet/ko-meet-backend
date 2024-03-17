@@ -42,6 +42,11 @@ public class RedisService {
         return ops.get(refreshToken);
     }
 
+    /**
+     * Redis에 저장된 값을 삭제하는 메서드.
+     *
+     * @param refreshToken Redis에 저장된 키
+     */
     public void deleteValueByKey(String refreshToken) {
         stringRedisTemplate.delete(refreshToken);
     }

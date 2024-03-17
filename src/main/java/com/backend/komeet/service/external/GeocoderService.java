@@ -28,6 +28,13 @@ public class GeocoderService {
     @Value("${geocode.key}")
     private String geocoderKey;
 
+    /**
+     * 위도와 경도를 기반으로 국가와 도시를 추출
+     *
+     * @param latitude  위도
+     * @param longitude 경도
+     * @return 국가와 도시
+     */
     @Async
     public CompletableFuture<Pair<String, String>> getCountry(Double latitude, Double longitude) {
         try {

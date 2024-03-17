@@ -84,7 +84,7 @@ public class PostUploadService {
      * 게시물 검색 메서드
      *
      * @param keyword 검색어
-     * @param page 페이지
+     * @param page
      * @return 검색된 게시물
      */
     @Transactional(readOnly = true)

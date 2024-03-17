@@ -1,6 +1,11 @@
 package com.backend.komeet.dto.request;
 
-import lombok.*;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 /**
@@ -10,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(value = "PostUpdateRequest", description = "게시물 수정 요청 DTO")
 public class PostUpdateRequest {
 
     private String title;

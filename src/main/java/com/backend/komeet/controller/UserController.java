@@ -126,6 +126,12 @@ public class UserController {
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
+    /**
+     * 사용자 로그아웃
+     *
+     * @param token 토큰
+     * @return ResponseEntity<Void> 로그아웃 결과
+     */
     @PatchMapping("/information")
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
     public ResponseEntity<ApiResponse> updateInformation(
@@ -146,6 +152,12 @@ public class UserController {
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
+    /**
+     * 비밀번호 재설정
+     *
+     * @param passwordResetRequest 비밀번호 재설정 요청 DTO
+     * @return ResponseEntity<Void> 비밀번호 재설정 결과
+     */
     @PatchMapping("/password/reset")
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호 재설정 진행")
     public ResponseEntity<ApiResponse> resetPassword(
@@ -163,6 +175,13 @@ public class UserController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 비밀번호 변경
+     *
+     * @param token                     토큰
+     * @param userPasswordChangeRequest 비밀번호 변경 요청 DTO
+     * @return ResponseEntity<Void> 비밀번호 변경 결과
+     */
     @PatchMapping("/password/change")
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
     public ResponseEntity<ApiResponse> changePassword(
@@ -176,6 +195,12 @@ public class UserController {
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 
+    /**
+     * 닉네임 중복 체크
+     *
+     * @param nickname 닉네임
+     * @return ResponseEntity<ApiResponse> 닉네임 중복 체크 결과
+     */
     @GetMapping("/nicknames")
     @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
     public ResponseEntity<ApiResponse> checkNickname(

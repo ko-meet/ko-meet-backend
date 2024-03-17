@@ -1,10 +1,10 @@
 package com.backend.komeet.domain;
 
-import lombok.*;
 import com.backend.komeet.dto.request.UserSignUpRequest;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.UserRole;
 import com.backend.komeet.enums.UserStatus;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -66,6 +66,13 @@ public class User extends BaseEntity {
     @Setter
     private String imageUrl;
 
+    /**
+     * User 팩토리 메서드
+     *
+     * @param userSignUpRequest 회원가입 요청
+     * @param encodedPassword   암호화된 패스워드
+     * @return User
+     */
     public static User from(UserSignUpRequest userSignUpRequest,
                             String encodedPassword) {
         return User.builder()

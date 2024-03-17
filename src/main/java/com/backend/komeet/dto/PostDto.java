@@ -8,6 +8,9 @@ import lombok.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 게시물 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

@@ -7,6 +7,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 댓글 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

@@ -2,8 +2,8 @@ package com.backend.komeet.domain;
 
 import com.backend.komeet.dto.request.PostUploadRequest;
 import com.backend.komeet.enums.Categories;
-import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.enums.Countries;
+import com.backend.komeet.enums.PostStatus;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.backend.komeet.enums.PostStatus.*;
+import static com.backend.komeet.enums.PostStatus.NORMAL;
 
 /**
  * 게시물 엔티티
@@ -77,6 +77,13 @@ public class Post extends BaseEntity {
     @Setter
     private PostStatus status;
 
+    /**
+     * 게시물 팩토리 메서드
+     *
+     * @param postUploadRequest 게시물 업로드 요청
+     * @param user              작성자
+     * @return Post
+     */
     public static Post from(PostUploadRequest postUploadRequest, User user) {
         return Post.builder()
                 .title(postUploadRequest.getTitle())

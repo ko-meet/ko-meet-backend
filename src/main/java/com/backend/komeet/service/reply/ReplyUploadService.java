@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
+/**
+ * 대댓글 업로드 서비스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service

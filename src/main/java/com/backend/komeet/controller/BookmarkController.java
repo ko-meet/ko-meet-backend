@@ -16,6 +16,9 @@ import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * 북마크 관련 컨트롤러
+ */
 @Api(tags = "Bookmark API", description = "즐겨찾기 관련 API")
 @RequestMapping("/api/v1/bookmarks")
 @RequiredArgsConstructor
@@ -24,6 +27,13 @@ public class BookmarkController {
     private final BookmarkCreationService bookmarkCreationService;
     private final JwtProvider jwtProvider;
 
+    /**
+     * 북마크 등록
+     *
+     * @param postSeq 게시물 번호
+     * @param token   토큰
+     * @return {@link ResponseEntity<ApiResponse>} 북마크 등록 결과
+     */
     @PostMapping("/posts/{postSeq}")
     @ApiOperation(value = "북마크 등록", notes = "게시물을 북마크에 등록합니다.")
     public ResponseEntity<ApiResponse> createComment(
@@ -37,6 +47,12 @@ public class BookmarkController {
         return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
     }
 
+    /**
+     * 북마크 조회
+     *
+     * @param token 토큰
+     * @return {@link ResponseEntity<ApiResponse>} 북마크 목록
+     */
     @GetMapping
     @ApiOperation(value = "북마크 조회", notes = "사용자의 북마크를 조회합니다.")
     public ResponseEntity<ApiResponse> getBookmarks(

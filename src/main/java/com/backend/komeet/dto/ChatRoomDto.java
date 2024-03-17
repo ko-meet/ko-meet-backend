@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * 채팅방 DTO
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

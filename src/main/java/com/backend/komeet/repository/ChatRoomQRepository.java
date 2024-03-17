@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
+/**
+ * 채팅방 관련 Querydsl 레포지토리 인터페이스
+ */
 public interface ChatRoomQRepository {
 
     Page<ChatRoomDto> getChatRooms(User user, Pageable pageable);

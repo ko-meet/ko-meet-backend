@@ -27,6 +27,13 @@ public class ImageController {
 
     private final ImageService imageService;
 
+    /**
+     * 이미지 업로드
+     *
+     * @param multipartFile {@link MultipartFile} 이미지 파일
+     * @param imagePath     이미지 경로
+     * @return {@link ResponseEntity<ApiResponse>} 이미지 업로드 결과
+     */
     @PostMapping
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadImage(List<MultipartFile> multipartFile,
@@ -36,6 +43,12 @@ public class ImageController {
         return ResponseEntity.status(OK).body(new ApiResponse(imageDto.getImageUrl()));
     }
 
+    /**
+     * 이미지 삭제
+     *
+     * @param imageRequest {@link ImageRequest} 이미지 삭제 요청
+     * @return {@link ResponseEntity<ApiResponse>} 이미지 삭제 결과
+     */
     @DeleteMapping
     @ApiOperation(value = "이미지 삭제", notes = "이미지를 삭제합니다.")
     public ResponseEntity<ApiResponse> deleteImage(ImageRequest imageRequest) {
