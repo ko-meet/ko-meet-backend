@@ -3,6 +3,7 @@ package com.backend.komeet.repository;
 import com.backend.komeet.dto.JobBoardDto;
 import com.backend.komeet.enums.Experience;
 import com.backend.komeet.enums.Industry;
+import com.backend.komeet.enums.SortingMethods;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,7 @@ import org.springframework.data.domain.Pageable;
  */
 public interface JobBoardQRepository {
     Page<JobBoardDto> getJobBoards(String country,
-                                   String sortingMethod,
+                                   SortingMethods sortingMethod,
                                    Industry industry,
                                    Experience experience,
                                    Pageable page,

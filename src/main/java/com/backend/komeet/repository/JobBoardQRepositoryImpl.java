@@ -1,7 +1,6 @@
 package com.backend.komeet.repository;
 
 import com.backend.komeet.domain.QJobBoard;
-import com.backend.komeet.domain.QPost;
 import com.backend.komeet.dto.JobBoardDto;
 import com.backend.komeet.enums.Countries;
 import com.backend.komeet.enums.Experience;
@@ -31,17 +30,17 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
     /**
      * 구인구직 게시판 목록을 조회하는 메서드
      *
-     * @param country        국가
-     * @param sortingMethod  정렬 방식
-     * @param industry       업종
-     * @param experience     경력
-     * @param pageable       페이지 정보
-     * @param userSeq        사용자 식별자
+     * @param country       국가
+     * @param sortingMethod 정렬 방식
+     * @param industry      업종
+     * @param experience    경력
+     * @param pageable      페이지 정보
+     * @param userSeq       사용자 식별자
      * @return 구인구직 게시판 목록
      */
     @Override
     public Page<JobBoardDto> getJobBoards(String country,
-                                          String sortingMethod,
+                                          SortingMethods sortingMethod,
                                           Industry industry,
                                           Experience experience,
                                           Pageable pageable,
@@ -105,8 +104,8 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
      * @return 전체 결과 개수
      */
     private Long getLength(Predicate predicate) {
-        QPost post = QPost.post;
-        return jpaQueryFactory.selectFrom(post)
+        QJobBoard jobBoard = QJobBoard.jobBoard;
+        return jpaQueryFactory.selectFrom(jobBoard)
                 .where(predicate)
                 .fetchCount();
     }

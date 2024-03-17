@@ -26,13 +26,10 @@ public class JobBoardUploadRequest {
     private Long seq;
     private String title;
     private String content;
-    private User user;
     private Long viewCount;
     private Long likeCount;
     private List<String> tags;
     private List<String> attachments;
-    private List<Long> likeUsers;
-    private List<Long> bookmarkUsers;
     private Countries country;
     private String region;
     private Industry industry;

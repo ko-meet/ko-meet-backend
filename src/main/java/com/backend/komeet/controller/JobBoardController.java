@@ -6,6 +6,7 @@ import com.backend.komeet.dto.request.JobBoardUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.enums.Experience;
 import com.backend.komeet.enums.Industry;
+import com.backend.komeet.enums.SortingMethods;
 import com.backend.komeet.service.jobboard.JobBoardDetailService;
 import com.backend.komeet.service.jobboard.JobBoardSearchService;
 import com.backend.komeet.service.jobboard.JobBoardUploadService;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -48,7 +50,7 @@ public class JobBoardController {
         Long userSeq = jwtProvider.getIdFromToken(token);
         JobBoardDto jobBoardDto =
                 jobBoardUploadService.postJobBoard(jobBoardRequest, userSeq);
-        return ResponseEntity.status(OK).body(new ApiResponse(jobBoardDto));
+        return ResponseEntity.status(OK).body(new ApiResponse(CREATED.value()));
     }
 
     /**
@@ -67,7 +69,7 @@ public class JobBoardController {
     public ResponseEntity<ApiResponse> searchJobBoard(
             @RequestHeader(AUTHORIZATION) String token,
             @RequestParam(required = false) String country,
-            @RequestParam(required = false) String sortingMethod,
+            @RequestParam(required = false) SortingMethods sortingMethod,
             @RequestParam(required = false) Industry industry,
             @RequestParam(required = false) Experience experience,
             @RequestParam(required = false) Integer page
