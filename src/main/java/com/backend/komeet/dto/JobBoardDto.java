@@ -27,7 +27,7 @@ public class JobBoardDto {
     private UserDto user;
     private Long viewCount;
     private Long likeCount;
-    private List<String> tags;
+        private List<String> tags;
     private List<String> attachments;
     private List<Long> likeUsers;
     private List<Long> bookmarkUsers;
@@ -44,6 +44,7 @@ public class JobBoardDto {
     private String companyHomepage;
     private String companyLogo;
     private PostStatus status;
+    private LocalDateTime createdAt;
 
     /**
      * JobBoardDto 팩토리 메서드
@@ -76,6 +77,7 @@ public class JobBoardDto {
                 .companyHomepage(jobBoard.getCompanyHomepage())
                 .companyLogo(jobBoard.getCompanyLogo())
                 .status(jobBoard.getStatus())
+                .createdAt(jobBoard.getCreatedAt())
                 .build();
     }
 }
