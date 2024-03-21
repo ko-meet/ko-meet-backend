@@ -34,6 +34,14 @@ public class Chat extends BaseEntity {
     @JoinColumn(name = "recipient_seq", nullable = false)
     private User recipient;
 
+    @Column
+    @Setter
+    private Long invisibleToSender;
+
+    @Column
+    @Setter
+    private Long invisibleToRecipient;
+
     @Column(nullable = false)
     @Setter
     private Boolean readStatus;

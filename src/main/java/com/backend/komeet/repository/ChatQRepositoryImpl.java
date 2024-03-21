@@ -38,8 +38,12 @@ public class ChatQRepositoryImpl implements ChatQRepository {
         Predicate predicate =
                 chat.chatRoom.seq.eq(chatRoomSeq)
                         .and(chat.sender.seq.eq(userSeq)
-                                .or(chat.recipient.seq.eq(userSeq))
-                        );
+                                .or(chat.recipient.seq.eq(userSeq)))
+                        .and(chat.invisibleToSender.isNull()
+                                .or(chat.invisibleToSender.ne(userSeq)))
+                        .and(chat.invisibleToRecipient.isNull()
+                                .or(chat.invisibleToRecipient.ne(userSeq)));
+
         Long total = getLength(predicate);
         OrderSpecifier<?> orderSpecifier = chat.createdAt.desc();
 

@@ -62,17 +62,16 @@ public class ChatRoomService {
 
     /**
      * 채팅방과 상대방 식별자를 조회하는 메서드
+     *
      * @param chatRoomSeq 채팅방 식별자
-     * @param senderSeq  발신자 식별자
+     * @param senderSeq   발신자 식별자
      * @return 채팅방 정보와 상대방 식별자
      */
     @Transactional
-    public Pair<ChatRoomDto,Long> getChatRoomAndRecipient(Long chatRoomSeq,
-                                                          Long senderSeq) {
+    public Pair<ChatRoomDto, Long> getChatRoomAndRecipient(Long chatRoomSeq,
+                                                           Long senderSeq) {
 
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomSeq).orElseThrow(
-                () -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND)
-        );
+        ChatRoom chatRoom = getChatRoom(chatRoomSeq);
 
         ChatRoomDto chatRoomDto = ChatRoomDto.from(chatRoom);
 
@@ -82,6 +81,66 @@ public class ChatRoomService {
                         chatRoom.getRecipient().getSeq();
 
         return Pair.of(chatRoomDto, recipientSeq);
+    }
+
+    /**
+     * 채팅방을 삭제하는 메서드
+     *
+     * @param chatRoomSeq 채팅방 식별자
+     * @param userSeq     사용자 식별자
+     */
+    @Transactional
+    public void deleteChatRoom(Long chatRoomSeq, Long userSeq) {
+        ChatRoom chatRoom = getChatRoom(chatRoomSeq);
+        User user = getUser(userSeq);
+        throwAnErrorIfUserIsNotInvolve(chatRoom, user);
+        setChatRoomInvisible(chatRoom, user);
+    }
+
+    /**
+     * 사용자가 채팅방에 참여하고 있는지 확인하는 메서드
+     *
+     * @param chatRoom {@link ChatRoom} 채팅방
+     * @param user     {@link User} 사용자
+     */
+    private static void throwAnErrorIfUserIsNotInvolve(ChatRoom chatRoom, User user) {
+        if (!chatRoom.getSender().equals(user) && !chatRoom.getRecipient().equals(user)) {
+            throw new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND);
+        }
+    }
+
+    /**
+     * 채팅방을 사용자에게 보이지 않도록 설정하는 메서드
+     *
+     * @param chatRoom {@link ChatRoom} 채팅방
+     * @param user     {@link User} 사용자
+     */
+    private static void setChatRoomInvisible(ChatRoom chatRoom, User user) {
+        boolean isSender = chatRoom.getSender().equals(user);
+        if (isSender) {
+            chatRoom.setIsVisibleToSender(false);
+            chatRoom.getChats().forEach(chat -> {
+                chat.setInvisibleToSender(user.getSeq());
+            });
+        } else {
+            chatRoom.setIsVisibleToRecipient(false);
+            chatRoom.getChats().forEach(chat -> {
+                chat.setInvisibleToRecipient(user.getSeq());
+            });
+        }
+
+    }
+
+    /**
+     * 채팅방을 조회하는 메서드
+     *
+     * @param chatRoomSeq 채팅방 식별자
+     * @return {@link ChatRoom} 채팅방
+     */
+    private ChatRoom getChatRoom(Long chatRoomSeq) {
+        return chatRoomRepository.findById(chatRoomSeq).orElseThrow(
+                () -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND)
+        );
     }
 
     /**

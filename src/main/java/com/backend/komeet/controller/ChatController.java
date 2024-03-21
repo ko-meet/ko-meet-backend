@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -99,5 +100,15 @@ public class ChatController {
         Long userSeq = jwtProvider.getIdFromToken(token);
         chatService.addChat(chatRoomSeq, userSeq, content);
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+    }
+
+    @ApiOperation(value = "채팅방 삭제", notes = "채팅방을 삭제합니다.")
+    @DeleteMapping("/rooms/{chatRoomSeq}")
+    public ResponseEntity<ApiResponse> deleteChatRoom(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long chatRoomSeq) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        chatRoomService.deleteChatRoom(chatRoomSeq, userSeq);
+        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
 }
