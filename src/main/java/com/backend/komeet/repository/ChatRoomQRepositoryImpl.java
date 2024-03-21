@@ -28,7 +28,8 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 채팅방 목록을 조회하는 메서드
-     * @param user 사용자
+     *
+     * @param user     사용자
      * @param pageable 페이지 정보
      * @return 채팅방 목록
      */
@@ -36,7 +37,9 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
     public Page<ChatRoomDto> getChatRooms(User user, Pageable pageable) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         Predicate predicate =
-                chatRoom.sender.eq(user).or(chatRoom.recipient.eq(user));
+                (chatRoom.sender.eq(user).and(chatRoom.isVisibleToSender.isTrue()))
+                        .or(chatRoom.recipient.eq(user).and(chatRoom.isVisibleToRecipient.isTrue()));
+
         Long total = getLength(predicate);
         OrderSpecifier<?> orderSpecifier = chatRoom.createdAt.desc();
 
@@ -55,6 +58,7 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 채팅방을 조회하는 메서드
+     *
      * @param user1 사용자1
      * @param user2 사용자2
      * @return 채팅방
@@ -66,13 +70,14 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
                         .or(chatRoom.sender.eq(user2).and(chatRoom.recipient.eq(user1)));
 
         return Optional.ofNullable(jpaQueryFactory.selectFrom(chatRoom)
-                .where(predicate)
-                .fetchOne())
+                        .where(predicate)
+                        .fetchOne())
                 .map(ChatRoomDto::from);
     }
 
     /**
      * 전체 결과 개수를 조회하는 메서드
+     *
      * @param predicate 조건
      * @return 전체 결과 개수
      */
