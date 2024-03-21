@@ -24,6 +24,12 @@ public class ChatRoom extends BaseEntity {
     @ManyToOne
     private User recipient;
 
+    @Setter
+    private Boolean isVisibleToSender;
+
+    @Setter
+    private Boolean isVisibleToRecipient;
+
     @OneToMany(mappedBy = "chatRoom")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Chat> chats;
@@ -39,6 +45,8 @@ public class ChatRoom extends BaseEntity {
         return ChatRoom.builder()
                 .sender(sender)
                 .recipient(recipient)
+                .isVisibleToRecipient(true)
+                .isVisibleToSender(true)
                 .build();
     }
 }

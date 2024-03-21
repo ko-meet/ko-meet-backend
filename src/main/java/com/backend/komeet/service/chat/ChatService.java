@@ -83,6 +83,7 @@ public class ChatService {
                 chatRequest.getAttachments());
 
         chatRoom.getChats().add(chat);
+        setChatRoomVisible(isSender, chatRoom);
 
         return chat;
     }
@@ -128,4 +129,19 @@ public class ChatService {
             throw new CustomException(ErrorCode.INVALID_USER);
         }
     }
+
+    /**
+     * 채팅방을 보이도록 설정하는 메서드
+     *
+     * @param isSender 채팅방 송신자 여부
+     * @param chatRoom 채팅방
+     */
+    private void setChatRoomVisible(boolean isSender, ChatRoom chatRoom) {
+        if (isSender) {
+            chatRoom.setIsVisibleToRecipient(true);
+        } else {
+            chatRoom.setIsVisibleToSender(true);
+        }
+    }
+
 }
