@@ -16,6 +16,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
@@ -162,14 +163,12 @@ public class ChatRoomService {
      *
      * @param userSeq 사용자 식별자
      * @param keyword 검색어
-     * @param page    페이지
      * @return 채팅방 목록
      */
-    public Page<ChatRoomDto> searchChatRooms(Long userSeq, String keyword, Integer page) {
-        Pageable pageable = PageRequest.of(page, 15);
+    public List<ChatRoomDto> searchChatRooms(Long userSeq, String keyword) {
         User user = userRepository.findById(userSeq).orElseThrow(
                 () -> new CustomException(USER_INFO_NOT_FOUND)
         );
-        return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword, pageable);
+        return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword);
     }
 }
