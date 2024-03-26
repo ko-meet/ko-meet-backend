@@ -5,6 +5,7 @@ import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
+import com.backend.komeet.repository.ChatRepository;
 import com.backend.komeet.repository.ChatRoomRepository;
 import com.backend.komeet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 @Service
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
     /**
@@ -153,5 +155,21 @@ public class ChatRoomService {
         return userRepository.findById(userSeq).orElseThrow(
                 () -> new CustomException(USER_INFO_NOT_FOUND)
         );
+    }
+
+    /**
+     * 채팅방을 검색하는 메서드
+     *
+     * @param userSeq 사용자 식별자
+     * @param keyword 검색어
+     * @param page    페이지
+     * @return 채팅방 목록
+     */
+    public Page<ChatRoomDto> searchChatRooms(Long userSeq, String keyword, Integer page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        User user = userRepository.findById(userSeq).orElseThrow(
+                () -> new CustomException(USER_INFO_NOT_FOUND)
+        );
+        return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword, pageable);
     }
 }

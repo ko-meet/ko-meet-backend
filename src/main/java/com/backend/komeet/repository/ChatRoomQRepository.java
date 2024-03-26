@@ -15,4 +15,9 @@ public interface ChatRoomQRepository {
     Page<ChatRoomDto> getChatRooms(User user, Pageable pageable);
 
     Optional<ChatRoomDto> getChatRoom(User user1, User user2);
+
+    Page<ChatRoomDto> searchChatRoomsByUserNickName(User user,
+                                                    String keyword,
+                                                    Pageable pageable);
+
 }
