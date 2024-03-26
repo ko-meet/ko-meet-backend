@@ -78,13 +78,12 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
     /**
      * 채팅방 검색 메서드
      *
-     * @param user     사용자
-     * @param keyword  검색어
-     * @param pageable 페이지 정보
+     * @param user    사용자
+     * @param keyword 검색어
      * @return 채팅방 목록
      */
     @Override
-    public Page<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword, Pageable pageable) {
+    public List<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         keyword = keyword.trim();
         Predicate predicate =
@@ -99,15 +98,13 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
         Long total = getLength(predicate);
         OrderSpecifier<?> orderSpecifier = chatRoom.createdAt.desc();
 
-        return new PageImpl<>(jpaQueryFactory.selectFrom(chatRoom)
+        return jpaQueryFactory.selectFrom(chatRoom)
                 .where(predicate)
                 .orderBy(orderSpecifier)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
                 .map(ChatRoomDto::from)
-                .collect(Collectors.toList()), pageable, total);
+                .collect(Collectors.toList());
     }
 
     /**
