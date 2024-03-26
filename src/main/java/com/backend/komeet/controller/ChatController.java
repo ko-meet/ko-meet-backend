@@ -136,5 +136,4 @@ public class ChatController {
                 new ApiResponse(chatRoomService.searchChatRooms(userSeq, keyword))
         );
     }
-
 }
