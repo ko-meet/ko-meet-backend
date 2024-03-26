@@ -5,6 +5,7 @@ import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
+import com.backend.komeet.repository.ChatRepository;
 import com.backend.komeet.repository.ChatRoomRepository;
 import com.backend.komeet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
@@ -26,6 +28,7 @@ import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 @Service
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
     /**
@@ -153,5 +156,19 @@ public class ChatRoomService {
         return userRepository.findById(userSeq).orElseThrow(
                 () -> new CustomException(USER_INFO_NOT_FOUND)
         );
+    }
+
+    /**
+     * 채팅방을 검색하는 메서드
+     *
+     * @param userSeq 사용자 식별자
+     * @param keyword 검색어
+     * @return 채팅방 목록
+     */
+    public List<ChatRoomDto> searchChatRooms(Long userSeq, String keyword) {
+        User user = userRepository.findById(userSeq).orElseThrow(
+                () -> new CustomException(USER_INFO_NOT_FOUND)
+        );
+        return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword);
     }
 }

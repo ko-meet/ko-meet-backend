@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -102,6 +104,13 @@ public class ChatController {
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
+    /**
+     * 채팅방 삭제
+     *
+     * @param token       토큰
+     * @param chatRoomSeq 채팅방 번호
+     * @return {@link ResponseEntity<ApiResponse>} 채팅방 삭제 결과
+     */
     @ApiOperation(value = "채팅방 삭제", notes = "채팅방을 삭제합니다.")
     @DeleteMapping("/rooms/{chatRoomSeq}")
     public ResponseEntity<ApiResponse> deleteChatRoom(
@@ -111,4 +120,22 @@ public class ChatController {
         chatRoomService.deleteChatRoom(chatRoomSeq, userSeq);
         return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
     }
+
+    /**
+     * 채팅방 검색
+     *
+     * @param token   토큰
+     * @param keyword 검색어
+     * @return {@link ResponseEntity<ApiResponse>} 채팅방 목록
+     */
+    @ApiOperation(value = "채팅방 검색", notes = "채팅방을 검색합니다.")
+    @GetMapping("/rooms/search")
+    public ResponseEntity<ApiResponse> searchChatRooms(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestParam String keyword) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        List<ChatRoomDto> chatList = chatRoomService.searchChatRooms(userSeq, keyword);
+        return ResponseEntity.status(OK).body(new ApiResponse(chatList));
+    }
+
 }

@@ -76,6 +76,38 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
     }
 
     /**
+     * 채팅방 검색 메서드
+     *
+     * @param user    사용자
+     * @param keyword 검색어
+     * @return 채팅방 목록
+     */
+    @Override
+    public List<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword) {
+        QChatRoom chatRoom = QChatRoom.chatRoom;
+        keyword = keyword.trim();
+        Predicate predicate =
+                (chatRoom.sender.eq(user)
+                        .and(chatRoom.sender.eq(user)
+                                .and(chatRoom.isVisibleToSender.isTrue()))
+                        .or(chatRoom.recipient.eq(user)
+                                .and(chatRoom.isVisibleToRecipient.isTrue()))
+                        .and(chatRoom.sender.nickName.contains(keyword))
+                        .or(chatRoom.recipient.nickName.contains(keyword)));
+
+        Long total = getLength(predicate);
+        OrderSpecifier<?> orderSpecifier = chatRoom.createdAt.desc();
+
+        return jpaQueryFactory.selectFrom(chatRoom)
+                .where(predicate)
+                .orderBy(orderSpecifier)
+                .fetch()
+                .stream()
+                .map(ChatRoomDto::from)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 전체 결과 개수를 조회하는 메서드
      *
      * @param predicate 조건
