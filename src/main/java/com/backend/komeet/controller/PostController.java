@@ -133,14 +133,14 @@ public class PostController {
     @GetMapping
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
     public ResponseEntity<ApiResponse> getPosts(
-            @RequestParam(required = false) String country,
+            @RequestParam(required = false) Countries country,
             @RequestParam(required = false) String sortingMethod,
             @RequestParam(required = false) String isPublic,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer page) {
 
         return ResponseEntity.ok().body(new ApiResponse(postUploadService.getPosts(
-                Countries.getCountry(country),
+                country,
                 SortingMethods.valueOf(sortingMethod),
                 isPublic,
                 Categories.valueOf(category),
