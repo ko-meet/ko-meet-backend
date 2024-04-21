@@ -17,6 +17,7 @@ public class Bookmark extends BaseEntity {
     private Long userSeq;
 
     @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("createdAt DESC")
     private List<Post> bookmarkPosts;
 
 }

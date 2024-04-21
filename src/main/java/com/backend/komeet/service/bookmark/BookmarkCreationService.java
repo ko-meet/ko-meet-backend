@@ -48,6 +48,19 @@ public class BookmarkCreationService {
     }
 
     /**
+     * 북마크 목록을 조회하는 메서드
+     * @param userSeq 사용자 식별자
+     * @return 북마크 목록
+     */
+    @Transactional(readOnly = true)
+    public List<PostDto> getBookmarkList(Long userSeq) {
+        return getBookmark(userSeq).getBookmarkPosts()
+                .stream()
+                .map(PostDto::from)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 게시물을 조회하는 메서드
      * @param postSeq 게시물 식별자
      * @return 게시물
@@ -73,15 +86,4 @@ public class BookmarkCreationService {
         return  bookmark;
     }
 
-    /**
-     * 북마크 목록을 조회하는 메서드
-     * @param userSeq 사용자 식별자
-     * @return 북마크 목록
-     */
-    public List<PostDto> getBookmarkList(Long userSeq) {
-        return getBookmark(userSeq).getBookmarkPosts()
-                .stream()
-                .map(PostDto::from)
-                .collect(Collectors.toList());
-    }
 }
