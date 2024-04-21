@@ -27,7 +27,7 @@ public class JobBoardDto {
     private UserDto user;
     private Long viewCount;
     private Long likeCount;
-        private List<String> tags;
+    private List<String> tags;
     private List<String> attachments;
     private List<Long> likeUsers;
     private List<Long> bookmarkUsers;
