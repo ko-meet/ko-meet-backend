@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.backend.komeet.enums.PostStatus.DELETED;
+
 /**
  * 게시글 관련 Querydsl 레포지토리 구현체
  */
@@ -48,7 +50,7 @@ public class PostQRepositoryImpl implements PostQRepository {
             }
         }
 
-        predicateBuilder.and(post.isPublic.eq(isPublic));
+        predicateBuilder.and(post.isPublic.eq(isPublic)).and(post.status.ne(DELETED));
 
         Predicate predicate = predicateBuilder.getValue();
 

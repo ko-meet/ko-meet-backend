@@ -1,5 +1,6 @@
 package com.backend.komeet.controller;
 
+import com.amazonaws.Response;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.dto.request.PostUpdateRequest;
@@ -87,9 +88,9 @@ public class PostController {
      * @param token   토큰
      * @return {@link ResponseEntity<ApiResponse>} 게시물 삭제 결과
      */
-    @DeleteMapping("/{postSeq}")
+    @PatchMapping("/{postSeq}/delete")
     @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
-    public ResponseEntity<ApiResponse> deletePost(
+    public ResponseEntity<Void> deletePost(
             @PathVariable Long postSeq,
             @RequestHeader(AUTHORIZATION) String token) {
 
@@ -97,7 +98,7 @@ public class PostController {
 
         postDeleteService.deletePost(userId, postSeq);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
