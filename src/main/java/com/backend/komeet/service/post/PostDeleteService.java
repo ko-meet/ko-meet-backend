@@ -2,7 +2,6 @@ package com.backend.komeet.service.post;
 
 import com.backend.komeet.domain.Post;
 import com.backend.komeet.domain.User;
-import com.backend.komeet.enums.PostStatus;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.PostRepository;
 import com.backend.komeet.repository.UserRepository;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.backend.komeet.enums.PostStatus.DELETED;
 import static com.backend.komeet.exception.ErrorCode.*;
 
 /**
@@ -34,7 +34,7 @@ public class PostDeleteService {
         if (!post.getUser().equals(user)) {
             throw new CustomException(NO_AUTHORITY);
         }
-        postRepository.delete(post);
+        post.setStatus(DELETED);
     }
 
     /**
@@ -46,7 +46,7 @@ public class PostDeleteService {
     private Post getPost(Long postSeq) {
         Post post = postRepository.findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        if (post.getStatus().equals(PostStatus.DELETED)) {
+        if (post.getStatus().equals(DELETED)) {
             throw new CustomException(ALREADY_DELETED_POST);
         }
         return post;
