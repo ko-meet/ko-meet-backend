@@ -14,7 +14,6 @@ public interface JobBoardQRepository {
     Page<JobBoardDto> getJobBoards(String country,
                                    SortingMethods sortingMethod,
                                    Industry industry,
-                                   Experience experience,
-                                   Pageable page,
-                                   Long userSeq);
+                                   String experience,
+                                   Pageable page);
 }

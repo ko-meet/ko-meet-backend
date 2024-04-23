@@ -35,16 +35,14 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
      * @param industry      업종
      * @param experience    경력
      * @param pageable      페이지 정보
-     * @param userSeq       사용자 식별자
      * @return 구인구직 게시판 목록
      */
     @Override
     public Page<JobBoardDto> getJobBoards(String country,
                                           SortingMethods sortingMethod,
                                           Industry industry,
-                                          Experience experience,
-                                          Pageable pageable,
-                                          Long userSeq) {
+                                          String experience,
+                                          Pageable pageable) {
 
         QJobBoard jobBoard = QJobBoard.jobBoard;
         BooleanBuilder predicateBuilder = new BooleanBuilder();
@@ -56,8 +54,8 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
         if (country != null && !country.equals(Countries.ALL.toString())) {
             predicateBuilder.and(jobBoard.country.eq(Countries.valueOf(country)));
         }
-        if (experience != null) {
-            predicateBuilder.and(jobBoard.experience.eq(experience));
+        if (experience != null && !experience.equals(Experience.ALL.toString())) {
+            predicateBuilder.and(jobBoard.experience.eq(Experience.valueOf(experience)));
         }
 
         // 정렬 조건 설정

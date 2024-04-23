@@ -14,6 +14,7 @@ public enum Experience {
     MIDDLE("경력"),
     SENIOR("고급"),
     DIRECTOR("이사"),
-    EXECUTIVE("임원");
+    EXECUTIVE("임원"),
+    ALL("전체");
     private final String experience;
 }
