@@ -35,23 +35,17 @@ public class JobBoardSearchService {
      * @param industry      {@link Industry} 업종
      * @param experience    {@link Experience} 경력
      * @param page          페이지 정보
-     * @param userSeq       사용자 식별자
      * @return {@link Page<JobBoardDto>} 구인구직 게시판 목록
      */
     public Page<JobBoardDto> getJobBoards(String country,
                                           SortingMethods sortingMethod,
                                           Industry industry,
-                                          Experience experience,
-                                          Integer page,
-                                          Long userSeq) {
-
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+                                          String experience,
+                                          Integer page) {
 
         Pageable pageable = PageRequest.of(page, 10);
 
-        return jobBoardRepository.getJobBoards(
-                country, sortingMethod, industry, experience, pageable, userSeq
-        );
+        return jobBoardRepository
+                .getJobBoards(country, sortingMethod, industry, experience, pageable);
     }
 }

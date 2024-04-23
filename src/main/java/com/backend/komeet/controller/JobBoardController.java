@@ -56,7 +56,6 @@ public class JobBoardController {
     /**
      * 구인구직 게시글 상세 조회
      *
-     * @param token         토큰
      * @param country       국가
      * @param sortingMethod 정렬 방식
      * @param industry      {@link Industry} 업종
@@ -67,16 +66,14 @@ public class JobBoardController {
     @GetMapping
     @ApiOperation(value = "구인구직 게시글 조회", notes = "구인구직 게시글을 조회합니다.")
     public ResponseEntity<ApiResponse> searchJobBoard(
-            @RequestHeader(AUTHORIZATION) String token,
             @RequestParam(required = false) String country,
             @RequestParam(required = false) SortingMethods sortingMethod,
             @RequestParam(required = false) Industry industry,
-            @RequestParam(required = false) Experience experience,
+            @RequestParam(required = false) String experience,
             @RequestParam(required = false) Integer page
     ) {
-        Long userSeq = jwtProvider.getIdFromToken(token);
         Page<JobBoardDto> jobBoards = jobBoardSearchService.getJobBoards(
-                country, sortingMethod, industry, experience, page, userSeq
+                country, sortingMethod, industry, experience, page
         );
         return ResponseEntity.status(OK).body(new ApiResponse(jobBoards));
     }
