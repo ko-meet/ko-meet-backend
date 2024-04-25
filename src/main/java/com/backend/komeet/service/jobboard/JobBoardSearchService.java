@@ -38,8 +38,8 @@ public class JobBoardSearchService {
      * @return {@link Page<JobBoardDto>} 구인구직 게시판 목록
      */
     public Page<JobBoardDto> getJobBoards(String country,
-                                          SortingMethods sortingMethod,
-                                          Industry industry,
+                                          String sortingMethod,
+                                          String industry,
                                           String experience,
                                           Integer page) {
 

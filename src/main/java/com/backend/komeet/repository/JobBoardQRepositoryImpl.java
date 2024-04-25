@@ -39,8 +39,8 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
      */
     @Override
     public Page<JobBoardDto> getJobBoards(String country,
-                                          SortingMethods sortingMethod,
-                                          Industry industry,
+                                          String sortingMethod,
+                                          String industry,
                                           String experience,
                                           Pageable pageable) {
 
@@ -48,13 +48,13 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
         BooleanBuilder predicateBuilder = new BooleanBuilder();
 
         // 조건에 맞게 필터링
-        if (industry != null && !industry.equals(Industry.ALL)) {
-            predicateBuilder.and(jobBoard.industry.eq(industry));
+        if (isNotNullAndSame(industry,Industry.ALL)) {
+            predicateBuilder.and(jobBoard.industry.eq(Industry.valueOf(industry)));
         }
-        if (country != null && !country.equals(Countries.ALL.toString())) {
+        if (isNotNullAndSame(country,Countries.ALL)) {
             predicateBuilder.and(jobBoard.country.eq(Countries.valueOf(country)));
         }
-        if (experience != null && !experience.equals(Experience.ALL.toString())) {
+        if (isNotNullAndSame(experience,Experience.ALL)) {
             predicateBuilder.and(jobBoard.experience.eq(Experience.valueOf(experience)));
         }
 
@@ -83,9 +83,9 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
      * @param jobBoard      구인구직 게시판
      * @return 정렬 조건
      */
-    private OrderSpecifier<?> getOrderSpecifier(SortingMethods sortingMethod,
+    private OrderSpecifier<?> getOrderSpecifier(String sortingMethod,
                                                 QJobBoard jobBoard) {
-        switch (sortingMethod) {
+        switch (SortingMethods.valueOf(sortingMethod)) {
             case VIEW_COUNT:
                 return jobBoard.viewCount.desc();
             case LIKE_COUNT:
@@ -106,5 +106,17 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
         return jpaQueryFactory.selectFrom(jobBoard)
                 .where(predicate)
                 .fetchCount();
+    }
+
+    /**
+     * 값이 null이 아니고 같은지 확인하는 메서드
+     *
+     * @param value 값
+     * @param compare 비교할 값
+     * @return boolean
+     * @param <T> 제네릭
+     */
+    private <T> boolean isNotNullAndSame(String value, T compare) {
+        return value != null && !value.equals(compare.toString());
     }
 }

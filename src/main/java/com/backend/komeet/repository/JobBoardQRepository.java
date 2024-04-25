@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
  */
 public interface JobBoardQRepository {
     Page<JobBoardDto> getJobBoards(String country,
-                                   SortingMethods sortingMethod,
-                                   Industry industry,
+                                   String sortingMethod,
+                                   String industry,
                                    String experience,
                                    Pageable page);
 }

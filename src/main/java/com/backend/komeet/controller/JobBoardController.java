@@ -67,11 +67,10 @@ public class JobBoardController {
     @ApiOperation(value = "구인구직 게시글 조회", notes = "구인구직 게시글을 조회합니다.")
     public ResponseEntity<ApiResponse> searchJobBoard(
             @RequestParam(required = false) String country,
-            @RequestParam(required = false) SortingMethods sortingMethod,
-            @RequestParam(required = false) Industry industry,
+            @RequestParam(required = false) String sortingMethod,
+            @RequestParam(required = false) String industry,
             @RequestParam(required = false) String experience,
-            @RequestParam(required = false) Integer page
-    ) {
+            @RequestParam(required = false) Integer page) {
         Page<JobBoardDto> jobBoards = jobBoardSearchService.getJobBoards(
                 country, sortingMethod, industry, experience, page
         );
