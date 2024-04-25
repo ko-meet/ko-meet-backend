@@ -47,7 +47,7 @@ public class ReplyController {
 
         replyUploadService.uploadComment(userId, commentSeq, commentUploadRequest);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -67,6 +67,6 @@ public class ReplyController {
 
         replyLikeService.likeReply(userId, replySeq);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 }

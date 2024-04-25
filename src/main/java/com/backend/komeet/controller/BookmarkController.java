@@ -1,7 +1,6 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.config.JwtProvider;
-import com.backend.komeet.dto.PostDto;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.service.bookmark.BookmarkCreationService;
 import io.swagger.annotations.Api;
@@ -9,8 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -60,8 +57,8 @@ public class BookmarkController {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        List<PostDto> bookmarkList = bookmarkCreationService.getBookmarkList(userSeq);
-
-        return ResponseEntity.status(OK).body(new ApiResponse(bookmarkList));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(bookmarkCreationService.getBookmarkList(userSeq))
+        );
     }
 }

@@ -6,7 +6,6 @@ import com.backend.komeet.dto.request.JobBoardUploadRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.enums.Experience;
 import com.backend.komeet.enums.Industry;
-import com.backend.komeet.enums.SortingMethods;
 import com.backend.komeet.service.jobboard.JobBoardDetailService;
 import com.backend.komeet.service.jobboard.JobBoardSearchService;
 import com.backend.komeet.service.jobboard.JobBoardUploadService;
@@ -45,11 +44,10 @@ public class JobBoardController {
     @ApiOperation(value = "구인구직 게시글 업로드", notes = "구인구직 게시글을 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadJobBoard(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestBody JobBoardUploadRequest jobBoardRequest
-    ) {
+            @RequestBody JobBoardUploadRequest jobBoardRequest) {
+
         Long userSeq = jwtProvider.getIdFromToken(token);
-        JobBoardDto jobBoardDto =
-                jobBoardUploadService.postJobBoard(jobBoardRequest, userSeq);
+        jobBoardUploadService.postJobBoard(jobBoardRequest, userSeq);
         return ResponseEntity.status(OK).body(new ApiResponse(CREATED.value()));
     }
 

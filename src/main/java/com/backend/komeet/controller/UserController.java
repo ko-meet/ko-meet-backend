@@ -172,7 +172,7 @@ public class UserController {
                 String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
         );
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -192,7 +192,7 @@ public class UserController {
 
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -206,9 +206,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> checkNickname(
             @RequestParam String nickname) {
 
-        Boolean isNicknameUnique =
-                userInformationService.checkNickname(nickname);
-
-        return ResponseEntity.status(OK).body(new ApiResponse(isNicknameUnique));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(userInformationService.checkNickname(nickname))
+        );
     }
 }

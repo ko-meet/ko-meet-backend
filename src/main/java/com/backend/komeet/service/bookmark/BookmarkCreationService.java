@@ -49,6 +49,7 @@ public class BookmarkCreationService {
 
     /**
      * 북마크 목록을 조회하는 메서드
+     *
      * @param userSeq 사용자 식별자
      * @return 북마크 목록
      */
@@ -62,6 +63,7 @@ public class BookmarkCreationService {
 
     /**
      * 게시물을 조회하는 메서드
+     *
      * @param postSeq 게시물 식별자
      * @return 게시물
      */
@@ -72,18 +74,19 @@ public class BookmarkCreationService {
 
     /**
      * 북마크를 조회하는 메서드
+     *
      * @param userSeq 사용자 식별자
      * @return 북마크
      */
     private Bookmark getBookmark(Long userSeq) {
-        Bookmark bookmark =  bookmarkRepository.findByUserSeq(userSeq)
+        Bookmark bookmark = bookmarkRepository.findByUserSeq(userSeq)
                 .orElseGet(() ->
                         bookmarkRepository.save(Bookmark.builder()
-                        .userSeq(userSeq)
-                        .bookmarkPosts(new ArrayList<>())
-                        .build()));
+                                .userSeq(userSeq)
+                                .bookmarkPosts(new ArrayList<>())
+                                .build()));
         log.error("bookmark : {}", bookmark.getBookmarkPosts());
-        return  bookmark;
+        return bookmark;
     }
 
 }

@@ -51,7 +51,8 @@ public class UserSignUpService {
      * @param email 사용자 이메일
      */
     private void validateUserNotExists(String email) {
-        userRepository.findByEmail(email)
+        userRepository
+                .findByEmail(email)
                 .ifPresent(user -> {
                     throw new CustomException(EXISTING_USER);
                 });

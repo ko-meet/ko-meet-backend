@@ -1,6 +1,10 @@
 package com.backend.komeet.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.util.Pair;
 
 @Getter
 @AllArgsConstructor
@@ -10,10 +14,10 @@ public class RefreshTokenResponse {
     private String accessToken;
     private String refreshToken;
 
-    public static RefreshTokenResponse from(String accessToken, String refreshToken) {
+    public static RefreshTokenResponse from(Pair<String, String> tokens) {
         return RefreshTokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .accessToken(tokens.getFirst())
+                .refreshToken(tokens.getSecond())
                 .build();
     }
 }

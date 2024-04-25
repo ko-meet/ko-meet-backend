@@ -1,7 +1,6 @@
 package com.backend.komeet.controller;
 
 import com.backend.komeet.config.JwtProvider;
-import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.dto.response.RefreshTokenResponse;
 import com.backend.komeet.service.external.GeocoderService;
@@ -50,10 +49,9 @@ public class AuthController {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        UserSignInDto userSignInDto =
-                userInformationService.getUser(userSeq, country);
-
-        return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(userInformationService.getUser(userSeq, country))
+        );
     }
 
     /**
@@ -69,10 +67,8 @@ public class AuthController {
         Pair<String, String> newAccessToken =
                 userInformationService.refreshToken(refreshToken);
 
-        RefreshTokenResponse refreshTokenResponse = RefreshTokenResponse.from(
-                newAccessToken.getFirst(),
-                newAccessToken.getSecond()
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(RefreshTokenResponse.from(newAccessToken))
         );
-        return ResponseEntity.status(OK).body(new ApiResponse(refreshTokenResponse));
     }
 }
