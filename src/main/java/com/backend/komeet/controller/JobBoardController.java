@@ -71,7 +71,6 @@ public class JobBoardController {
             @RequestParam(required = false) String industry,
             @RequestParam(required = false) String experience,
             @RequestParam(required = false) Integer page) {
-
         Page<JobBoardDto> jobBoards = jobBoardSearchService.getJobBoards(
                 country, sortingMethod, industry, experience, page
         );
