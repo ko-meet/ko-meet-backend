@@ -14,4 +14,10 @@ import java.util.List;
 public class ImageDto {
 
     private List<String> imageUrl;
+
+    public static ImageDto from(List<String> imageUrl) {
+        return ImageDto.builder()
+                .imageUrl(imageUrl)
+                .build();
+    }
 }

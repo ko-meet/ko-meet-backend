@@ -7,6 +7,7 @@ import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class UserSignUpService {
      * @param userSignUpRequest 사용자 회원가입 요청
      */
     @Transactional
-    public Long signUp(UserSignUpRequest userSignUpRequest) {
+    public Pair<Long,String> signUp(UserSignUpRequest userSignUpRequest) {
 
         validateUserNotExists(userSignUpRequest.getEmail());
 
@@ -42,7 +43,7 @@ public class UserSignUpService {
                 User.from(userSignUpRequest, encodedPassword)
         );
 
-        return user.getSeq();
+        return Pair.of(user.getSeq(),user.getNickName());
     }
 
     /**
@@ -51,7 +52,8 @@ public class UserSignUpService {
      * @param email 사용자 이메일
      */
     private void validateUserNotExists(String email) {
-        userRepository.findByEmail(email)
+        userRepository
+                .findByEmail(email)
                 .ifPresent(user -> {
                     throw new CustomException(EXISTING_USER);
                 });

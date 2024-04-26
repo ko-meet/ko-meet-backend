@@ -38,14 +38,11 @@ public class LocationController {
     @ApiOperation(value = "위치 정보", notes = "위치 정보를 가져옵니다.")
     public ResponseEntity<ApiResponse> getLocation(@RequestParam Double latitude,
                                                    @RequestParam Double longitude) {
+        Pair<String, String> country =
+                geocoderService.getCountry(latitude, longitude).join();
 
-        CompletableFuture<Pair<String, String>> country =
-                geocoderService.getCountry(latitude, longitude);
-
-        LocationResponse response = LocationResponse.from(
-                country.join().getFirst(), country.join().getSecond()
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(LocationResponse.from(country.getFirst(), country.getSecond()))
         );
-
-        return ResponseEntity.status(OK).body(new ApiResponse(response));
     }
 }

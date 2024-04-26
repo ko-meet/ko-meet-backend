@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -118,7 +116,7 @@ public class ChatController {
             @PathVariable Long chatRoomSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         chatRoomService.deleteChatRoom(chatRoomSeq, userSeq);
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -134,8 +132,9 @@ public class ChatController {
             @RequestHeader(AUTHORIZATION) String token,
             @RequestParam String keyword) {
         Long userSeq = jwtProvider.getIdFromToken(token);
-        List<ChatRoomDto> chatList = chatRoomService.searchChatRooms(userSeq, keyword);
-        return ResponseEntity.status(OK).body(new ApiResponse(chatList));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(chatRoomService.searchChatRooms(userSeq, keyword))
+        );
     }
 
 }

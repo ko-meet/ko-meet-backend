@@ -39,7 +39,8 @@ public class GeocoderService {
     public CompletableFuture<Pair<String, String>> getCountry(Double latitude, Double longitude) {
         try {
             CompletableFuture<String> response =
-                    webClient.build().get()
+                    webClient.build()
+                            .get()
                             .uri(String.format(geocoderUrl, latitude, longitude, geocoderKey))
                             .header("Accept-Language", "ko-KR")
                             .retrieve()

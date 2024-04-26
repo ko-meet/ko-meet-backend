@@ -47,7 +47,7 @@ public class CommentController {
 
         commentUploadService.uploadComment(userId, postSeq, commentUploadRequest);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -67,6 +67,6 @@ public class CommentController {
 
         commentLikeService.likeComment(userId, commentSeq);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 }

@@ -41,9 +41,7 @@ public class ImageService {
             imageUrls.add(saveFileAndGetUrl(multipartFile, imagePath))
         );
 
-        return ImageDto.builder()
-                .imageUrl(imageUrls)
-                .build();
+        return ImageDto.from(imageUrls);
     }
 
     /**
@@ -85,7 +83,12 @@ public class ImageService {
         metadata.setContentType(multipartFile.getContentType());
 
         try {
-            amazonS3.putObject(bucket, originalFileName, multipartFile.getInputStream(), metadata);
+            amazonS3.putObject(
+                    bucket,
+                    originalFileName,
+                    multipartFile.getInputStream(),
+                    metadata
+            );
         } catch (IOException e) {
             throw new CustomException(IMAGE_UPLOAD_FAILED);
         }
