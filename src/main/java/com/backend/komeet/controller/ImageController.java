@@ -52,7 +52,7 @@ public class ImageController {
     @ApiOperation(value = "이미지 삭제", notes = "이미지를 삭제합니다.")
     public ResponseEntity<ApiResponse> deleteImage(ImageRequest imageRequest) {
         imageService.deleteFile(imageRequest.getImagePath());
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }

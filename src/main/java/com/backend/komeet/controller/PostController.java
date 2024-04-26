@@ -55,7 +55,7 @@ public class PostController {
 
         postUploadService.uploadPost(userId, postUploadRequest);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -77,7 +77,7 @@ public class PostController {
 
         postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -117,7 +117,7 @@ public class PostController {
 
         postLikeService.likePost(userId, postSeq);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**

@@ -34,7 +34,8 @@ public enum ErrorCode {
 
     COMMENT_NOT_FOUND(NOT_FOUND, "존재하지 않는 댓글입니다."),
     CHAT_ROOM_NOT_FOUND(NOT_FOUND, "존재하지 않는 채팅방입니다."),
-    INVALID_USER(BAD_REQUEST, "해당 채팅방에 대한 권한이 없습니다.");
+    INVALID_USER(BAD_REQUEST, "해당 채팅방에 대한 권한이 없습니다."),
+    EMAIL_SEND_FAILED(BAD_REQUEST, "이메일 발송에 실패하였습니다.");
 
     private final HttpStatus status;
     private final String message;

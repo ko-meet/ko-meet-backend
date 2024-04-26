@@ -116,7 +116,7 @@ public class ChatController {
             @PathVariable Long chatRoomSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         chatRoomService.deleteChatRoom(chatRoomSeq, userSeq);
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**

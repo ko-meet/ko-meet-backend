@@ -41,7 +41,7 @@ public class BookmarkController {
 
         bookmarkCreationService.createBookmark(userSeq, postSeq);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
