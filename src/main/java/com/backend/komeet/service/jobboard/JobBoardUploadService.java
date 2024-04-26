@@ -31,9 +31,8 @@ public class JobBoardUploadService {
      * @return {@link JobBoardDto}
      */
     public JobBoardDto postJobBoard(JobBoardUploadRequest jobBoardRequest, Long userSeq) {
-        User user = userRepository.findById(userSeq).orElseThrow(
-                () -> new CustomException(USER_INFO_NOT_FOUND)
-        );
+        User user = userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return JobBoardDto.from(jobBoardRepository.save(JobBoard.from(jobBoardRequest, user)));
     }
 }

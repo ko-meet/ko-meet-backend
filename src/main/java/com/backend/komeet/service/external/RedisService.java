@@ -5,9 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * Redis 서비스
@@ -28,7 +27,7 @@ public class RedisService {
     public void saveKeyAndValue(String key, String value, int expireTime) {
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         ops.set(key, value);
-        stringRedisTemplate.expire(key, expireTime, TimeUnit.MINUTES);
+        stringRedisTemplate.expire(key, expireTime, MINUTES);
     }
 
     /**

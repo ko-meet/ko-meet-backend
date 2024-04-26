@@ -17,7 +17,6 @@ public interface ChatRoomQRepository {
 
     Optional<ChatRoomDto> getChatRoom(User user1, User user2);
 
-    List<ChatRoomDto> searchChatRoomsByUserNickName(User user,
-                                                    String keyword);
+    List<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword);
 
 }

@@ -1,6 +1,5 @@
 package com.backend.komeet.controller;
 
-import com.amazonaws.Response;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.dto.SearchResultDto;
 import com.backend.komeet.dto.request.PostUpdateRequest;
@@ -56,7 +55,7 @@ public class PostController {
 
         postUploadService.uploadPost(userId, postUploadRequest);
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -78,7 +77,7 @@ public class PostController {
 
         postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -118,7 +117,7 @@ public class PostController {
 
         postLikeService.likePost(userId, postSeq);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -140,13 +139,17 @@ public class PostController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer page) {
 
-        return ResponseEntity.ok().body(new ApiResponse(postUploadService.getPosts(
-                country,
-                SortingMethods.valueOf(sortingMethod),
-                isPublic,
-                Categories.valueOf(category),
-                page == null ? 0 : page
-        )));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(
+                        postUploadService.getPosts(
+                                country,
+                                SortingMethods.valueOf(sortingMethod),
+                                isPublic,
+                                Categories.valueOf(category),
+                                page == null ? 0 : page
+                        )
+                )
+        );
     }
 
     /**
@@ -157,12 +160,11 @@ public class PostController {
      */
     @PatchMapping("/{postSeq}/view")
     @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
-    public ResponseEntity<ApiResponse> increaseViewCount(
-            @PathVariable Long postSeq) {
+    public ResponseEntity<ApiResponse> increaseViewCount(@PathVariable Long postSeq) {
 
         postUpdateService.increaseViewCount(postSeq);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -173,11 +175,11 @@ public class PostController {
      */
     @GetMapping("/{postSeq}")
     @ApiOperation(value = "게시물 상세 조회", notes = "게시물 상세 정보를 조회합니다.")
-    public ResponseEntity<ApiResponse> getPost(
-            @PathVariable Long postSeq) {
+    public ResponseEntity<ApiResponse> getPost(@PathVariable Long postSeq) {
 
-        return ResponseEntity.status(OK)
-                .body(new ApiResponse(postUploadService.getPost(postSeq)));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(postUploadService.getPost(postSeq))
+        );
     }
 
     /**
@@ -191,7 +193,6 @@ public class PostController {
     @GetMapping("/search")
     @ApiOperation(value = "게시물 검색", notes = "게시물을 검색합니다.")
     public ResponseEntity<ApiResponse> searchPosts(
-            @RequestHeader(AUTHORIZATION) String token,
             @RequestParam(required = true) String keyword,
             @RequestParam(required = true) Integer page) {
         Page<SearchResultDto> list =
@@ -214,7 +215,7 @@ public class PostController {
 
         Long userId = jwtProvider.getIdFromToken(token);
 
-        return ResponseEntity.ok().body(
+        return ResponseEntity.status(OK).body(
                 new ApiResponse(postUploadService.getMyPosts(userId, page))
         );
     }

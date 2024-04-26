@@ -52,15 +52,20 @@ public class UserController {
     public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
 
-        Long userSeq = userSignUpService.signUp(userSignUpRequest);
+        Pair<Long, String> userSeqAndNickName =
+                userSignUpService.signUp(userSignUpRequest);
 
-        emailService.sendEmail(
+        emailService.sendHtmlEmail(
                 userSignUpRequest.getEmail(),
                 EMAIL_SIGN_UP_SUBJECT,
-                String.format(EMAIL_SIGN_UP_CONTENT, userSeq)
+                String.format(
+                        HTML_SIGN_UP_CONTENT,
+                        userSeqAndNickName.getSecond(),
+                        String.format(API_LINK, userSeqAndNickName.getFirst())
+                )
         );
 
-        return ResponseEntity.status(CREATED).body(new ApiResponse(CREATED.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -71,19 +76,23 @@ public class UserController {
      */
     @PostMapping("/authentication-mail")
     @ApiOperation(value = "이메일 재 인증", notes = "이메일 재 인증 진행")
-    public ResponseEntity<ApiResponse> reAuthenticationMail(
+    public ResponseEntity<Void> reAuthenticationMail(
             @Valid @RequestBody UserEmailRequest userEmailRequest) {
 
         UserDto user =
                 userSignUpService.getUserByEmail(userEmailRequest.getEmail());
 
-        emailService.sendEmail(
+        emailService.sendHtmlEmail(
                 userEmailRequest.getEmail(),
                 EMAIL_SIGN_UP_SUBJECT,
-                String.format(EMAIL_SIGN_UP_CONTENT, user.getSeq())
+                String.format(
+                        HTML_SIGN_UP_CONTENT,
+                        user.getNickName(),
+                        String.format(API_LINK, user.getSeq())
+                )
         );
 
-        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+        return ResponseEntity.status(CREATED).build();
     }
 
     /**
@@ -98,9 +107,8 @@ public class UserController {
 
         userSignUpService.verifyEmail(userSeq);
 
-        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+        return ResponseEntity.status(OK).build();
     }
-
     /**
      * 사용자 로그인
      *
@@ -166,13 +174,13 @@ public class UserController {
         String temporaryPassword =
                 userInformationService.resetPassword(passwordResetRequest);
 
-        emailService.sendEmail(
-                passwordResetRequest.getEmail(),
-                PASSWORD_RESET_SUBJECT,
-                String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
-        );
+//        emailService.sendEmail(
+//                passwordResetRequest.getEmail(),
+//                PASSWORD_RESET_SUBJECT,
+//                String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
+//        );
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -192,7 +200,7 @@ public class UserController {
 
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
 
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -206,9 +214,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> checkNickname(
             @RequestParam String nickname) {
 
-        Boolean isNicknameUnique =
-                userInformationService.checkNickname(nickname);
-
-        return ResponseEntity.status(OK).body(new ApiResponse(isNicknameUnique));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(userInformationService.checkNickname(nickname))
+        );
     }
 }

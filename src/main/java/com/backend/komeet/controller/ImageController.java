@@ -1,6 +1,5 @@
 package com.backend.komeet.controller;
 
-import com.backend.komeet.dto.ImageDto;
 import com.backend.komeet.dto.request.ImageRequest;
 import com.backend.komeet.dto.response.ApiResponse;
 import com.backend.komeet.service.external.ImageService;
@@ -38,9 +37,9 @@ public class ImageController {
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadImage(List<MultipartFile> multipartFile,
                                                    @RequestParam String imagePath) {
-        ImageDto imageDto =
-                imageService.saveFiles(multipartFile, imagePath);
-        return ResponseEntity.status(OK).body(new ApiResponse(imageDto.getImageUrl()));
+        return ResponseEntity.status(OK).body(
+                new ApiResponse(imageService.saveFiles(multipartFile, imagePath))
+        );
     }
 
     /**
@@ -53,7 +52,7 @@ public class ImageController {
     @ApiOperation(value = "이미지 삭제", notes = "이미지를 삭제합니다.")
     public ResponseEntity<ApiResponse> deleteImage(ImageRequest imageRequest) {
         imageService.deleteFile(imageRequest.getImagePath());
-        return ResponseEntity.status(NO_CONTENT).body(new ApiResponse(NO_CONTENT.value()));
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }

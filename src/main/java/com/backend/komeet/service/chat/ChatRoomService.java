@@ -5,7 +5,6 @@ import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.ChatRoomDto;
 import com.backend.komeet.exception.CustomException;
 import com.backend.komeet.exception.ErrorCode;
-import com.backend.komeet.repository.ChatRepository;
 import com.backend.komeet.repository.ChatRoomRepository;
 import com.backend.komeet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 @Service
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
     /**
@@ -41,9 +39,8 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public Page<ChatRoomDto> getChatRooms(Long userSeq, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);
-        User user = userRepository.findById(userSeq).orElseThrow(
-                () -> new CustomException(USER_INFO_NOT_FOUND)
-        );
+        User user = userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.getChatRooms(user, pageable);
     }
 
@@ -141,9 +138,8 @@ public class ChatRoomService {
      * @return {@link ChatRoom} 채팅방
      */
     private ChatRoom getChatRoom(Long chatRoomSeq) {
-        return chatRoomRepository.findById(chatRoomSeq).orElseThrow(
-                () -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND)
-        );
+        return chatRoomRepository.findById(chatRoomSeq)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
     }
 
     /**
@@ -153,9 +149,8 @@ public class ChatRoomService {
      * @return 사용자 정보
      */
     private User getUser(Long userSeq) {
-        return userRepository.findById(userSeq).orElseThrow(
-                () -> new CustomException(USER_INFO_NOT_FOUND)
-        );
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 
     /**
@@ -166,9 +161,8 @@ public class ChatRoomService {
      * @return 채팅방 목록
      */
     public List<ChatRoomDto> searchChatRooms(Long userSeq, String keyword) {
-        User user = userRepository.findById(userSeq).orElseThrow(
-                () -> new CustomException(USER_INFO_NOT_FOUND)
-        );
+        User user = userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword);
     }
 }
