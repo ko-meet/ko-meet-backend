@@ -3,7 +3,6 @@ package com.backend.komeet.service.user;
 import com.backend.komeet.config.JwtProvider;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.TokenIssuanceDto;
-import com.backend.komeet.dto.UserDto;
 import com.backend.komeet.dto.UserSignInDto;
 import com.backend.komeet.dto.request.UserInfoUpdateRequest;
 import com.backend.komeet.dto.request.UserPasswordChangeRequest;
@@ -49,13 +48,11 @@ public class UserInformationService {
                                   CompletableFuture<Pair<String, String>> country,
                                   UserInfoUpdateRequest userInfoUpdateRequest) {
 
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userSeq, "");
 
         if (userInfoUpdateRequest.getNickName() != null) {
             user.setNickName(userInfoUpdateRequest.getNickName());
         }
-
         if (userInfoUpdateRequest.getCountry() != null) {
             Pair<String, String> countryPair =
                     CountryUtil.fetchLocation(country);
@@ -78,8 +75,7 @@ public class UserInformationService {
      */
     @Transactional
     public String resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
-        User user = userRepository.findByEmail(userPasswordResetRequest.getEmail())
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(null, userPasswordResetRequest.getEmail());
 
         if (!user.getCountry().equals(userPasswordResetRequest.getCountry())) {
             throw new CustomException(USER_INFO_NOT_FOUND);
@@ -94,8 +90,7 @@ public class UserInformationService {
     @Transactional
     public void changePassword(Long userSeq,
                                UserPasswordChangeRequest userPasswordChangeRequest) {
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userSeq, "");
 
         if (!passwordEncoder.matches(
                 userPasswordChangeRequest.getExistingPassword(), user.getPassword())
@@ -129,8 +124,7 @@ public class UserInformationService {
     @Transactional(readOnly = true)
     public UserSignInDto getUser(Long userSeq, CompletableFuture<Pair<String, String>> country) {
 
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userSeq, "");
 
         boolean isLocationMatch = false;
 
@@ -159,14 +153,17 @@ public class UserInformationService {
      * @param token 토큰
      * @return 토큰
      */
+    @Transactional
     public Pair<String, String> refreshToken(String token) {
         String userEmail = redisService.getValueByKey(TOKEN_PREFIX + token);
         if (userEmail == null) {
             throw new CustomException(USER_INFO_NOT_FOUND);
         }
-        String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDto.from(
-                userRepository.findByEmail(userEmail)
-                        .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))));
+        String accessToken = jwtProvider.issueAccessToken(
+                TokenIssuanceDto.from(
+                        userRepository.findByEmail(userEmail)
+                                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
+                ));
 
         String refreshToken = jwtProvider.issueRefreshToken();
 
@@ -175,5 +172,16 @@ public class UserInformationService {
                 TOKEN_PREFIX + refreshToken, userEmail, REFRESH_TOKEN_EXPIRE_TIME);
 
         return Pair.of(accessToken, refreshToken);
+    }
+
+    private User getUser(Long userSeq, String userEmail) {
+        if (userSeq != null) {
+            return userRepository.findById(userSeq)
+                    .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        } else if (userEmail != null) {
+            return userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        }
+        return new User();
     }
 }

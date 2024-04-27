@@ -57,7 +57,11 @@ public class ChatRoomService {
         User counterpart = getUser(counterpartSeq);
         return chatRoomRepository.getChatRoom(user, counterpart)
                 .map(ChatRoomDto::getSeq)
-                .orElseGet(() -> chatRoomRepository.save(ChatRoom.from(user, counterpart)).getSeq());
+                .orElseGet(
+                        () -> chatRoomRepository
+                                .save(ChatRoom.from(user, counterpart))
+                                .getSeq()
+                );
     }
 
     /**
@@ -103,7 +107,8 @@ public class ChatRoomService {
      * @param chatRoom {@link ChatRoom} 채팅방
      * @param user     {@link User} 사용자
      */
-    private static void throwAnErrorIfUserIsNotInvolve(ChatRoom chatRoom, User user) {
+    private static void throwAnErrorIfUserIsNotInvolve(ChatRoom chatRoom,
+                                                       User user) {
         if (!chatRoom.getSender().equals(user) && !chatRoom.getRecipient().equals(user)) {
             throw new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND);
         }

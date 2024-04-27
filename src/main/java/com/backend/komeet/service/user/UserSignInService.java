@@ -42,8 +42,7 @@ public class UserSignInService {
     public UserSignInDto signIn(UserSignInRequest userSignInRequest,
                                 CompletableFuture<Pair<String, String>> country) {
 
-        User user = userRepository.findByEmail(userSignInRequest.getEmail())
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userSignInRequest);
 
         if (!passwordEncoder.matches(userSignInRequest.getPassword(), user.getPassword())) {
             throw new CustomException(PASSWORD_NOT_MATCH);
@@ -69,6 +68,17 @@ public class UserSignInService {
                 user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
                         user.getRegion().equals(countryPair.getSecond())
         );
+    }
+
+    /**
+     * 사용자 정보 가져오기
+     *
+     * @param userSignInRequest {@link UserSignInRequest}
+     * @return 사용자 정보
+     */
+    private User getUser(UserSignInRequest userSignInRequest) {
+        return userRepository.findByEmail(userSignInRequest.getEmail())
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 
 }

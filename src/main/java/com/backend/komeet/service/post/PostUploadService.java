@@ -94,13 +94,13 @@ public class PostUploadService {
     }
 
     /**
-     * 내 게시물 목록 조회 메서드
+     * 사용자 게시물 목록 조회 메서드
      * @param userId 사용자 식별자
      * @param page 페이지 번호
      * @return 내 게시물 목록
      */
     @Transactional(readOnly = true)
-    public Page<PostDto> getMyPosts(Long userId, Integer page) {
+    public Page<PostDto> getUserPosts(Long userId, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);
         return postRepository.getMyPosts(userId, pageable);
     }

@@ -59,7 +59,10 @@ public class CommentLikeService {
             }
         }
         if (likeCount == null) {
-            log.error("Failed to process like for commentSeq {} after {} retries", commentSeq, maxRetries);
+            log.error(
+                    "Failed to process like for commentSeq {} after {} retries",
+                    commentSeq, maxRetries
+            );
         }
     }
 

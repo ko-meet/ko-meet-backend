@@ -30,9 +30,32 @@ public class JobBoardUploadService {
      * @param userSeq         사용자 식별자
      * @return {@link JobBoardDto}
      */
-    public JobBoardDto postJobBoard(JobBoardUploadRequest jobBoardRequest, Long userSeq) {
+    public JobBoardDto postJobBoard(JobBoardUploadRequest jobBoardRequest,
+                                    Long userSeq) {
+        User user = getUser(userSeq);
+        return JobBoardDto.from(getJobBoard(jobBoardRequest, user));
+    }
+
+    /**
+     * 구인구직 게시글 엔티티를 생성하는 메서드
+     *
+     * @param jobBoardRequest {@link JobBoardUploadRequest}
+     * @param user            {@link User}
+     * @return {@link JobBoard}
+     */
+    private JobBoard getJobBoard(JobBoardUploadRequest jobBoardRequest, User user) {
+        return jobBoardRepository.save(JobBoard.from(jobBoardRequest, user));
+    }
+
+    /**
+     * 사용자 엔티티를 조회하는 메서드
+     *
+     * @param userSeq 사용자 식별자
+     * @return {@link User}
+     */
+    private User getUser(Long userSeq) {
         User user = userRepository.findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
-        return JobBoardDto.from(jobBoardRepository.save(JobBoard.from(jobBoardRequest, user)));
+        return user;
     }
 }
