@@ -185,7 +185,6 @@ public class PostController {
     /**
      * 게시물 검색
      *
-     * @param token   토큰
      * @param keyword 검색어
      * @param page    페이지
      * @return {@link ResponseEntity<ApiResponse>} 게시물 검색 결과
@@ -201,22 +200,19 @@ public class PostController {
     }
 
     /**
-     * 내 게시물 목록 조회
+     * 사용자 게시물 목록 조회
      *
-     * @param token 토큰
      * @param page  페이지
      * @return {@link ResponseEntity<ApiResponse>} 내 게시물 목록
      */
-    @GetMapping("/my")
-    @ApiOperation(value = "내 게시물 목록 조회", notes = "내 게시물 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse> getMyPosts(
-            @RequestHeader(AUTHORIZATION) String token,
-            @RequestParam(required = true) Integer page) {
-
-        Long userId = jwtProvider.getIdFromToken(token);
+    @GetMapping("/users/{userSeq}/page/{page}")
+    @ApiOperation(value = "사용자의 게시물 목록 조회", notes = "사용자 게시물 목록을 조회합니다.")
+    public ResponseEntity<ApiResponse> getUserPosts(
+            @PathVariable Long userSeq,
+            @PathVariable Integer page) {
 
         return ResponseEntity.status(OK).body(
-                new ApiResponse(postUploadService.getMyPosts(userId, page))
+                new ApiResponse(postUploadService.getUserPosts(userSeq, page))
         );
     }
 }

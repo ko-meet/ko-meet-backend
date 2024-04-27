@@ -80,7 +80,7 @@ public class ChatController {
             @RequestParam Long counterpartSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         Long chatRoomSeq = chatRoomService.createChatRoom(userSeq, counterpartSeq);
-        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+        return ResponseEntity.status(OK).body(new ApiResponse(chatRoomSeq));
     }
 
     /**

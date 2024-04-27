@@ -32,22 +32,30 @@ public class ChatRoomDto {
                 .lastChat(
                         chatRoom.getChats().isEmpty() ?
                                 " " :
-                                chatRoom.getChats().get(chatRoom.getChats().size() - 1).getContent()
+                                chatRoom.getChats()
+                                        .get(chatRoom.getChats().size() - 1)
+                                        .getContent()
                 )
                 .lastChatTime(
                         chatRoom.getChats().isEmpty() ?
                                 LocalDateTime.now() :
-                                chatRoom.getChats().get(chatRoom.getChats().size() - 1).getCreatedAt()
+                                chatRoom.getChats()
+                                        .get(chatRoom.getChats().size() - 1)
+                                        .getCreatedAt()
                 )
                 .unreadCountForSender(
                         (int) chatRoom.getChats().stream()
-                                .filter(chat -> chat.getSender().getSeq().equals(chatRoom.getRecipient().getSeq()))
+                                .filter(chat -> chat.getSender()
+                                        .getSeq()
+                                        .equals(chatRoom.getRecipient().getSeq()))
                                 .filter(chat -> !chat.getReadStatus())
                                 .count()
                 )
                 .unreadCountForRecipient(
                         (int) chatRoom.getChats().stream()
-                                .filter(chat -> chat.getSender().getSeq().equals(chatRoom.getSender().getSeq()))
+                                .filter(chat -> chat.getSender()
+                                        .getSeq()
+                                        .equals(chatRoom.getSender().getSeq()))
                                 .filter(chat -> !chat.getReadStatus())
                                 .count()
                 )

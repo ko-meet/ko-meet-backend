@@ -5,7 +5,6 @@ import com.backend.komeet.domain.Reply;
 import com.backend.komeet.domain.User;
 import com.backend.komeet.dto.request.CommentUploadRequest;
 import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.exception.ErrorCode;
 import com.backend.komeet.repository.CommentRepository;
 import com.backend.komeet.repository.ReplyRepository;
 import com.backend.komeet.repository.UserRepository;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.backend.komeet.exception.ErrorCode.COMMENT_NOT_FOUND;
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
@@ -30,25 +30,57 @@ public class ReplyUploadService {
 
     /**
      * 대댓글을 업로드하는 메서드
-     * @param userId 사용자 식별자
-     * @param commentSeq 댓글 식별자
+     *
+     * @param userId               사용자 식별자
+     * @param commentSeq           댓글 식별자
      * @param commentUploadRequest 대댓글 업로드 요청 데이터
      */
     @Transactional
     public void uploadComment(Long userId,
                               Long commentSeq,
                               CommentUploadRequest commentUploadRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userId);
+        Comment comment = getComment(commentSeq);
 
-        Comment comment = commentRepository.findById(commentSeq)
-                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+        comment.getReplies().add(getReply(commentUploadRequest, user, comment));
+    }
 
-        Reply reply = replyRepository.save(
+    /**
+     * 대댓글 엔티티를 생성하는 메서드
+     *
+     * @param commentUploadRequest {@link CommentUploadRequest}
+     * @param user                 {@link User}
+     * @param comment              {@link Comment}
+     * @return {@link Reply}
+     */
+    private Reply getReply(CommentUploadRequest commentUploadRequest,
+                           User user,
+                           Comment comment) {
+        return replyRepository.save(
                 Reply.from(user, comment, commentUploadRequest.getContent())
         );
+    }
 
-        comment.getReplies().add(reply);
+    /**
+     * 댓글 식별자로 댓글을 조회하는 메서드
+     *
+     * @param commentSeq 댓글 식별자
+     * @return {@link Comment}
+     */
+    private Comment getComment(Long commentSeq) {
+        return commentRepository.findById(commentSeq)
+                .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
+    }
+
+    /**
+     * 사용자 식별자로 사용자를 조회하는 메서드
+     *
+     * @param userId 사용자 식별자
+     * @return {@link User}
+     */
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 
 }
