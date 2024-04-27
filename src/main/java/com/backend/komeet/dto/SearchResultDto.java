@@ -129,12 +129,16 @@ public class SearchResultDto {
         // 남는 태그들을 섞고 적절한 개수 선택하기
         List<String> shuffledTags = tags.stream()
                 .filter(tag -> !keywordTagList.contains(tag)) // 이미 추가된 태그는 제외
-                .collect(Collectors.collectingAndThen(Collectors.toList(), collected -> {
-                    Collections.shuffle(collected);
-                    return collected.stream()
-                            .limit(isAdded ? Math.min(2, collected.size()) : Math.min(3, collected.size()))
-                            .collect(Collectors.toList());
-                }));
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(), collected -> {
+                            Collections.shuffle(collected);
+                            return collected.stream()
+                                    .limit(isAdded ?
+                                            Math.min(2, collected.size()) :
+                                            Math.min(3, collected.size())
+                                    ).collect(Collectors.toList());
+                        }
+                ));
 
         // 두 리스트를 합쳐서 결과 리스트 생성
         List<String> result = new ArrayList<>(keywordTagList);

@@ -32,8 +32,7 @@ public class UserSignUpService {
      * @param userSignUpRequest 사용자 회원가입 요청
      */
     @Transactional
-    public Pair<Long,String> signUp(UserSignUpRequest userSignUpRequest) {
-
+    public Pair<Long, String> signUp(UserSignUpRequest userSignUpRequest) {
         validateUserNotExists(userSignUpRequest.getEmail());
 
         String encodedPassword =
@@ -43,7 +42,7 @@ public class UserSignUpService {
                 User.from(userSignUpRequest, encodedPassword)
         );
 
-        return Pair.of(user.getSeq(),user.getNickName());
+        return Pair.of(user.getSeq(), user.getNickName());
     }
 
     /**
@@ -78,8 +77,18 @@ public class UserSignUpService {
      */
     @Transactional
     public void verifyEmail(Long userSeq) {
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        User user = getUser(userSeq);
         user.setUserStatus(ACTIVE);
+    }
+
+    /**
+     * 사용자 정보 가져오기
+     *
+     * @param userSeq 사용자 시퀀스
+     * @return {@link User}
+     */
+    private User getUser(Long userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }

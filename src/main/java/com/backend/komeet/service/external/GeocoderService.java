@@ -36,7 +36,8 @@ public class GeocoderService {
      * @return 국가와 도시
      */
     @Async
-    public CompletableFuture<Pair<String, String>> getCountry(Double latitude, Double longitude) {
+    public CompletableFuture<Pair<String, String>> getCountry(Double latitude,
+                                                              Double longitude) {
         try {
             CompletableFuture<String> response =
                     webClient.build()

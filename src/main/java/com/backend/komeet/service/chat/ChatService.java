@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.backend.komeet.exception.ErrorCode.*;
+
 /**
  * 채팅방 관련 서비스
  */
@@ -49,7 +51,7 @@ public class ChatService {
     @Transactional
     public void addChat(Long chatRoomSeq, Long userSeq, ChatContentRequest content) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomSeq)
-                .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
         User sender = chatRoom.getSender();
         User recipient = chatRoom.getRecipient();
         isValidUser(sender, recipient, userSeq);
@@ -71,7 +73,7 @@ public class ChatService {
     @Transactional
     public Chat saveChat(ChatRequest chatRequest) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRequest.getChatRoomSeq())
-                .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
 
         boolean isSender = senderCheck(chatRoom.getSender(), chatRequest.getSenderSeq());
 
@@ -98,7 +100,7 @@ public class ChatService {
     public void markAsRead(Long chatSeq, Long userSeq) {
 
         Chat chat = chatRepository.findById(chatSeq).orElseThrow(
-                () -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND)
+                () -> new CustomException(CHAT_ROOM_NOT_FOUND)
         );
 
         if (chat.getRecipient().getSeq().equals(userSeq)) {
@@ -126,7 +128,7 @@ public class ChatService {
      */
     private void isValidUser(User sender, User recipient, Long userSeq) {
         if (!sender.getSeq().equals(userSeq) && !recipient.getSeq().equals(userSeq)) {
-            throw new CustomException(ErrorCode.INVALID_USER);
+            throw new CustomException(INVALID_USER);
         }
     }
 

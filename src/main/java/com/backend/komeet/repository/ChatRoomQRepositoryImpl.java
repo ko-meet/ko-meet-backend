@@ -83,7 +83,8 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
      * @return 채팅방 목록
      */
     @Override
-    public List<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword) {
+    public List<ChatRoomDto> searchChatRoomsByUserNickName(User user,
+                                                           String keyword) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         keyword = keyword.trim();
         Predicate predicate =

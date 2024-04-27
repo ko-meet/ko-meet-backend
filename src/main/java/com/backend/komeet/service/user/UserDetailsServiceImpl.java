@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backend.komeet.exception.ErrorCode.*;
+
 /**
  * Spring Security에서 사용자 인증을 위해 사용되는 클래스
  */
@@ -32,8 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        com.backend.komeet.domain.User userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_INFO_NOT_FOUND));
+        com.backend.komeet.domain.User userEntity = getUser(email);
 
         List<GrantedAuthority> authorities =
                 new ArrayList<>(userEntity.getUserRole().getAuthorities());
@@ -43,5 +44,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .password(userEntity.getPassword())
                 .authorities(authorities)
                 .build();
+    }
+
+    /**
+     * 사용자 정보를 조회하는 메서드
+     * @param email 사용자 이메일
+     * @return {@link com.backend.komeet.domain.User}
+     */
+    private com.backend.komeet.domain.User getUser(String email) {
+        com.backend.komeet.domain.User userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
+        return userEntity;
     }
 }
