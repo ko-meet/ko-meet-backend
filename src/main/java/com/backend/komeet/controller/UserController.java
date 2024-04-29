@@ -9,6 +9,7 @@ import com.backend.komeet.service.external.EmailService;
 import com.backend.komeet.service.external.GeocoderService;
 import com.backend.komeet.service.external.RedisService;
 import com.backend.komeet.service.user.UserInformationService;
+import com.backend.komeet.service.user.UserReportService;
 import com.backend.komeet.service.user.UserSignInService;
 import com.backend.komeet.service.user.UserSignUpService;
 import io.swagger.annotations.Api;
@@ -38,8 +39,8 @@ public class UserController {
     private final UserInformationService userInformationService;
     private final GeocoderService geocoderService;
     private final EmailService emailService;
-    private final RedisService redisService;
     private final JwtProvider jwtProvider;
+    private final UserReportService userReportService;
 
     /**
      * 사용자 회원가입
@@ -109,6 +110,7 @@ public class UserController {
 
         return ResponseEntity.status(OK).build();
     }
+
     /**
      * 사용자 로그인
      *
@@ -217,5 +219,26 @@ public class UserController {
         return ResponseEntity.status(OK).body(
                 new ApiResponse(userInformationService.checkNickname(nickname))
         );
+    }
+
+    /**
+     * 사용자 신고
+     *
+     * @param token             토큰
+     * @param userSeq           신고대상자 고유번호
+     * @param userReportRequest {@link UserReportRequest}
+     * @return {@link ResponseEntity<Void>}
+     */
+    @PatchMapping("/{userSeq}/report")
+    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
+    public ResponseEntity<Void> reportUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq,
+            @Valid @RequestBody UserReportRequest userReportRequest) {
+
+        Long reporterSeq = jwtProvider.getIdFromToken(token);
+        userReportService.reportValidation(userSeq, reporterSeq);
+        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }
