@@ -1,8 +1,8 @@
 package com.backend.komeet.user.presentation.controller;
 
-import com.backend.komeet.base.application.RedisService;
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.global.security.JwtProvider;
+import com.backend.komeet.service.user.UserReportService;
 import com.backend.komeet.user.application.*;
 import com.backend.komeet.user.enums.EmailComponents;
 import com.backend.komeet.user.model.dtos.UserDto;
@@ -36,7 +36,6 @@ public class UserController {
     private final UserInformationService userInformationService;
     private final GeocoderService geocoderService;
     private final EmailService emailService;
-    private final RedisService redisService;
     private final JwtProvider jwtProvider;
     private final UserReportService userReportService;
 
