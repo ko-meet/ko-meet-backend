@@ -33,7 +33,6 @@ public class UserSignUpService {
      */
     @Transactional
     public Pair<Long, String> signUp(UserSignUpRequest userSignUpRequest) {
-
         validateUserNotExists(userSignUpRequest.getEmail());
 
         String encodedPassword =
