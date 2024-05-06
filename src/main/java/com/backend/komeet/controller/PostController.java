@@ -133,7 +133,7 @@ public class PostController {
     @GetMapping
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
     public ResponseEntity<ApiResponse> getPosts(
-            @RequestParam(required = false) Countries country,
+            @RequestParam(required = false) String country,
             @RequestParam(required = false) String sortingMethod,
             @RequestParam(required = false) String isPublic,
             @RequestParam(required = false) String category,
@@ -142,7 +142,7 @@ public class PostController {
         return ResponseEntity.status(OK).body(
                 new ApiResponse(
                         postUploadService.getPosts(
-                                country,
+                                Countries.getCountry(country),
                                 SortingMethods.valueOf(sortingMethod),
                                 isPublic,
                                 Categories.valueOf(category),
@@ -202,7 +202,7 @@ public class PostController {
     /**
      * 사용자 게시물 목록 조회
      *
-     * @param page  페이지
+     * @param page 페이지
      * @return {@link ResponseEntity<ApiResponse>} 내 게시물 목록
      */
     @GetMapping("/users/{userSeq}/page/{page}")
