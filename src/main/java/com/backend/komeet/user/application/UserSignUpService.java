@@ -66,11 +66,9 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = true)
     public UserDto getUserByEmail(String email) {
-        return UserDto.from(
-                userRepository
-                        .findByEmail(email)
-                        .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
-        );
+        return UserDto.from(userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND)));
     }
 
     /**
