@@ -66,11 +66,9 @@ public class UserSignUpService {
      */
     @Transactional(readOnly = true)
     public UserDto getUserByEmail(String email) {
-        return UserDto.from(
-                userRepository
-                        .findByEmail(email)
-                        .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
-        );
+        return UserDto.from(userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND)));
     }
 
     /**
@@ -91,7 +89,8 @@ public class UserSignUpService {
      * @return {@link User}
      */
     private User getUser(Long userSeq) {
-        return userRepository.findById(userSeq)
+        return userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }
