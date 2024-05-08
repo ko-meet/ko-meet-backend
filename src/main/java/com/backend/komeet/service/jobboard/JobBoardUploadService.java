@@ -54,8 +54,8 @@ public class JobBoardUploadService {
      * @return {@link User}
      */
     private User getUser(Long userSeq) {
-        User user = userRepository.findById(userSeq)
+        return userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
-        return user;
     }
 }

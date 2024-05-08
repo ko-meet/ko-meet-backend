@@ -44,7 +44,8 @@ public class PostDeleteService {
      * @return 게시물
      */
     private Post getPost(Long postSeq) {
-        Post post = postRepository.findById(postSeq)
+        Post post = postRepository
+                .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
         if (post.getStatus().equals(DELETED)) {
             throw new CustomException(ALREADY_DELETED_POST);
@@ -59,7 +60,8 @@ public class PostDeleteService {
      * @return 사용자
      */
     private User getUser(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository
+                .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }

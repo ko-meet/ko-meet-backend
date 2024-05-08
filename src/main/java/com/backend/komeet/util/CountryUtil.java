@@ -17,8 +17,7 @@ public class CountryUtil {
      * @param country CompletableFuture 객체
      * @return 나라와 도시 정보
      */
-    public Pair<String, String> fetchLocation(
-            CompletableFuture<Pair<String, String>> country) {
+    public Pair<String, String> fetchLocation(CompletableFuture<Pair<String, String>> country) {
 
         return country
                 .orTimeout(5, TimeUnit.SECONDS) // 5초 이내에 완료되지 않으면 타임아웃

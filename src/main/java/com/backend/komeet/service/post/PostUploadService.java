@@ -38,7 +38,8 @@ public class PostUploadService {
      */
     @Transactional
     public void uploadPost(Long userId, PostUploadRequest postUploadRequest) {
-        User user = userRepository.findById(userId)
+        User user = userRepository
+                .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
 
         postRepository.save(Post.from(postUploadRequest, user));
@@ -75,8 +76,9 @@ public class PostUploadService {
     @Transactional(readOnly = true)
     public PostDto getPost(Long postSeq) {
         return PostDto.from(
-                postRepository.findById(postSeq).orElseThrow(
-                        () -> new CustomException(POST_NOT_FOUND))
+                postRepository
+                        .findById(postSeq)
+                        .orElseThrow(() -> new CustomException(POST_NOT_FOUND))
         );
     }
 

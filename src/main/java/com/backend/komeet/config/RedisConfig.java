@@ -39,6 +39,7 @@ public class RedisConfig {
 
     /**
      * RedisTemplate을 반환하는 메서드
+     *
      * @param redisConnectionFactory RedisConnectionFactory 인스턴스
      * @return RedisTemplate 인스턴스
      */
@@ -52,6 +53,7 @@ public class RedisConfig {
 
     /**
      * RedisCacheManager를 반환하는 메서드
+     *
      * @param redisConnectionFactory RedisConnectionFactory 인스턴스
      * @return RedisCacheManager 인스턴스
      */
@@ -60,13 +62,18 @@ public class RedisConfig {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(3)) // 캐시 만료 기간 4시간
                 .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair
-                                .fromSerializer(new StringRedisSerializer()))
+                        RedisSerializationContext
+                                .SerializationPair
+                                .fromSerializer(new StringRedisSerializer())
+                )
                 .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair
-                                .fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                        RedisSerializationContext
+                                .SerializationPair
+                                .fromSerializer(new GenericJackson2JsonRedisSerializer())
+                );
 
-        return RedisCacheManager.builder(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory))
+        return RedisCacheManager
+                .builder(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(cacheConfiguration)
                 .build();
     }

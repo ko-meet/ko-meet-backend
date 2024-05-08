@@ -65,7 +65,8 @@ public class UserSignInService {
                 user,
                 accessToken,
                 refreshToken,
-                user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
+                user
+                        .getCountry().getCountryName().equals(countryPair.getFirst()) &&
                         user.getRegion().equals(countryPair.getSecond())
         );
     }
@@ -77,7 +78,8 @@ public class UserSignInService {
      * @return 사용자 정보
      */
     private User getUser(UserSignInRequest userSignInRequest) {
-        return userRepository.findByEmail(userSignInRequest.getEmail())
+        return userRepository
+                .findByEmail(userSignInRequest.getEmail())
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 

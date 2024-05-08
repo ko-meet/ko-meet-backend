@@ -98,8 +98,9 @@ public class UserInformationService {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
 
-        user.setPassword(passwordEncoder.encode(
-                userPasswordChangeRequest.getNewPassword()));
+        user.setPassword(
+                passwordEncoder.encode(userPasswordChangeRequest.getNewPassword())
+        );
 
     }
 
@@ -139,7 +140,8 @@ public class UserInformationService {
         String refreshToken = jwtProvider.issueRefreshToken();
 
         redisService.saveKeyAndValue(
-                TOKEN_PREFIX + refreshToken, user.getEmail(), REFRESH_TOKEN_EXPIRE_TIME
+                TOKEN_PREFIX + refreshToken, user.getEmail(),
+                REFRESH_TOKEN_EXPIRE_TIME
         );
 
         return UserSignInDto.from(
@@ -161,9 +163,11 @@ public class UserInformationService {
         }
         String accessToken = jwtProvider.issueAccessToken(
                 TokenIssuanceDto.from(
-                        userRepository.findByEmail(userEmail)
+                        userRepository
+                                .findByEmail(userEmail)
                                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
-                ));
+                )
+        );
 
         String refreshToken = jwtProvider.issueRefreshToken();
 
@@ -176,10 +180,12 @@ public class UserInformationService {
 
     private User getUser(Long userSeq, String userEmail) {
         if (userSeq != null) {
-            return userRepository.findById(userSeq)
+            return userRepository
+                    .findById(userSeq)
                     .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         } else if (userEmail != null) {
-            return userRepository.findByEmail(userEmail)
+            return userRepository
+                    .findByEmail(userEmail)
                     .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         }
         return new User();

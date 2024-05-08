@@ -20,14 +20,16 @@ public class GlobalExceptionHandler {
      * Validation 예외 처리
      *
      * @param exception MethodArgumentNotValidException 예외 객체
-     * @return ResponseEntity<List<String>> 유효성 검사 오류 목록
+     * @return ResponseEntity<List < String>> 유효성 검사 오류 목록
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidException(
             MethodArgumentNotValidException exception) {
 
         List<String> errors = new ArrayList<>();
-        exception.getBindingResult().getAllErrors()
+        exception
+                .getBindingResult()
+                .getAllErrors()
                 .forEach(error -> errors.add(error.getDefaultMessage()));
 
         return ResponseEntity.status(400).body(errors);
@@ -41,10 +43,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .errorCode(exception.getErrorCode())
-                .message(exception.getMessage())
-                .build();
+        ErrorResponse errorResponse =
+                ErrorResponse
+                        .builder()
+                        .errorCode(exception.getErrorCode())
+                        .message(exception.getMessage())
+                        .build();
 
         log.error(exception.getMessage(), exception);
 
@@ -61,10 +65,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> undefinedException(Exception exception) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(exception.getMessage())
-                .errorCode(ErrorCode.UNDEFINED_EXCEPTION)
-                .build();
+        ErrorResponse errorResponse =
+                ErrorResponse
+                        .builder()
+                        .message(exception.getMessage())
+                        .errorCode(ErrorCode.UNDEFINED_EXCEPTION)
+                        .build();
 
         log.error(exception.getMessage(), exception);
 

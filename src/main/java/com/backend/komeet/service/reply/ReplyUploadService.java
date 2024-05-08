@@ -68,7 +68,8 @@ public class ReplyUploadService {
      * @return {@link Comment}
      */
     private Comment getComment(Long commentSeq) {
-        return commentRepository.findById(commentSeq)
+        return commentRepository
+                .findById(commentSeq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
     }
 
@@ -79,7 +80,8 @@ public class ReplyUploadService {
      * @return {@link User}
      */
     private User getUser(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository
+                .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 

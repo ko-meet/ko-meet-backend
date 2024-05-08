@@ -130,7 +130,8 @@ public class UserReportService {
     private void processReport(Long targetUserSeq, Long reporterUserSeq) {
         User targetUser = getUser(targetUserSeq);
 
-        long reportCount = targetUser.getReportedCount() == null ?
+        long reportCount =
+                targetUser.getReportedCount() == null ?
                 0 : targetUser.getReportedCount();
         targetUser.setReportedCount(reportCount + 1);
         targetUser.setReportedDate(Date.valueOf(LocalDate.now()));
@@ -145,7 +146,8 @@ public class UserReportService {
      * @return {@link User}
      */
     private User getUser(Long targetUserSeq) {
-        return userRepository.findById(targetUserSeq)
+        return userRepository
+                .findById(targetUserSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }

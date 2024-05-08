@@ -177,9 +177,9 @@ public class PostController {
     @ApiOperation(value = "게시물 상세 조회", notes = "게시물 상세 정보를 조회합니다.")
     public ResponseEntity<ApiResponse> getPost(@PathVariable Long postSeq) {
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(postUploadService.getPost(postSeq))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(postUploadService.getPost(postSeq)));
     }
 
     /**
@@ -211,8 +211,8 @@ public class PostController {
             @PathVariable Long userSeq,
             @PathVariable Integer page) {
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(postUploadService.getUserPosts(userSeq, page))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(postUploadService.getUserPosts(userSeq, page)));
     }
 }

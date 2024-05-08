@@ -55,7 +55,8 @@ public class BookmarkCreationService {
      */
     @Transactional(readOnly = true)
     public List<PostDto> getBookmarkList(Long userSeq) {
-        return getBookmark(userSeq).getBookmarkPosts()
+        return getBookmark(userSeq)
+                .getBookmarkPosts()
                 .stream()
                 .map(PostDto::from)
                 .collect(Collectors.toList());
@@ -68,7 +69,8 @@ public class BookmarkCreationService {
      * @return 게시물
      */
     private Post getPost(Long postSeq) {
-        return postRepository.findById(postSeq)
+        return postRepository
+                .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 
@@ -79,12 +81,14 @@ public class BookmarkCreationService {
      * @return 북마크
      */
     private Bookmark getBookmark(Long userSeq) {
-        Bookmark bookmark = bookmarkRepository.findByUserSeq(userSeq)
-                .orElseGet(() ->
-                        bookmarkRepository.save(Bookmark.builder()
+        Bookmark bookmark = bookmarkRepository.findByUserSeq(userSeq).orElseGet(
+                () -> bookmarkRepository.save(
+                        Bookmark.builder()
                                 .userSeq(userSeq)
                                 .bookmarkPosts(new ArrayList<>())
-                                .build()));
+                                .build()
+                )
+        );
         log.error("bookmark : {}", bookmark.getBookmarkPosts());
         return bookmark;
     }

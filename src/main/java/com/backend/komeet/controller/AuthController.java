@@ -49,8 +49,9 @@ public class AuthController {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(userInformationService.getUser(userSeq, country))
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(userInformationService.getUser(userSeq, country))
         );
     }
 
@@ -67,8 +68,8 @@ public class AuthController {
         Pair<String, String> newAccessToken =
                 userInformationService.refreshToken(refreshToken);
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(RefreshTokenResponse.from(newAccessToken))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(RefreshTokenResponse.from(newAccessToken)));
     }
 }

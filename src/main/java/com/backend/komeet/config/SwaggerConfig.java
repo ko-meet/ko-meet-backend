@@ -44,10 +44,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .title("KO-MEET REST API")
                 .description("Spring boot 이민자 커뮤니티 앱 REST API")
                 .version("0.0.1")
-                .contact(new Contact("조현수",
+                .contact(new Contact(
+                        "조현수",
                         "https://github.com/HyunsooZo",
-                        "bzhs1992@icloud.com"))
-                .build();
+                        "bzhs1992@icloud.com")
+                ).build();
     }
 
     /**
