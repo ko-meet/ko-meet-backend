@@ -50,7 +50,8 @@ public class ChatService {
      */
     @Transactional
     public void addChat(Long chatRoomSeq, Long userSeq, ChatContentRequest content) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomSeq)
+        ChatRoom chatRoom = chatRoomRepository
+                .findById(chatRoomSeq)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
         User sender = chatRoom.getSender();
         User recipient = chatRoom.getRecipient();
@@ -72,7 +73,8 @@ public class ChatService {
      */
     @Transactional
     public Chat saveChat(ChatRequest chatRequest) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRequest.getChatRoomSeq())
+        ChatRoom chatRoom = chatRoomRepository
+                .findById(chatRequest.getChatRoomSeq())
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
 
         boolean isSender = senderCheck(chatRoom.getSender(), chatRequest.getSenderSeq());
@@ -99,9 +101,9 @@ public class ChatService {
     @Transactional
     public void markAsRead(Long chatSeq, Long userSeq) {
 
-        Chat chat = chatRepository.findById(chatSeq).orElseThrow(
-                () -> new CustomException(CHAT_ROOM_NOT_FOUND)
-        );
+        Chat chat = chatRepository
+                .findById(chatSeq)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
 
         if (chat.getRecipient().getSeq().equals(userSeq)) {
             chat.setReadStatus(true);

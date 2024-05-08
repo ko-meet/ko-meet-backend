@@ -41,8 +41,10 @@ public class LocationController {
         Pair<String, String> country =
                 geocoderService.getCountry(latitude, longitude).join();
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(LocationResponse.from(country.getFirst(), country.getSecond()))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(
+                        LocationResponse.from(country.getFirst(), country.getSecond()))
+                );
     }
 }

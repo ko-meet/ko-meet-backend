@@ -34,7 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) // CORS 설정 허용
-                .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
+                .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
+                                .disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers(

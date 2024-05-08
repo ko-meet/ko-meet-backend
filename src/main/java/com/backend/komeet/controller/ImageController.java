@@ -37,9 +37,9 @@ public class ImageController {
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadImage(List<MultipartFile> multipartFile,
                                                    @RequestParam String imagePath) {
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(imageService.saveFiles(multipartFile, imagePath))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(imageService.saveFiles(multipartFile, imagePath)));
     }
 
     /**

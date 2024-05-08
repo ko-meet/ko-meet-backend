@@ -10,7 +10,8 @@ public class UUIDUtil {
      * @return UUID
      */
     public String generateUUID(Integer length) {
-        return java.util.UUID.randomUUID()
+        return java.util.UUID
+                .randomUUID()
                 .toString()
                 .replace("-", "")
                 .substring(0, length);

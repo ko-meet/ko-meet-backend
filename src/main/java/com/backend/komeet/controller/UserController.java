@@ -216,9 +216,9 @@ public class UserController {
     public ResponseEntity<ApiResponse> checkNickname(
             @RequestParam String nickname) {
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(userInformationService.checkNickname(nickname))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(userInformationService.checkNickname(nickname)));
     }
 
     /**

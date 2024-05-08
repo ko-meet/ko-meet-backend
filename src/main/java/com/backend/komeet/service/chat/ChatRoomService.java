@@ -39,7 +39,8 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public Page<ChatRoomDto> getChatRooms(Long userSeq, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);
-        User user = userRepository.findById(userSeq)
+        User user = userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.getChatRooms(user, pageable);
     }
@@ -55,7 +56,8 @@ public class ChatRoomService {
     public Long createChatRoom(Long userSeq, Long counterpartSeq) {
         User user = getUser(userSeq);
         User counterpart = getUser(counterpartSeq);
-        return chatRoomRepository.getChatRoom(user, counterpart)
+        return chatRoomRepository
+                .getChatRoom(user, counterpart)
                 .map(ChatRoomDto::getSeq)
                 .orElseGet(
                         () -> chatRoomRepository
@@ -143,7 +145,8 @@ public class ChatRoomService {
      * @return {@link ChatRoom} 채팅방
      */
     private ChatRoom getChatRoom(Long chatRoomSeq) {
-        return chatRoomRepository.findById(chatRoomSeq)
+        return chatRoomRepository
+                .findById(chatRoomSeq)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
     }
 
@@ -154,7 +157,8 @@ public class ChatRoomService {
      * @return 사용자 정보
      */
     private User getUser(Long userSeq) {
-        return userRepository.findById(userSeq)
+        return userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 
@@ -166,7 +170,8 @@ public class ChatRoomService {
      * @return 채팅방 목록
      */
     public List<ChatRoomDto> searchChatRooms(Long userSeq, String keyword) {
-        User user = userRepository.findById(userSeq)
+        User user = userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword);
     }
