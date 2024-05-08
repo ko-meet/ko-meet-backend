@@ -132,8 +132,8 @@ public class ChatController {
             @RequestHeader(AUTHORIZATION) String token,
             @RequestParam String keyword) {
         Long userSeq = jwtProvider.getIdFromToken(token);
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(chatRoomService.searchChatRooms(userSeq, keyword))
-        );
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(chatRoomService.searchChatRooms(userSeq, keyword)));
     }
 }

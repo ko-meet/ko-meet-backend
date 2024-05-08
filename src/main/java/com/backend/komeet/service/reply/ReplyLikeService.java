@@ -59,14 +59,18 @@ public class ReplyLikeService {
             }
         }
         if (likeCount == null) {
-            log.error("Failed to process like for postSeq {} after {} retries", replySeq, maxRetries);
+            log.error(
+                    "Failed to process like for postSeq {} after {} retries",
+                    replySeq,
+                    maxRetries
+            );
         }
     }
 
     /**
      * 좋아요 작업을 처리하는 메서드
      *
-     * @param userSeq 사용자 식별자
+     * @param userSeq  사용자 식별자
      * @param replySeq 게시물 식별자
      * @return 작업 성공 여부
      * @throws CustomException 작업 실패
@@ -104,7 +108,8 @@ public class ReplyLikeService {
      * @return 게시물
      */
     private Reply getReply(Long seq) {
-        return replyRepository.findById(seq)
+        return replyRepository
+                .findById(seq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
     }
 }

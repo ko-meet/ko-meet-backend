@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.backend.komeet.exception.ErrorCode.*;
+
 /**
  * 게시물 좋아요 관련 서비스
  */
@@ -103,7 +105,8 @@ public class PostLikeService {
      * @return 게시물
      */
     private Post getPost(Long seq) {
-        return postRepository.findById(seq)
-                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        return postRepository
+                .findById(seq)
+                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 }

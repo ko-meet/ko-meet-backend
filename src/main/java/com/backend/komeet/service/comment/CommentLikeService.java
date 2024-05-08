@@ -107,7 +107,8 @@ public class CommentLikeService {
      * @return 게시물
      */
     private Comment getComment(Long seq) {
-        return commentRepository.findById(seq)
+        return commentRepository
+                .findById(seq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
     }
 }

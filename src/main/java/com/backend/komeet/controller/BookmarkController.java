@@ -57,8 +57,9 @@ public class BookmarkController {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        return ResponseEntity.status(OK).body(
-                new ApiResponse(bookmarkCreationService.getBookmarkList(userSeq))
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(bookmarkCreationService.getBookmarkList(userSeq))
         );
     }
 }

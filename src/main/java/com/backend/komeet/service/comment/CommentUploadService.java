@@ -67,7 +67,8 @@ public class CommentUploadService {
      * @return {@link Post}
      */
     private Post getPost(Long postSeq) {
-        return postRepository.findById(postSeq)
+        return postRepository
+                .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 
@@ -78,7 +79,8 @@ public class CommentUploadService {
      * @return {@link User}
      */
     private User getUser(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository
+                .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }

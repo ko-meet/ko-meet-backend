@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.backend.komeet.enums.PostStatus.*;
+import static com.backend.komeet.exception.ErrorCode.*;
 import static com.backend.komeet.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
@@ -40,7 +41,7 @@ public class PostUpdateService {
         Post post = getPost(postSeq);
 
         if (!post.getUser().equals(user)) {
-            throw new CustomException(ErrorCode.NO_AUTHORITY);
+            throw new CustomException(NO_AUTHORITY);
         }
         if (postUpdateRequest.getContent() != null) {
             post.setContent(postUpdateRequest.getContent());
@@ -93,7 +94,8 @@ public class PostUpdateService {
      * @return 사용자
      */
     private User getUser(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository
+                .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 
@@ -104,8 +106,9 @@ public class PostUpdateService {
      * @return 게시물
      */
     private Post getPost(Long seq) {
-        return postRepository.findById(seq)
-                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        return postRepository
+                .findById(seq)
+                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 
     /**
@@ -115,8 +118,9 @@ public class PostUpdateService {
      */
     @Transactional
     public void increaseViewCount(Long postSeq) {
-        Post post = postRepository.findById(postSeq)
-                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        Post post = postRepository
+                .findById(postSeq)
+                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
         post.setViewCount(post.getViewCount() + 1);
     }
