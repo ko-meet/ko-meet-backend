@@ -39,7 +39,8 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public Page<ChatRoomDto> getChatRooms(Long userSeq, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);
-        User user = userRepository.findById(userSeq)
+        User user = userRepository
+                .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.getChatRooms(user, pageable);
     }
