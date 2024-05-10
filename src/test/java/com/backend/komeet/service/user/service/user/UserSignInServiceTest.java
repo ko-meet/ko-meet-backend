@@ -1,16 +1,16 @@
 package com.backend.komeet.service.user.service.user;
 
-import com.backend.komeet.config.JwtProvider;
-import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.TokenIssuanceDto;
-import com.backend.komeet.dto.UserSignInDto;
-import com.backend.komeet.dto.request.UserSignInRequest;
-import com.backend.komeet.enums.Countries;
-import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.exception.ErrorCode;
-import com.backend.komeet.repository.UserRepository;
-import com.backend.komeet.service.external.RedisService;
-import com.backend.komeet.service.user.UserSignInService;
+import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
+import com.backend.komeet.user.model.dtos.UserSignInDto;
+import com.backend.komeet.user.presentation.request.UserSignInRequest;
+import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.infrastructure.exception.ErrorCode;
+import com.backend.komeet.user.repositories.UserRepository;
+import com.backend.komeet.base.application.RedisService;
+import com.backend.komeet.user.application.UserSignInService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static com.backend.komeet.enums.UserRole.ROLE_USER;
-import static com.backend.komeet.enums.UserStatus.ACTIVE;
+import static com.backend.komeet.user.enums.UserRole.ROLE_USER;
+import static com.backend.komeet.user.enums.UserStatus.ACTIVE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
