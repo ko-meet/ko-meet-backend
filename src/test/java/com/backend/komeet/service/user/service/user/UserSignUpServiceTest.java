@@ -1,24 +1,21 @@
 package com.backend.komeet.service.user.service.user;
 
-import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.request.UserSignUpRequest;
-import com.backend.komeet.enums.Countries;
-import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.repository.UserRepository;
-import com.backend.komeet.service.user.UserSignUpService;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.user.presentation.request.UserSignUpRequest;
+import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.user.repositories.UserRepository;
+import com.backend.komeet.user.application.UserSignUpService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.exception.ErrorCode.EXISTING_USER;
+import static com.backend.komeet.infrastructure.exception.ErrorCode.EXISTING_USER;
 import static org.mockito.Mockito.*;
 
 @DisplayName("사용자 회원가입 서비스 테스트")

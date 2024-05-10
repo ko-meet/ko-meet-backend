@@ -1,12 +1,12 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.domain.Post;
-import com.backend.komeet.domain.User;
-import com.backend.komeet.enums.Countries;
-import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.repository.PostRepository;
-import com.backend.komeet.repository.UserRepository;
-import org.assertj.core.api.Assertions;
+import com.backend.komeet.post.model.entities.Post;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.post.application.PostDeleteService;
+import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.post.repositories.PostRepository;
+import com.backend.komeet.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +16,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Optional;
 
-import static com.backend.komeet.enums.PostStatus.DELETED;
-import static com.backend.komeet.enums.PostStatus.NORMAL;
-import static com.backend.komeet.exception.ErrorCode.ALREADY_DELETED_POST;
+import static com.backend.komeet.post.enums.PostStatus.DELETED;
+import static com.backend.komeet.post.enums.PostStatus.NORMAL;
+import static com.backend.komeet.infrastructure.exception.ErrorCode.ALREADY_DELETED_POST;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

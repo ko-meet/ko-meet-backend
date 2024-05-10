@@ -1,11 +1,12 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.domain.Post;
-import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.request.PostUpdateRequest;
-import com.backend.komeet.enums.Countries;
-import com.backend.komeet.repository.PostRepository;
-import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.post.model.entities.Post;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.post.application.PostUpdateService;
+import com.backend.komeet.post.presentation.request.PostUpdateRequest;
+import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.post.repositories.PostRepository;
+import com.backend.komeet.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
