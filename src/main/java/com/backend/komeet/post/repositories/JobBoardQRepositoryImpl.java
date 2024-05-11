@@ -1,7 +1,7 @@
 package com.backend.komeet.post.repositories;
 
 import com.backend.komeet.post.model.dtos.JobBoardDto;
-import com.backend.komeet.domain.entities.QJobBoard;
+import com.backend.komeet.post.model.entities.QJobBoard;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
