@@ -2,8 +2,9 @@ package com.backend.komeet.post.repositories;
 
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
-import com.backend.komeet.domain.entities.QPost;
+
 import com.backend.komeet.post.enums.Categories;
+import com.backend.komeet.post.model.entities.QPost;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.enums.SortingMethods;
 import com.querydsl.core.BooleanBuilder;
