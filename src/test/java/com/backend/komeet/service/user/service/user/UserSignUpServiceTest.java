@@ -53,7 +53,7 @@ public class UserSignUpServiceTest {
             .build();
 
     UserSignUpRequest request = UserSignUpRequest.builder()
-            .email("test@test.c")
+            .email("test@test.test")
             .nickName("test")
             .country("SOUTH_KOREA")
             .password("test")
@@ -85,9 +85,7 @@ public class UserSignUpServiceTest {
                 .thenReturn(Optional.of(user));
 
         //when & then
-        assertThatThrownBy(() ->
-                        userSignUpService.signUp(
-                                request))
+        assertThatThrownBy(() -> userSignUpService.signUp(request))
                 .hasMessage(EXISTING_USER.getMessage())
                 .isInstanceOf(CustomException.class);
 
