@@ -43,6 +43,7 @@ class UserInformationServiceTest {
     }
 
     User user = User.builder()
+            .seq(1L)
             .email("test@test.test")
             .password("test")
             .country(Countries.SOUTH_KOREA)

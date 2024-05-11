@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,7 @@ class PostDeleteServiceTest {
         // when
         postDeleteService.deletePost(user.getSeq(), post.getSeq());
         // then
-        verify(postRepository, times(1)).delete(post);
+        assertThat(post.getStatus()).isEqualTo(DELETED);
     }
 
     @Test
