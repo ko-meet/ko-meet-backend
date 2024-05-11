@@ -53,6 +53,7 @@ public class UserSignUpServiceTest {
             .build();
 
     UserSignUpRequest request = UserSignUpRequest.builder()
+            .email("test@test.c")
             .email("test@test.test")
             .nickName("test")
             .country("SOUTH_KOREA")
