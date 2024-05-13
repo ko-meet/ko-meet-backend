@@ -1,4 +1,4 @@
-package com.backend.komeet.base.model.dtos;
+package com.backend.komeet.chat.model.dtos;
 
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.chat.model.entities.ChatRoom;

@@ -1,6 +1,6 @@
 package com.backend.komeet.chat.repositories;
 
-import com.backend.komeet.base.model.dtos.ChatDto;
+import com.backend.komeet.chat.model.dtos.ChatDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

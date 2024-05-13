@@ -1,8 +1,8 @@
 package com.backend.komeet.chat.presentation.controller;
 
 import com.backend.komeet.chat.model.entities.Chat;
-import com.backend.komeet.base.model.dtos.ChatDto;
-import com.backend.komeet.base.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.model.dtos.ChatDto;
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.chat.model.dtos.ReadChatDto;
 import com.backend.komeet.chat.application.ChatRoomService;
 import com.backend.komeet.chat.application.ChatService;
