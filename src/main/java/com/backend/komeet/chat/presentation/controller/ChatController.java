@@ -2,8 +2,8 @@ package com.backend.komeet.chat.presentation.controller;
 
 import com.backend.komeet.chat.presentation.request.ChatContentRequest;
 import com.backend.komeet.infrastructure.security.JwtProvider;
-import com.backend.komeet.base.model.dtos.ChatDto;
-import com.backend.komeet.base.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.model.dtos.ChatDto;
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.chat.application.ChatRoomService;
 import com.backend.komeet.chat.application.ChatService;
