@@ -3,7 +3,7 @@ package com.backend.komeet.chat.application;
 import com.backend.komeet.chat.model.entities.Chat;
 import com.backend.komeet.chat.model.entities.ChatRoom;
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.base.model.dtos.ChatDto;
+import com.backend.komeet.chat.model.dtos.ChatDto;
 import com.backend.komeet.chat.presentation.request.ChatContentRequest;
 import com.backend.komeet.chat.presentation.request.ChatRequest;
 import com.backend.komeet.infrastructure.exception.CustomException;

@@ -1,10 +1,11 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.post.application.PostUploadService;
 import com.backend.komeet.post.presentation.request.PostUploadRequest;
-import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.repositories.PostRepository;
+import com.backend.komeet.service.common.TestEntityGenerator;
+import com.backend.komeet.service.common.TestRequestGenerator;
+import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -32,26 +32,16 @@ class PostUploadServiceTest {
         postUploadService = new PostUploadService(postRepository, userRepository);
     }
 
-    User user = User.builder()
-            .email("test@test.test")
-            .password("test")
-            .country(Countries.SOUTH_KOREA)
-            .build();
+    User user = TestEntityGenerator.user;
+
+    PostUploadRequest postUploadRequest =
+            TestRequestGenerator.createPostUploadRequest();
 
     @Test
     @DisplayName("성공")
     void createPost() {
         // given
-        PostUploadRequest postUploadRequest = PostUploadRequest.builder()
-                .title("제목")
-                .content("내용")
-                .attachments(List.of("test"))
-                .tags(List.of("test"))
-                .isPublic(true)
-                .build();
-
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
         // when
         postUploadService.uploadPost(1L, postUploadRequest);
         // then

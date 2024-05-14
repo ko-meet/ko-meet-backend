@@ -3,7 +3,7 @@ package com.backend.komeet.chat.repositories;
 import com.backend.komeet.chat.model.entities.QChat;
 import com.backend.komeet.chat.model.entities.QChatRoom;
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.base.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;

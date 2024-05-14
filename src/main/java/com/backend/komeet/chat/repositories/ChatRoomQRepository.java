@@ -1,7 +1,7 @@
 package com.backend.komeet.chat.repositories;
 
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.base.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

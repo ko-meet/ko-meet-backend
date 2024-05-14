@@ -1,4 +1,4 @@
-package com.backend.komeet.service.user.service.user;
+package com.backend.komeet.service.user;
 
 import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.user.application.UserSignUpService;
