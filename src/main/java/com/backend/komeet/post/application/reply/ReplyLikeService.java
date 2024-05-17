@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.reply;
 
 import com.backend.komeet.infrastructure.components.RedisDistributedLock;
 import com.backend.komeet.post.model.entities.Reply;

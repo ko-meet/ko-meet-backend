@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.post;
 
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.model.entities.User;

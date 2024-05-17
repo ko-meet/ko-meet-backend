@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.reply;
 
 import com.backend.komeet.post.model.entities.Comment;
 import com.backend.komeet.post.model.entities.Reply;

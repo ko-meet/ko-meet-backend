@@ -1,6 +1,6 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.post.application.PostUpdateService;
+import com.backend.komeet.post.application.post.PostUpdateService;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.presentation.request.PostUpdateRequest;
 import com.backend.komeet.post.repositories.PostRepository;
