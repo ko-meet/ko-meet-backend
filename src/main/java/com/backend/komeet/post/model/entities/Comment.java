@@ -59,7 +59,7 @@ public class Comment extends BaseEntity {
      * @param user    작성자
      * @param post    게시글
      * @param content 내용
-     * @return Comment
+     * @return comment
      */
     public static Comment from(User user, Post post, String content) {
         return Comment.builder()

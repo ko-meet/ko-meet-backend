@@ -1,6 +1,6 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.post.application.PostUploadService;
+import com.backend.komeet.post.application.post.PostUploadService;
 import com.backend.komeet.post.presentation.request.PostUploadRequest;
 import com.backend.komeet.post.repositories.PostRepository;
 import com.backend.komeet.service.common.TestEntityGenerator;

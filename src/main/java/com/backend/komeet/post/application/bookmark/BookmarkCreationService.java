@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.bookmark;
 
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;

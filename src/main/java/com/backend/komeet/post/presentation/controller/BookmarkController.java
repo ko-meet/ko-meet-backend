@@ -2,7 +2,7 @@ package com.backend.komeet.post.presentation.controller;
 
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.post.application.BookmarkCreationService;
+import com.backend.komeet.post.application.bookmark.BookmarkCreationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
