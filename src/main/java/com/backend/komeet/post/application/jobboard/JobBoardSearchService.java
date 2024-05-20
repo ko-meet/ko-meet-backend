@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.jobboard;
 
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.enums.Experience;

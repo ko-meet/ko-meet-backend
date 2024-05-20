@@ -1,9 +1,9 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.post;
 
 import com.backend.komeet.infrastructure.components.RedisDistributedLock;
-import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.post.repositories.CommentRepository;
+import com.backend.komeet.post.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -11,40 +11,40 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.COMMENT_NOT_FOUND;
+import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
 
 /**
- * 대댓글 좋아요 서비스
+ * 게시물 좋아요 관련 서비스
  */
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class CommentLikeService {
-    private final CommentRepository commentRepository;
+public class PostLikeService {
+    private final PostRepository postRepository;
     private final RedisDistributedLock redisDistributedLock;
-    final String LOCK_KEY = "likeComment : ";
+    final String LOCK_KEY = "likePost : ";
 
     /**
-     * 대댓글 좋아요를 처리하는 메서드
+     * 게시물 좋아요를 처리하는 메서드
      *
-     * @param userSeq  사용자 식별자
-     * @param commentSeq 대댓글 식별자
+     * @param userSeq 사용자 식별자
+     * @param postSeq 게시물 식별자
      */
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void likeComment(Long userSeq, Long commentSeq) {
+    public void likePost(Long userSeq, Long postSeq) {
         int maxRetries = 3;
         int retries = 0;
         long retryIntervalMillis = 1000; // 1초 간격으로 재시도
-        Integer likeCount = null;
+        Long likeCount = null;
 
         while (retries <= maxRetries) {
             try {
-                likeCount = processLike(userSeq, commentSeq);
+                likeCount = processLike(userSeq, postSeq);
                 if (likeCount != null) {
                     break;
                 } else {
-                    log.error("Failed to acquire lock for commentSeq: {}", commentSeq);
+                    log.error("Failed to acquire lock for postSeq: {}", postSeq);
                 }
             } catch (CustomException e) {
                 log.error(e.getMessage());
@@ -59,10 +59,7 @@ public class CommentLikeService {
             }
         }
         if (likeCount == null) {
-            log.error(
-                    "Failed to process like for commentSeq {} after {} retries",
-                    commentSeq, maxRetries
-            );
+            log.error("Failed to process like for postSeq {} after {} retries", postSeq, maxRetries);
         }
     }
 
@@ -70,32 +67,32 @@ public class CommentLikeService {
      * 좋아요 작업을 처리하는 메서드
      *
      * @param userSeq 사용자 식별자
-     * @param commentSeq 게시물 식별자
+     * @param postSeq 게시물 식별자
      * @return 작업 성공 여부
      * @throws CustomException 작업 실패
      */
-    private Integer processLike(Long userSeq, Long commentSeq) throws CustomException {
-        Comment comment = getComment(commentSeq);
+    private Long processLike(Long userSeq, Long postSeq) throws CustomException {
+        Post post = getPost(postSeq);
 
         boolean lockAcquired = false;
         try {
             lockAcquired = redisDistributedLock.acquireLock(
-                    LOCK_KEY, commentSeq.toString(), 10
+                    LOCK_KEY, postSeq.toString(), 10
             );
             if (lockAcquired) {
-                if (comment.getLikeUsers().remove(userSeq)) {
-                    comment.setUpVotes(comment.getUpVotes() - 1);
+                if (post.getLikeUsers().remove(userSeq)) {
+                    post.setLikeCount(post.getLikeCount() - 1);
                 } else {
-                    comment.getLikeUsers().add(userSeq);
-                    comment.setUpVotes(comment.getUpVotes() + 1);
+                    post.getLikeUsers().add(userSeq);
+                    post.setLikeCount(post.getLikeCount() + 1);
                 }
-                return commentRepository.save(comment).getUpVotes();
+                return postRepository.save(post).getLikeCount();
             } else {
                 return null;
             }
         } finally {
             if (lockAcquired) {
-                redisDistributedLock.releaseLock(LOCK_KEY, commentSeq.toString());
+                redisDistributedLock.releaseLock(LOCK_KEY, postSeq.toString());
             }
         }
     }
@@ -106,9 +103,9 @@ public class CommentLikeService {
      * @param seq 게시물 식별자
      * @return 게시물
      */
-    private Comment getComment(Long seq) {
-        return commentRepository
+    private Post getPost(Long seq) {
+        return postRepository
                 .findById(seq)
-                .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 }

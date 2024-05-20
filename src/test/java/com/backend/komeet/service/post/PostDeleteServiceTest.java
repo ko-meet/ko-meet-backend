@@ -1,7 +1,7 @@
 package com.backend.komeet.service.post;
 
 import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.post.application.PostDeleteService;
+import com.backend.komeet.post.application.post.PostDeleteService;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.repositories.PostRepository;
 import com.backend.komeet.service.common.TestEntityGenerator;
