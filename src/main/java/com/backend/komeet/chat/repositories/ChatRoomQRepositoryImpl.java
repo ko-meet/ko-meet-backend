@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
  * 채팅방 관련 Querydsl 레포지토리 구현체
  */
 @RequiredArgsConstructor
-@Repository
 public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
