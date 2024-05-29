@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  * 채팅 관련 Querydsl 레포지토리 구현체
  */
 @RequiredArgsConstructor
-@Repository
 public class ChatQRepositoryImpl implements ChatQRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
