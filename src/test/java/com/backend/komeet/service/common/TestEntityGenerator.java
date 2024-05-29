@@ -1,7 +1,13 @@
 package com.backend.komeet.service.common;
 
+
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.post.model.entities.Bookmark;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -27,6 +33,7 @@ public class TestEntityGenerator {
             .isPublic("Y")
             .country(LAOS)
             .region("지역")
+            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
             .user(user)
             .content("내용")
             .comments(List.of())
@@ -41,9 +48,17 @@ public class TestEntityGenerator {
             .isPublic("Y")
             .country(LAOS)
             .region("지역")
+            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
             .user(user)
             .content("내용")
             .comments(List.of())
             .status(DELETED)
             .build();
+
+    public static Bookmark bookmark = Bookmark.builder()
+            .bookmarkSeq(1L)
+            .bookmarkPosts(new ArrayList<>(Arrays.asList(postNormal)))
+            .userSeq(1L)
+            .build();
+
 }
