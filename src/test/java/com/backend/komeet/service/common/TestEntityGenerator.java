@@ -1,6 +1,6 @@
 package com.backend.komeet.service.common;
 
-
+import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.post.model.entities.Bookmark;
@@ -9,6 +9,8 @@ import com.backend.komeet.post.model.entities.Bookmark;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
@@ -60,5 +62,4 @@ public class TestEntityGenerator {
             .bookmarkPosts(new ArrayList<>(Arrays.asList(postNormal)))
             .userSeq(1L)
             .build();
-
 }

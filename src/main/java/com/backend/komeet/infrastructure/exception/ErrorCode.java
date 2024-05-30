@@ -38,7 +38,9 @@ public enum ErrorCode {
     EMAIL_SEND_FAILED(BAD_REQUEST, "이메일 발송에 실패하였습니다."),
 
     ALREADY_REPORTED(BAD_REQUEST, "이미 신고한 사용자입니다."),
-    CANNOT_REPORT_MYSELF(BAD_REQUEST, "자기 자신은 신고할 수 없습니다.");
+    CANNOT_REPORT_MYSELF(BAD_REQUEST, "자기 자신은 신고할 수 없습니다."),
+
+    NOT_AN_ADMIN_USER(BAD_REQUEST, "공지사항 작성 권한이 없는 사용자입니다.");
 
     private final HttpStatus status;
     private final String message;
