@@ -3,8 +3,8 @@ package com.backend.komeet.post.presentation.controller;
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.post.presentation.request.CommentUploadRequest;
 import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.post.application.CommentLikeService;
-import com.backend.komeet.post.application.CommentUploadService;
+import com.backend.komeet.post.application.comment.CommentLikeService;
+import com.backend.komeet.post.application.comment.CommentUploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 /**
  * 댓글 관련 컨트롤러
  */
-@Api(tags = "Comment API", description = "댓글 관련 API")
+@Api(tags = "comment API", description = "댓글 관련 API")
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 @RestController

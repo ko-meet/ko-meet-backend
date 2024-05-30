@@ -30,8 +30,8 @@ public class ImageService {
     /**
      * 파일 업로드
      *
-     * @param multipartFiles  파일
-     * @param imagePath 이미지 타입에 대한 경로
+     * @param multipartFiles 파일
+     * @param imagePath      이미지 타입에 대한 경로
      * @return 업로드한 파일의 URL
      */
     public ImageDto saveFiles(List<MultipartFile> multipartFiles, String imagePath) {
@@ -46,8 +46,9 @@ public class ImageService {
 
     /**
      * 파일 업로드
+     *
      * @param multipartFile 파일
-     * @param imagePath 이미지 타입에 대한 경로
+     * @param imagePath     이미지 타입에 대한 경로
      * @return 업로드한 파일의 URL
      */
     private String saveFileAndGetUrl(MultipartFile multipartFile, String imagePath) {
@@ -58,8 +59,9 @@ public class ImageService {
 
     /**
      * 파일 이름 생성
+     *
      * @param multipartFile 파일
-     * @param imagePath 이미지 타입에 대한 경로
+     * @param imagePath     이미지 타입에 대한 경로
      * @return 파일 이름
      */
     private String generateFileName(MultipartFile multipartFile, String imagePath) {

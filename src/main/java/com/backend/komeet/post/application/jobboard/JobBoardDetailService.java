@@ -1,4 +1,4 @@
-package com.backend.komeet.post.application;
+package com.backend.komeet.post.application.jobboard;
 
 import com.backend.komeet.post.repositories.JobBoardRepository;
 import com.backend.komeet.user.repositories.UserRepository;
