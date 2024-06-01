@@ -14,10 +14,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static com.backend.komeet.post.enums.PostStatus.NORMAL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -35,6 +34,8 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long seq;
 
+    private Long authorUserSeq;
+
     @Setter
     private String title;
 
@@ -47,12 +48,10 @@ public class Notice extends BaseEntity {
     @Setter
     private PostStatus status;
 
-    @Setter
     @ElementCollection
     @Cascade(CascadeType.ALL)
     private List<Countries> targetCountries;
 
-    @Setter
     @ElementCollection
     @Cascade(CascadeType.ALL)
     private List<Long> readUsers;
@@ -60,16 +59,17 @@ public class Notice extends BaseEntity {
     /**
      * Notice 팩토리 메서드
      *
-     * @param userSeq
+     * @param userSeq 사용자 고유번호
      * @param request {@link NoticeRegisterRequest}
      */
     public static Notice from(Long userSeq, NoticeRegisterRequest request) {
         return Notice.builder()
                 .title(request.getTitle())
+                .authorUserSeq(userSeq)
                 .content(request.getContent())
                 .type(request.getType())
                 .targetCountries(request.getTargetCountries())
-                .readUsers(new ArrayList<>(Collections.singleton(userSeq)))
+                .status(NORMAL)
                 .build();
     }
 }
