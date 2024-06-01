@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
-import static com.backend.komeet.user.enums.UserRole.ROLE_USER;
+import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -24,28 +24,25 @@ public class NoticeRegisterService {
      *
      * @param userSeq 사용자 고유번호
      * @param request 공지사항 등록 요청
-     * @return 공지사항 등록 여부
      */
     public void registerNotice(Long userSeq,
                                NoticeRegisterRequest request) {
-
-        User user = getUser(userSeq);
-
-        if (isNotAdmin(user)) {
+        if (!isUserAdmin(userSeq)) {
             throw new CustomException(NOT_AN_ADMIN_USER);
         }
-
         noticeRepository.save(Notice.from(userSeq, request));
     }
 
     /**
      * 사용자가 관리자가 아닌지 확인
      *
-     * @param user 사용자
+     * @param userSeq 사용자 고유번호
      * @return 사용자가 관리자가 아닌지 여부
      */
-    private static boolean isNotAdmin(User user) {
-        return user.getUserStatus().equals(ROLE_USER);
+    private boolean isUserAdmin(Long userSeq) {
+        return getUser(userSeq)
+                .getUserRole()
+                .equals(ROLE_ADMIN);
     }
 
     /**
