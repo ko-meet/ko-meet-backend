@@ -2,12 +2,13 @@ package com.backend.komeet.notice.application;
 
 import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.notice.model.entities.Notice;
-import com.backend.komeet.notice.presentation.controller.NoticeRegisterRequest;
+import com.backend.komeet.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.komeet.notice.repositories.NoticeRepository;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
@@ -25,6 +26,7 @@ public class NoticeRegisterService {
      * @param userSeq 사용자 고유번호
      * @param request 공지사항 등록 요청
      */
+    @Transactional
     public void registerNotice(Long userSeq,
                                NoticeRegisterRequest request) {
         if (!isUserAdmin(userSeq)) {
@@ -50,7 +52,6 @@ public class NoticeRegisterService {
      *
      * @param userSeq 사용자 고유번호
      * @param userSeq 사용자 고유번호
-     * @return 사용자 정보
      * @return 사용자 정보
      */
     private User getUser(Long userSeq) {

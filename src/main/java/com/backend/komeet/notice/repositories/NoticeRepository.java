@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
  * 공지사항 레포지토리
  */
 @Repository
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository
+        extends JpaRepository<Notice, Long>, NoticeQRepository {
 }
