@@ -1,4 +1,4 @@
-package com.backend.komeet.notice.model.dtos;
+package com.backend.komeet.notice.enums;
 
 /**
  * 공지 타입
