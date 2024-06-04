@@ -50,4 +50,16 @@ public class NoticeController {
                 ));
     }
 
+    @GetMapping("/{noticeSeq}")
+    @ApiOperation(value = "공지사항 상세 조회", notes = "공지사항을 상세 조회합니다.")
+    public ResponseEntity<ApiResponse> getNotice(@RequestHeader String token,
+                                                 @PathVariable Long noticeSeq) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(
+                        noticeInquiryService.getNotice(userSeq, noticeSeq)
+                ));
+    }
+
 }

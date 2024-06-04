@@ -40,7 +40,9 @@ public enum ErrorCode {
     ALREADY_REPORTED(BAD_REQUEST, "이미 신고한 사용자입니다."),
     CANNOT_REPORT_MYSELF(BAD_REQUEST, "자기 자신은 신고할 수 없습니다."),
 
-    NOT_AN_ADMIN_USER(BAD_REQUEST, "공지사항 작성 권한이 없는 사용자입니다.");
+    NOT_AN_ADMIN_USER(BAD_REQUEST, "공지사항 작성 권한이 없는 사용자입니다."),
+    NOTICE_NOT_FOUND(NOT_FOUND, "존재하지 않는 공지사항입니다."),
+    NOT_ELIGIBLE_COUNTRY(BAD_REQUEST, "해당 국가에 대한 공지사항이 아닙니다.");
 
     private final HttpStatus status;
     private final String message;
