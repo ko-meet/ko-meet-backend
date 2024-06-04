@@ -5,6 +5,7 @@ import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.notice.application.NoticeInquiryService;
 import com.backend.komeet.notice.application.NoticeModifyService;
 import com.backend.komeet.notice.application.NoticeRegisterService;
+import com.backend.komeet.notice.presentation.request.NoticeModifyRequest;
 import com.backend.komeet.notice.presentation.request.NoticeRegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -60,6 +62,16 @@ public class NoticeController {
                 .body(new ApiResponse(
                         noticeInquiryService.getNotice(userSeq, noticeSeq)
                 ));
+    }
+
+    @PatchMapping("/{noticeSeq}")
+    @ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
+    public ResponseEntity<Void> modifyNotice(@RequestHeader String token,
+                                             @PathVariable Long noticeSeq,
+                                             @RequestBody NoticeModifyRequest request) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        noticeModifyService.modifyNotice(userSeq, noticeSeq, request);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }
