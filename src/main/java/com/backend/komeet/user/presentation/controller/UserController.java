@@ -4,6 +4,7 @@ import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.user.application.*;
 import com.backend.komeet.user.enums.EmailComponents;
+import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
 import com.backend.komeet.user.presentation.request.*;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.komeet.user.enums.UserStatus.*;
+import static com.backend.komeet.user.enums.UserStatus.BLOCKED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
@@ -250,7 +253,25 @@ public class UserController {
             @PathVariable Long userSeq) {
 
         Long adminSeq = jwtProvider.getIdFromToken(token);
-        userInformationService.blockUser(userSeq, adminSeq);
+        userInformationService.blockOrUnblockUser(userSeq, adminSeq, BLOCKED);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    /**
+     * 사용자 차단 해제
+     *
+     * @param token   토큰
+     * @param userSeq 차단대상자 고유번호
+     * @return {@link ResponseEntity<Void>}
+     */
+    @PatchMapping("/{userSeq}/unblock")
+    @ApiOperation(value = "사용자 차단 해제", notes = "사용자 차단 해제 진행")
+    public ResponseEntity<Void> unblockUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq) {
+
+        Long adminSeq = jwtProvider.getIdFromToken(token);
+        userInformationService.blockOrUnblockUser(userSeq, adminSeq, ACTIVE);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 }

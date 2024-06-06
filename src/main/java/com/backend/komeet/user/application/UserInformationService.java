@@ -5,6 +5,7 @@ import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.infrastructure.util.CountryUtil;
 import com.backend.komeet.infrastructure.util.UUIDUtil;
+import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
 import com.backend.komeet.user.model.entities.User;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
@@ -196,11 +198,13 @@ public class UserInformationService {
      * @param adminSeq 관리자 고유번호
      */
     @Transactional
-    public void blockUser(Long userSeq, Long adminSeq) {
+    public void blockOrUnblockUser(Long userSeq,
+                                   Long adminSeq,
+                                   UserStatus status) {
         if (!getUser(adminSeq, "").getUserRole().equals(ROLE_ADMIN)) {
             throw new CustomException(NOT_AN_ADMIN_USER);
         }
-        getUser(userSeq, "").setUserStatus(BLOCKED);
+        getUser(userSeq, "").setUserStatus(status);
     }
 
     /**
