@@ -1,16 +1,11 @@
 package com.backend.komeet.user.presentation.controller;
 
+import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.user.application.*;
+import com.backend.komeet.user.enums.EmailComponents;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
-import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.user.application.EmailService;
-import com.backend.komeet.user.application.GeocoderService;
-import com.backend.komeet.user.application.UserInformationService;
-import com.backend.komeet.user.application.UserReportService;
-import com.backend.komeet.user.application.UserSignInService;
-import com.backend.komeet.user.application.UserSignUpService;
-import com.backend.komeet.user.enums.EmailComponents;
 import com.backend.komeet.user.presentation.request.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -238,6 +233,24 @@ public class UserController {
         Long reporterSeq = jwtProvider.getIdFromToken(token);
         userReportService.reportValidation(userSeq, reporterSeq);
         userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    /**
+     * 사용자 차단
+     *
+     * @param token   토큰
+     * @param userSeq 차단대상자 고유번호
+     * @return {@link ResponseEntity<Void>}
+     */
+    @PatchMapping("/{userSeq}/block")
+    @ApiOperation(value = "사용자 차단", notes = "사용자 차단 진행")
+    public ResponseEntity<Void> blockUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq) {
+
+        Long adminSeq = jwtProvider.getIdFromToken(token);
+        userInformationService.blockUser(userSeq, adminSeq);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 }

@@ -1,6 +1,7 @@
 package com.backend.komeet.user.presentation.request;
 
 import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.user.enums.UserStatus;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +22,5 @@ public class UserInfoUpdateRequest {
     private Countries country;
     private Double latitude;
     private Double longitude;
+    private UserStatus status;
 }
