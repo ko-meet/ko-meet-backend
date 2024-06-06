@@ -10,7 +10,7 @@ import java.util.Optional;
  * 사용자 레포지토리
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, UserBulkRepository {
     Optional<User> findByEmail(String email);
     Optional<User> findByNickName(String nickname);
 }

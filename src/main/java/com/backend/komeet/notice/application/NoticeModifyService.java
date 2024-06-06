@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.post.enums.PostStatus.DELETED;
 import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
 
 @Service
@@ -35,6 +36,11 @@ public class NoticeModifyService {
             throw new CustomException(NOT_AN_ADMIN_USER);
         }
         Notice notice = getNoticeBySeq(noticeSeq);
+
+        if (notice.getStatus().equals(DELETED)) {
+            throw new CustomException(NOTICE_ALREADY_DELETED);
+        }
+
         setIfItsNotNull(request, notice);
     }
 

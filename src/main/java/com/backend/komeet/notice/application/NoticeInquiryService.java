@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.post.enums.PostStatus.DELETED;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +43,14 @@ public class NoticeInquiryService {
      * @param noticeSeq 공지사항 고유번호
      * @return {@link NoticeDto}
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public NoticeDto getNotice(Long userSeq, Long noticeSeq) {
         Notice notice = getNoticeBySeq(noticeSeq);
         validateCountry(userSeq, notice);
         addReadUserIfItsUnreadUser(userSeq, notice);
+        if (notice.getStatus().equals(DELETED)) {
+            throw new CustomException(NOTICE_ALREADY_DELETED);
+        }
         return NoticeDto.from(notice);
     }
 

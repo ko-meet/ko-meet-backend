@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.backend.komeet.post.enums.PostStatus.DELETED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -71,6 +72,19 @@ public class NoticeController {
                                              @RequestBody NoticeModifyRequest request) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         noticeModifyService.modifyNotice(userSeq, noticeSeq, request);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{noticeSeq}/delete")
+    @ApiOperation(value = "공지사항 삭제", notes = "공지사항을 삭제합니다.")
+    public ResponseEntity<Void> deleteNotice(@RequestHeader String token,
+                                             @PathVariable Long noticeSeq) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        noticeModifyService.modifyNotice(
+                userSeq,
+                noticeSeq,
+                NoticeModifyRequest.builder().status(DELETED).build()
+        );
         return ResponseEntity.status(NO_CONTENT).build();
     }
 

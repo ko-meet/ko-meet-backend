@@ -1,27 +1,30 @@
 package com.backend.komeet.user.application;
 
 import com.backend.komeet.base.application.RedisService;
+import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.infrastructure.security.JwtProvider;
-import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.infrastructure.util.CountryUtil;
+import com.backend.komeet.infrastructure.util.UUIDUtil;
+import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
+import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.komeet.user.presentation.request.UserPasswordChangeRequest;
 import com.backend.komeet.user.presentation.request.UserPasswordResetRequest;
-import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.user.repositories.UserRepository;
-import com.backend.komeet.infrastructure.util.CountryUtil;
-import com.backend.komeet.infrastructure.util.UUIDUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.PASSWORD_NOT_MATCH;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
+import static com.backend.komeet.user.enums.UserStatus.BLOCKED;
 
 /**
  * 사용자 정보 관련 서비스
@@ -65,6 +68,10 @@ public class UserInformationService {
         if (userInfoUpdateRequest.getProfileImage() != null) {
             user.setImageUrl(userInfoUpdateRequest.getProfileImage());
         }
+        if (userInfoUpdateRequest.getStatus() != null) {
+            user.setUserStatus(userInfoUpdateRequest.getStatus());
+        }
+
     }
 
     /**
@@ -87,6 +94,12 @@ public class UserInformationService {
         return temporaryPassword;
     }
 
+    /**
+     * 사용자 비밀번호 변경
+     *
+     * @param userSeq                   사용자 번호
+     * @param userPasswordChangeRequest {@link UserPasswordChangeRequest}
+     */
     @Transactional
     public void changePassword(Long userSeq,
                                UserPasswordChangeRequest userPasswordChangeRequest) {
@@ -178,6 +191,29 @@ public class UserInformationService {
         return Pair.of(accessToken, refreshToken);
     }
 
+    /**
+     * 사용자 차단
+     *
+     * @param userSeq  차단대상 사용자 고유번호
+     * @param adminSeq 관리자 고유번호
+     */
+    @Transactional
+    public void blockOrUnblockUser(Long userSeq,
+                                   Long adminSeq,
+                                   UserStatus status) {
+        if (!getUser(adminSeq, "").getUserRole().equals(ROLE_ADMIN)) {
+            throw new CustomException(NOT_AN_ADMIN_USER);
+        }
+        getUser(userSeq, "").setUserStatus(status);
+    }
+
+    /**
+     * 사용자 정보 조회
+     *
+     * @param userSeq   사용자 고유번호
+     * @param userEmail 사용자 이메일
+     * @return {@link User}
+     */
     private User getUser(Long userSeq, String userEmail) {
         if (userSeq != null) {
             return userRepository
