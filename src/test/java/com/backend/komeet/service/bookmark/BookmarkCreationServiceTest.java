@@ -1,6 +1,6 @@
 package com.backend.komeet.service.bookmark;
 
-import com.backend.komeet.post.application.BookmarkCreationService;
+import com.backend.komeet.post.application.bookmark.BookmarkCreationService;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;
