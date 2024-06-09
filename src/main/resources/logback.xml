@@ -13,10 +13,11 @@
     <!-- File Appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- Corrected: Specify the full path including the file name for the 'file' property -->
-        <file>${user.home}/kather/logs/app.log</file>
+        <file>/var/log/api/app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover with path fixed in the pattern -->
-            <fileNamePattern>${user.home}/kather/logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/var/log/api/application.%d{yyyy-MM-dd}
+                .log</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
