@@ -1,12 +1,12 @@
 package com.backend.komeet.chat.presentation.controller;
 
-import com.backend.komeet.chat.presentation.request.ChatContentRequest;
-import com.backend.komeet.infrastructure.security.JwtProvider;
-import com.backend.komeet.chat.model.dtos.ChatDto;
-import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.chat.application.ChatRoomService;
 import com.backend.komeet.chat.application.ChatService;
+import com.backend.komeet.chat.model.dtos.ChatDto;
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.presentation.request.ChatContentRequest;
+import com.backend.komeet.infrastructure.security.JwtProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -135,5 +135,21 @@ public class ChatController {
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(chatRoomService.searchChatRooms(userSeq, keyword)));
+    }
+
+    /**
+     * 신규 채팅 여부 조회
+     *
+     * @param token 토큰
+     * @return {@link ResponseEntity<ApiResponse>} 신규 채팅 여부
+     */
+    @ApiOperation(value = "신규 채팅 여부 조회", notes = "신규 채팅 여부를 조회합니다.")
+    @GetMapping("/rooms/new")
+    public ResponseEntity<ApiResponse> getNewChatRooms(
+            @RequestHeader(AUTHORIZATION) String token) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(chatRoomService.getNewChatRooms(userSeq)));
     }
 }
