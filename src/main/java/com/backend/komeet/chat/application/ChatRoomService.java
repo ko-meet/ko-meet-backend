@@ -1,11 +1,12 @@
 package com.backend.komeet.chat.application;
 
-import com.backend.komeet.chat.model.entities.ChatRoom;
-import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.chat.model.dtos.ChatRoomDto;
+import com.backend.komeet.chat.model.entities.ChatRoom;
+import com.backend.komeet.chat.repositories.ChatRepository;
+import com.backend.komeet.chat.repositories.ChatRoomRepository;
 import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.infrastructure.exception.ErrorCode;
-import com.backend.komeet.chat.repositories.ChatRoomRepository;
+import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NO
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
 
     /**
      * 채팅방 목록을 조회하는 메서드
@@ -174,5 +176,15 @@ public class ChatRoomService {
                 .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         return chatRoomRepository.searchChatRoomsByUserNickName(user, keyword);
+    }
+
+    /**
+     * 사용자가 읽지 않은 채팅이 있는지 확인하는 메서드
+     *
+     * @param userSeq 사용자 식별자
+     * @return 읽지 않은 채팅 여부
+     */
+    public boolean getNewChatRooms(Long userSeq) {
+        return chatRepository.hasUnreadMessages(userSeq);
     }
 }

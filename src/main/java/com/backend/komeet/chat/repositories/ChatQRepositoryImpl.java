@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +58,24 @@ public class ChatQRepositoryImpl implements ChatQRepository {
         return new PageImpl<>(results, pageable, total);
     }
 
+    /**
+     * 사용자가 읽지 않은 채팅이 있는지 확인하는 메서드
+     *
+     * @param userSeq 사용자 식별자
+     * @return 읽지 않은 채팅 여부
+     */
+    @Override
+    public boolean hasUnreadMessages(Long userSeq) {
+        QChat chat = QChat.chat;
+        Predicate predicate = chat.recipient.seq.eq(userSeq)
+                .and(chat.readStatus.isFalse())
+                .and(chat.invisibleToRecipient.ne(userSeq)
+                        .or(chat.invisibleToRecipient.ne(userSeq)));
+
+        return jpaQueryFactory.selectFrom(chat)
+                .where(predicate)
+                .fetchCount() > 0;
+    }
     /**
      * 전체 결과 개수를 조회하는 메서드
      *
