@@ -3,6 +3,7 @@ package com.backend.komeet.notice.repositories;
 import com.backend.komeet.notice.model.dtos.NoticeDto;
 import com.backend.komeet.notice.model.entities.QNotice;
 import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.model.entities.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.backend.komeet.post.enums.PostStatus.*;
+import static com.backend.komeet.user.enums.Countries.*;
 
 @RequiredArgsConstructor
 public class NoticeQRepositoryImpl implements NoticeQRepository {
@@ -37,9 +39,8 @@ public class NoticeQRepositoryImpl implements NoticeQRepository {
 
             BooleanBuilder predicateBuilder = new BooleanBuilder();
 
-
-            predicateBuilder.and(notice.readUsers.contains(user.getSeq()).not());
-            predicateBuilder.and(notice.targetCountries.contains(user.getCountry()));
+            predicateBuilder.and(notice.targetCountries.contains(user.getCountry())
+                    .or(notice.targetCountries.contains(ALL)));
             predicateBuilder.and(notice.status.eq(NORMAL));
 
             Long total = getTotal(predicateBuilder.getValue());
