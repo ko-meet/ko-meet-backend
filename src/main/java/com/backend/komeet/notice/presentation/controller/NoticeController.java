@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
  * 공지사항 관련 컨트롤러
  */
 @Api(tags = "Notice API", description = "공지사항 관련 API")
-@RequestMapping("/api/v1/notices/")
+@RequestMapping("/api/v1/notices")
 @RequiredArgsConstructor
 @RestController
 public class NoticeController {
@@ -33,7 +34,7 @@ public class NoticeController {
     @PostMapping
     @ApiOperation(value = "공지사항 등록", notes = "공지사항을 등록합니다.")
     public ResponseEntity<ApiResponse> registerNotice(@RequestBody NoticeRegisterRequest request,
-                                                      @RequestHeader String token) {
+                                                      @RequestHeader(AUTHORIZATION) String token) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         noticeRegisterService.registerNotice(userSeq, request);
         return ResponseEntity
@@ -43,7 +44,7 @@ public class NoticeController {
 
     @GetMapping
     @ApiOperation(value = "공지사항 조회", notes = "공지사항을 조회합니다.")
-    public ResponseEntity<ApiResponse> getNotices(@RequestHeader String token,
+    public ResponseEntity<ApiResponse> getNotices(@RequestHeader(AUTHORIZATION) String token,
                                                   @RequestParam Integer page) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         return ResponseEntity
@@ -55,7 +56,7 @@ public class NoticeController {
 
     @GetMapping("/{noticeSeq}")
     @ApiOperation(value = "공지사항 상세 조회", notes = "공지사항을 상세 조회합니다.")
-    public ResponseEntity<ApiResponse> getNotice(@RequestHeader String token,
+    public ResponseEntity<ApiResponse> getNotice(@RequestHeader(AUTHORIZATION) String token,
                                                  @PathVariable Long noticeSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         return ResponseEntity
@@ -67,7 +68,7 @@ public class NoticeController {
 
     @PatchMapping("/{noticeSeq}")
     @ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
-    public ResponseEntity<Void> modifyNotice(@RequestHeader String token,
+    public ResponseEntity<Void> modifyNotice(@RequestHeader(AUTHORIZATION) String token,
                                              @PathVariable Long noticeSeq,
                                              @RequestBody NoticeModifyRequest request) {
         Long userSeq = jwtProvider.getIdFromToken(token);
@@ -77,7 +78,7 @@ public class NoticeController {
 
     @PatchMapping("/{noticeSeq}/delete")
     @ApiOperation(value = "공지사항 삭제", notes = "공지사항을 삭제합니다.")
-    public ResponseEntity<Void> deleteNotice(@RequestHeader String token,
+    public ResponseEntity<Void> deleteNotice(@RequestHeader(AUTHORIZATION) String token,
                                              @PathVariable Long noticeSeq) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         noticeModifyService.modifyNotice(
