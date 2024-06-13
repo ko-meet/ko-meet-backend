@@ -26,11 +26,15 @@ public class NoticeDto {
     private List<Long> readUsers;
 
     public static NoticeDto from(Notice notice) {
+        String content = notice.getContent();
+        if (content.length() > 30) {
+            content = content.substring(0, 30);
+        }
         return NoticeDto.builder()
                 .seq(notice.getSeq())
                 .authorUserSeq(notice.getAuthorUserSeq())
                 .title(notice.getTitle())
-                .content(notice.getContent())
+                .content(content + "...")
                 .type(notice.getType())
                 .status(notice.getStatus())
                 .targetCountries(notice.getTargetCountries())
