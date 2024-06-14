@@ -53,7 +53,11 @@ class NoticeInquiryServiceTest {
         // then
         notices.forEach(noticeDto -> {
             Assertions.assertThat(noticeDto.getTitle()).isEqualTo(notice.getTitle());
-            Assertions.assertThat(noticeDto.getContent()).isEqualTo(notice.getContent());
+            String content = notice.getContent();
+            if (content.length() > 30) {
+                content = content.substring(0, 30);
+            }
+            Assertions.assertThat(noticeDto.getContent()).isEqualTo(content + "...");
         });
     }
 }
