@@ -2,6 +2,8 @@ package com.backend.komeet.service.common;
 
 import com.backend.komeet.notice.enums.NoticeType;
 import com.backend.komeet.notice.model.entities.Notice;
+import com.backend.komeet.post.enums.Experience;
+import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.JobBoard;
 import com.backend.komeet.post.model.entities.Post;
@@ -100,6 +102,8 @@ public class TestEntityGenerator {
             .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
             .user(user)
             .status(NORMAL)
+            .experience(Experience.ALL)
+            .industry(Industry.ALL)
             .build();
 
 }
