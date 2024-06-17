@@ -3,10 +3,12 @@ package com.backend.komeet.service.common;
 import com.backend.komeet.notice.enums.NoticeType;
 import com.backend.komeet.notice.model.entities.Notice;
 import com.backend.komeet.post.model.entities.Bookmark;
+import com.backend.komeet.post.model.entities.JobBoard;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.enums.UserRole;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.post.model.entities.Bookmark;
+import org.mockito.InjectMocks;
 
 
 import java.util.ArrayList;
@@ -87,4 +89,17 @@ public class TestEntityGenerator {
             .targetCountries(new ArrayList<>(Arrays.asList(SOUTH_KOREA)))
             .readUsers(new ArrayList<>(Arrays.asList(1L)))
             .build();
+    public static JobBoard jobBoard = JobBoard.builder()
+            .seq(1L)
+            .title("제목")
+            .content("내용")
+            .attachments(List.of("첨부파일1", "첨부파일2"))
+            .tags(List.of("태그1", "태그2"))
+            .country(LAOS)
+            .region("지역")
+            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
+            .user(user)
+            .status(NORMAL)
+            .build();
+
 }
