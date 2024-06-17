@@ -44,7 +44,9 @@ public enum ErrorCode {
 
     NOTICE_NOT_FOUND(NOT_FOUND, "존재하지 않는 공지사항입니다."),
     NOT_ELIGIBLE_COUNTRY(BAD_REQUEST, "해당 국가에 대한 공지사항이 아닙니다."),
-    NOTICE_ALREADY_DELETED(BAD_REQUEST, "이미 삭제된 공지사항입니다.");
+    NOTICE_ALREADY_DELETED(BAD_REQUEST, "이미 삭제된 공지사항입니다."),
+
+    JOB_BOARD_NOT_FOUND(NOT_FOUND, "존재하지 않는 구인 게시판입니다.");
 
     private final HttpStatus status;
     private final String message;

@@ -52,7 +52,7 @@ public class JobBoardController {
     }
 
     /**
-     * 구인구직 게시글 상세 조회
+     * 구인구직 게시글 목록 조회
      *
      * @param country       국가
      * @param sortingMethod 정렬 방식
@@ -73,5 +73,18 @@ public class JobBoardController {
                 country, sortingMethod, industry, experience, page
         );
         return ResponseEntity.status(OK).body(new ApiResponse(jobBoards));
+    }
+
+    /**
+     * 구인구직 게시글 상세 조회
+     *
+     * @param jobBoardSeq 구인구직 게시글 번호
+     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 상세 조회 결과
+     */
+    @GetMapping("/{jobBoardSeq}")
+    @ApiOperation(value = "구인구직 게시글 상세 조회", notes = "구인구직 게시글을 상세 조회합니다.")
+    public ResponseEntity<ApiResponse> getJobBoardDetail(@PathVariable Long jobBoardSeq) {
+        JobBoardDto jobBoard = jobBoardDetailService.getJobBoardDetail(jobBoardSeq);
+        return ResponseEntity.status(OK).body(new ApiResponse(jobBoard));
     }
 }
