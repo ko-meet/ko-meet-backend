@@ -1,9 +1,9 @@
 package com.backend.komeet.post.application.jobboard;
 
-import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.enums.SortingMethods;
+import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.repositories.JobBoardRepository;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 구인구직 게시판 검색 서비스
@@ -33,6 +34,7 @@ public class JobBoardSearchService {
      * @param page          페이지 정보
      * @return {@link Page<JobBoardDto>} 구인구직 게시판 목록
      */
+    @Transactional(readOnly = true)
     public Page<JobBoardDto> getJobBoards(String country,
                                           String sortingMethod,
                                           String industry,
@@ -41,7 +43,12 @@ public class JobBoardSearchService {
 
         Pageable pageable = PageRequest.of(page, 10);
 
-        return jobBoardRepository
-                .getJobBoards(country, sortingMethod, industry, experience, pageable);
+        return jobBoardRepository.getJobBoards(
+                country,
+                sortingMethod,
+                industry,
+                experience,
+                pageable
+        );
     }
 }

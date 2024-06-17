@@ -10,6 +10,7 @@ import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
@@ -30,6 +31,7 @@ public class JobBoardUploadService {
      * @param userSeq         사용자 식별자
      * @return {@link JobBoardDto}
      */
+    @Transactional
     public JobBoardDto postJobBoard(JobBoardUploadRequest jobBoardRequest,
                                     Long userSeq) {
         User user = getUser(userSeq);
