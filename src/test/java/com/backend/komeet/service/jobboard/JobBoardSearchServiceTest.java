@@ -1,5 +1,6 @@
-package com.backend.komeet.post.application.jobboard;
+package com.backend.komeet.service.jobboard;
 
+import com.backend.komeet.post.application.jobboard.JobBoardSearchService;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.enums.SortingMethods;
