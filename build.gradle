@@ -72,6 +72,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     //logback
     implementation 'ch.qos.logback:logback-classic:1.2.11'
+    // Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 def generatedDir =  "$buildDir/main/generated"
