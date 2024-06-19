@@ -1,9 +1,10 @@
 package com.backend.komeet.user.application;
 
-import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.user.model.dtos.UserDto;
-import com.backend.komeet.user.presentation.request.UserSignUpRequest;
 import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.user.enums.UserStatus;
+import com.backend.komeet.user.model.dtos.UserDto;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.user.presentation.request.UserSignUpRequest;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.user.enums.UserStatus.ACTIVE;
 import static com.backend.komeet.infrastructure.exception.ErrorCode.EXISTING_USER;
 import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.user.enums.UserStatus.ACTIVE;
 
 /**
  * 사용자 회원가입 서비스
@@ -77,10 +78,44 @@ public class UserSignUpService {
      * @param userSeq 사용자 시퀀스
      */
     @Transactional
-    public void verifyEmail(Long userSeq) {
+    public Pair<String,Boolean> verifyEmail(Long userSeq) {
         User user = getUser(userSeq);
-        user.setUserStatus(ACTIVE);
+        String resultString = "이메일 인증이 완료되었습니다.";
+        UserStatus currentUserStatus = user.getUserStatus();
+        return getVerificationResult(currentUserStatus, user, resultString);
+
     }
+
+    /**
+     * 사용자 상태에 따른 인증 결과 가져오기
+     *
+     * @param currentUserStatus 현재 사용자 상태
+     * @param user              사용자
+     * @param resultString      결과 문자열
+     * @return 인증 결과
+     */
+    private Pair<String, Boolean> getVerificationResult(UserStatus currentUserStatus,
+                                                        User user,
+                                                        String resultString) {
+        boolean isLoginAvailable = true;
+        switch (currentUserStatus) {
+            case PENDING:
+                user.setUserStatus(ACTIVE);
+                break;
+            case ACTIVE:
+                resultString = "이미 인증된 사용자입니다.";
+                break;
+            case BLOCKED:
+                resultString = "차단된 사용자입니다.";
+                isLoginAvailable = false;
+                break;
+            default:
+                resultString = "이메일 인증이 필요한 사용자가 아닙니다.";
+                break;
+        }
+        return Pair.of(resultString, isLoginAvailable);
+    }
+
 
     /**
      * 사용자 정보 가져오기
