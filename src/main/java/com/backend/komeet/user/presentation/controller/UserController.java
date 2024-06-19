@@ -4,7 +4,6 @@ import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.user.application.*;
 import com.backend.komeet.user.enums.EmailComponents;
-import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
 import com.backend.komeet.user.presentation.request.*;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.user.enums.UserStatus.*;
+import static com.backend.komeet.user.enums.UserStatus.ACTIVE;
 import static com.backend.komeet.user.enums.UserStatus.BLOCKED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
@@ -91,21 +90,6 @@ public class UserController {
         );
 
         return ResponseEntity.status(CREATED).build();
-    }
-
-    /**
-     * 사용자 이메일 인증
-     *
-     * @param userSeq 사용자 시퀀스
-     * @return ResponseEntity<Void>
-     */
-    @GetMapping("/{userSeq}/verification")
-    @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
-    public ResponseEntity<ApiResponse> verifyEmail(@PathVariable Long userSeq) {
-
-        userSignUpService.verifyEmail(userSeq);
-
-        return ResponseEntity.status(OK).build();
     }
 
     /**

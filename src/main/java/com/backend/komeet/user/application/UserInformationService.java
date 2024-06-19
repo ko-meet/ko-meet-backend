@@ -65,9 +65,6 @@ public class UserInformationService {
         if (userInfoUpdateRequest.getProfileImage() != null) {
             user.setImageUrl(userInfoUpdateRequest.getProfileImage());
         }
-        if (userInfoUpdateRequest.getProfileImage() != null) {
-            user.setImageUrl(userInfoUpdateRequest.getProfileImage());
-        }
         if (userInfoUpdateRequest.getStatus() != null) {
             user.setUserStatus(userInfoUpdateRequest.getStatus());
         }
