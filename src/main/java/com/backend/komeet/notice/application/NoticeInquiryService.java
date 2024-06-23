@@ -55,6 +55,20 @@ public class NoticeInquiryService {
     }
 
     /**
+     * 공지사항 존재 여부 확인
+     *
+     * @param userSeq 사용자 고유번호
+     * @return 공지사항 존재 여부
+     */
+    @Transactional(readOnly = true)
+    public Boolean isNoticeExist(Long userSeq) {
+        User user = getUser(userSeq);
+        return noticeRepository.existsByTargetCountriesContainingAndReadUsersNotContaining(
+                user.getCountry(), user.getSeq()
+        );
+    }
+
+    /**
      * 공지사항 조회시 읽은 사용자 추가
      *
      * @param userSeq 사용자 고유번호

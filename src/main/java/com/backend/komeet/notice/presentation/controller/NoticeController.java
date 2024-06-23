@@ -89,4 +89,13 @@ public class NoticeController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
+    @GetMapping("/unread")
+    @ApiOperation(value = "공지사항 존재 여부 조회", notes = "공지사항이 존재하는지 여부를 조회합니다.")
+    public ResponseEntity<ApiResponse> isNoticeExist(@RequestHeader(AUTHORIZATION) String token) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+        return ResponseEntity
+                .status(OK)
+                .body(new ApiResponse(noticeInquiryService.isNoticeExist(userSeq)));
+    }
+
 }
