@@ -20,6 +20,7 @@ public class UserInfoUpdateRequest {
     private String nickName;
     private String profileImage;
     private Countries country;
+    private Countries interestCountry;
     private Double latitude;
     private Double longitude;
     private UserStatus status;
