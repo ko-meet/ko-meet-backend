@@ -24,6 +24,7 @@ public class UserDto {
     private Long reportedCount;
     private Date reportedDate;
     private Countries country;
+    private Countries interestCountry;
     private String region;
     private UserRole userRole;
     private UserStatus userStatus;
@@ -37,6 +38,7 @@ public class UserDto {
                 .reportedCount(user.getReportedCount())
                 .reportedDate(user.getReportedDate())
                 .country(user.getCountry())
+                .interestCountry(user.getInterestCountry())
                 .region(user.getRegion())
                 .userRole(user.getUserRole())
                 .userStatus(user.getUserStatus())
