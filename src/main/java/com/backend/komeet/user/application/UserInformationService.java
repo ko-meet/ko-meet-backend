@@ -19,12 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
 import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
-import static com.backend.komeet.user.enums.UserStatus.BLOCKED;
 
 /**
  * 사용자 정보 관련 서비스
@@ -62,6 +60,11 @@ public class UserInformationService {
             user.setRegion(countryPair.getSecond());
             user.setCountry(userInfoUpdateRequest.getCountry());
         }
+
+        if (userInfoUpdateRequest.getInterestCountry() != null) {
+            user.setInterestCountry(userInfoUpdateRequest.getInterestCountry());
+        }
+
         if (userInfoUpdateRequest.getProfileImage() != null) {
             user.setImageUrl(userInfoUpdateRequest.getProfileImage());
         }

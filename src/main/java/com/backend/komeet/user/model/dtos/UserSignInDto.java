@@ -17,6 +17,7 @@ public class UserSignInDto {
     private String accessToken;
     private String refreshToken;
     private String country;
+    private String interestCountry;
     private String region;
     private String userProfileUrl;
     private Boolean isLocationMatch;
@@ -41,6 +42,7 @@ public class UserSignInDto {
                 .accessToken(accessToken == null ? "" : accessToken)
                 .refreshToken(refreshToken == null ? "" : refreshToken)
                 .country(user.getCountry().getCountryName())
+                .interestCountry(user.getInterestCountry().getCountryName())
                 .region(user.getRegion())
                 .userProfileUrl(user.getImageUrl())
                 .isLocationMatch(isLocationMatch)

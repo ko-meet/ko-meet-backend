@@ -34,6 +34,8 @@ public class UserSignUpRequest {
     @NotNull(message = "국가를 입력해주세요.")
     private String country;
 
+    private String interestCountry;
+
     private String region;
 
     private String profileImage;
