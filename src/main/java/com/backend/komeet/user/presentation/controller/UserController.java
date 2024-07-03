@@ -131,10 +131,11 @@ public class UserController {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        CompletableFuture<Pair<String, String>> country = geocoderService.getCountry(
-                userInfoUpdateRequest.getLatitude(),
-                userInfoUpdateRequest.getLongitude()
-        );
+        CompletableFuture<Pair<String, String>> country =
+                geocoderService.getCountry(
+                        userInfoUpdateRequest.getLatitude(),
+                        userInfoUpdateRequest.getLongitude()
+                );
 
         userInformationService.updateInformation(
                 userSeq, country, userInfoUpdateRequest

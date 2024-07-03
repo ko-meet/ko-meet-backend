@@ -14,12 +14,14 @@ import com.backend.komeet.user.presentation.request.UserPasswordChangeRequest;
 import com.backend.komeet.user.presentation.request.UserPasswordResetRequest;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
 import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
@@ -27,6 +29,7 @@ import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
 /**
  * 사용자 정보 관련 서비스
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserInformationService {
@@ -54,11 +57,16 @@ public class UserInformationService {
         if (userInfoUpdateRequest.getNickName() != null) {
             user.setNickName(userInfoUpdateRequest.getNickName());
         }
-        if (userInfoUpdateRequest.getCountry() != null) {
-            Pair<String, String> countryPair =
-                    CountryUtil.fetchLocation(country);
-            user.setRegion(countryPair.getSecond());
-            user.setCountry(userInfoUpdateRequest.getCountry());
+
+        try {
+            if (userInfoUpdateRequest.getCountry() != null && country.get() != null) {
+                Pair<String, String> countryPair =
+                        CountryUtil.fetchLocation(country);
+                user.setRegion(countryPair.getSecond());
+                user.setCountry(userInfoUpdateRequest.getCountry());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.info(e.getMessage());
         }
 
         if (userInfoUpdateRequest.getInterestCountry() != null) {
