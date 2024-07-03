@@ -38,6 +38,9 @@ public class GeocoderService {
     @Async
     public CompletableFuture<Pair<String, String>> getCountry(Double latitude,
                                                               Double longitude) {
+        if(latitude <= 0.0 || longitude <= 0.0) {
+            return CompletableFuture.completedFuture(null);
+        }
         try {
             CompletableFuture<String> response =
                     webClient.build()
