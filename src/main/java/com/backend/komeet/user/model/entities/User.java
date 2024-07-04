@@ -88,7 +88,7 @@ public class User extends BaseEntity {
                 .nickName(userSignUpRequest.getNickName())
                 .email(userSignUpRequest.getEmail())
                 .password(encodedPassword)
-                .country(Countries.getCountry(userSignUpRequest.getCountry()))
+                .country(Countries.getCountryByKoreanName(userSignUpRequest.getCountry()))
                 .interestCountry(interestCountry)
                 .region(userSignUpRequest.getRegion())
                 .userRole(UserRole.ROLE_USER)
