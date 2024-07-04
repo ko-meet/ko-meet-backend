@@ -3,42 +3,50 @@ package com.backend.komeet.user.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 /**
  * 국가 코드
  */
 @Getter
 @RequiredArgsConstructor
 public enum Countries {
-    ALL("ALL","ALL"),
-    MALAYSIA("MALAYSIA","MY"),
-    SINGAPORE("SINGAPORE","SG"),
-    INDONESIA("INDONESIA","ID"),
-    VIETNAM("VIETNAM","VN"),
-    PHILIPPINES("PHILIPPINES","PH"),
-    THAILAND("THAILAND","TH"),
-    MYANMAR("MYANMAR","MM"),
-    CAMBODIA("CAMBODIA","KH"),
-    LAOS("LAOS","LA"),
-    BRUNEI("BRUNEI","BN"),
-    EAST_TIMOR("EAST_TIMOR","TL"),
-    CHINA("CHINA","CN"),
-    JAPAN("JAPAN","JP"),
-    SOUTH_KOREA("SOUTH_KOREA","KR"),
-    AUSTRALIA("AUSTRALIA","AU"),
-    NEW_ZEALAND("NEW_ZEALAND","NZ"),
-    GUAM("GUAM","GU"),
-    SAI_PAN("SAI_PAN","MP"),
-    ECT("ECT","ETC");
+    ALL("ALL","ALL", "전체"),
+    MALAYSIA("MALAYSIA","MY","말레이시아"),
+    SINGAPORE("SINGAPORE","SG","싱가포르"),
+    INDONESIA("INDONESIA","ID","인도네시아"),
+    VIETNAM("VIETNAM","VN","베트남"),
+    PHILIPPINES("PHILIPPINES","PH","필리핀"),
+    THAILAND("THAILAND","TH","태국"),
+    MYANMAR("MYANMAR","MM","미얀마"),
+    CAMBODIA("CAMBODIA","KH","캄보디아"),
+    LAOS("LAOS","LA","라오스"),
+    BRUNEI("BRUNEI","BN","브루나이"),
+    EAST_TIMOR("EAST_TIMOR","TL","동티모르"),
+    CHINA("CHINA","CN","중국"),
+    JAPAN("JAPAN","JP","일본"),
+    SOUTH_KOREA("SOUTH_KOREA","KR","대한민국"),
+    AUSTRALIA("AUSTRALIA","AU","오스트레일리아"),
+    NEW_ZEALAND("NEW_ZEALAND","NZ","뉴질랜드"),
+    GUAM("GUAM","GU","괌"),
+    SAI_PAN("SAI_PAN","MP","사이판"),
+    ECT("ECT","ETC","기타");
 
     private final String countryName;
     private final String countryCode;
+    private final String countryKoreanName;
 
     public static Countries getCountry(String countryName) {
-        for (Countries country : Countries.values()) {
-            if (country.getCountryName().equals(countryName)) {
-                return country;
-            }
-        }
-        return null;
+        return Arrays.stream(Countries.values())
+                .filter(country -> country.getCountryName().equals(countryName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static Countries getCountryByKoreanName(String countryKoreanName) {
+        return Arrays.stream(Countries.values())
+                .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
+                .findFirst()
+                .orElse(null);
     }
 }
