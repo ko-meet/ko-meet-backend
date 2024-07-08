@@ -1,6 +1,7 @@
 package com.backend.komeet.user.presentation.controller;
 
 import com.backend.komeet.base.presentation.response.ApiResponse;
+import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.response.LocationResponse;
 import com.backend.komeet.user.application.GeocoderService;
 import io.swagger.annotations.Api;
@@ -42,7 +43,9 @@ public class LocationController {
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(
-                        LocationResponse.from(country.getFirst(), country.getSecond()))
+                        LocationResponse.from(
+                                Countries.getCountryByKoreanName(country.getFirst()),
+                                country.getSecond()))
                 );
     }
 }
