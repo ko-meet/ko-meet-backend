@@ -44,7 +44,7 @@ public class LogFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-      
+
         // 요청 파라미터 로깅
         String params = httpRequest.getParameterMap().entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + String.join(",", entry.getValue()))
