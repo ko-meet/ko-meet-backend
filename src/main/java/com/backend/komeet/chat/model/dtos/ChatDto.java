@@ -2,10 +2,7 @@ package com.backend.komeet.chat.model.dtos;
 
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.chat.model.entities.Chat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

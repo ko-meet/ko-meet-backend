@@ -21,7 +21,7 @@ public class Chat extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatRoomSeq")
     private ChatRoom chatRoom;
 
@@ -48,7 +48,7 @@ public class Chat extends BaseEntity {
     @Setter
     private Boolean readStatus;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 

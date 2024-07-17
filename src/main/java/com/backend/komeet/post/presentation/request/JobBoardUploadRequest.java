@@ -5,10 +5,7 @@ import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.enums.PostStatus;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

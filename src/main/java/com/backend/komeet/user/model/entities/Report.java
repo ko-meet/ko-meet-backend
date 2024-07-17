@@ -3,10 +3,7 @@ package com.backend.komeet.user.model.entities;
 import com.backend.komeet.base.model.entities.BaseEntity;
 import com.backend.komeet.user.presentation.request.UserReportRequest;
 import com.backend.komeet.user.enums.ReportReason;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
