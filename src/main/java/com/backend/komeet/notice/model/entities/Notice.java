@@ -10,10 +10,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 import static com.backend.komeet.post.enums.PostStatus.NORMAL;
@@ -48,11 +45,11 @@ public class Notice extends BaseEntity {
     @Setter
     private PostStatus status;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     private List<Countries> targetCountries;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(CascadeType.ALL)
     private List<Long> readUsers;
 

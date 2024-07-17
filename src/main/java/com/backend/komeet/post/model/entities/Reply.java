@@ -25,12 +25,12 @@ public class Reply extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_seq")
     @JsonIgnore
     private Comment comment;
@@ -38,7 +38,7 @@ public class Reply extends BaseEntity {
     @Setter
     private Integer upVotes;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> likeUsers;
 

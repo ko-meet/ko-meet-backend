@@ -1,11 +1,11 @@
 package com.backend.komeet.post.model.entities;
 
 import com.backend.komeet.base.model.entities.BaseEntity;
-import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.post.presentation.request.PostUploadRequest;
 import com.backend.komeet.post.enums.Categories;
-import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.post.presentation.request.PostUploadRequest;
+import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.user.model.entities.User;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
@@ -37,10 +37,18 @@ public class Post extends BaseEntity {
     @Setter
     private String content;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(
+            targetEntity = User.class,
+            fetch = FetchType.LAZY
+    )
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "post",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Comment> comments = new ArrayList<>();
 
     @Setter
@@ -49,19 +57,19 @@ public class Post extends BaseEntity {
     @Setter
     private Long likeCount;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> tags;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> likeUsers;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> bookmarkUsers;
 
