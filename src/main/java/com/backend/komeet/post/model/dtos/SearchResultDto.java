@@ -3,10 +3,7 @@ package com.backend.komeet.post.model.dtos;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.PostStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

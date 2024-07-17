@@ -1,10 +1,7 @@
 package com.backend.komeet.base.presentation.request;
 
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 이미지 요청 DTO
