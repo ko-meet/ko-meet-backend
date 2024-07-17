@@ -1,10 +1,7 @@
 package com.backend.komeet.user.model.dtos;
 
 import com.backend.komeet.user.model.entities.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 사용자 로그인 DTO

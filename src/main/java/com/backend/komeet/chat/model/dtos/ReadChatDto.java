@@ -1,9 +1,6 @@
 package com.backend.komeet.chat.model.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 채팅 읽음 DTO

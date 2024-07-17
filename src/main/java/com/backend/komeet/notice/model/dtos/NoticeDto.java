@@ -4,10 +4,7 @@ import com.backend.komeet.notice.enums.NoticeType;
 import com.backend.komeet.notice.model.entities.Notice;
 import com.backend.komeet.post.enums.PostStatus;
 import com.backend.komeet.user.enums.Countries;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 

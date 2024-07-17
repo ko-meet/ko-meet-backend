@@ -6,10 +6,7 @@ import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.enums.PostStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
