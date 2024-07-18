@@ -39,6 +39,12 @@ public class LogFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        // 멀티파트 요청인지 확인
+        if (httpRequest.getContentType() != null && httpRequest.getContentType().startsWith("multipart/form-data")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // 요청 파라미터 로깅
         String params = httpRequest.getParameterMap().entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + String.join(",", entry.getValue()))
