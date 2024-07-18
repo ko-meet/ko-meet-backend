@@ -1,10 +1,12 @@
 package com.backend.komeet.user.application;
 
+import com.backend.komeet.base.application.ImageService;
 import com.backend.komeet.base.application.RedisService;
 import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.infrastructure.security.JwtProvider;
 import com.backend.komeet.infrastructure.util.CountryUtil;
 import com.backend.komeet.infrastructure.util.UUIDUtil;
+import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
@@ -37,15 +39,12 @@ public class UserInformationService {
     private final PasswordEncoder passwordEncoder;
     private final RedisService redisService;
     private final JwtProvider jwtProvider;
+    private final ImageService imageService;
     final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
     final String TOKEN_PREFIX = "Refresh: ";
 
     /**
      * 사용자 정보 수정
-     *
-     * @param userSeq               사용자 번호
-     * @param country               나라 정보
-     * @param userInfoUpdateRequest 사용자 정보 수정 요청
      */
     @Transactional
     public void updateInformation(Long userSeq,
@@ -53,11 +52,20 @@ public class UserInformationService {
                                   UserInfoUpdateRequest userInfoUpdateRequest) {
 
         User user = getUser(userSeq, "");
+        setUserCountryIfItsChanged(country, userInfoUpdateRequest, user);
+        setUserNickNameIfItsChanged(userInfoUpdateRequest.getNickName(), user);
+        setUserInterestCountryIfItsChanged(userInfoUpdateRequest.getInterestCountry(), user);
+        setUserStatusIfItsChanged(userInfoUpdateRequest.getStatus(), user);
+        setUserImageProfileIfItsChanged(userInfoUpdateRequest.getProfileImage(), user);
+    }
 
-        if (userInfoUpdateRequest.getNickName() != null) {
-            user.setNickName(userInfoUpdateRequest.getNickName());
-        }
-
+    /**
+     * 사용자 나라 변경
+     */
+    private static void setUserCountryIfItsChanged(
+            CompletableFuture<Pair<String, String>> country,
+            UserInfoUpdateRequest userInfoUpdateRequest,
+            User user) {
         try {
             if (userInfoUpdateRequest.getCountry() != null && country.get() != null) {
                 Pair<String, String> countryPair =
@@ -68,25 +76,51 @@ public class UserInformationService {
         } catch (InterruptedException | ExecutionException e) {
             log.info(e.getMessage());
         }
+    }
 
-        if (userInfoUpdateRequest.getInterestCountry() != null) {
-            user.setInterestCountry(userInfoUpdateRequest.getInterestCountry());
+    /**
+     * 사용자 닉네임 변경
+     */
+    private static void setUserNickNameIfItsChanged(String userNickName,
+                                                    User user) {
+        if (userNickName != null) {
+            user.setNickName(userNickName);
         }
+    }
 
-        if (userInfoUpdateRequest.getProfileImage() != null) {
-            user.setImageUrl(userInfoUpdateRequest.getProfileImage());
+    /**
+     * 사용자 관심 나라 변경
+     */
+    private static void setUserInterestCountryIfItsChanged(Countries interestCountry,
+                                                           User user) {
+        if (interestCountry != null) {
+            user.setInterestCountry(interestCountry);
         }
-        if (userInfoUpdateRequest.getStatus() != null) {
-            user.setUserStatus(userInfoUpdateRequest.getStatus());
-        }
+    }
 
+    /**
+     * 사용자 상태 변경
+     */
+    private static void setUserStatusIfItsChanged(UserStatus status,
+                                                  User user) {
+        if (status != null) {
+            user.setUserStatus(status);
+        }
+    }
+
+    /**
+     * 사용자 프로필 이미지 변경
+     */
+    private void setUserImageProfileIfItsChanged(String profileUrl,
+                                                        User user) {
+        if (profileUrl != null) {
+            imageService.deleteFile(user.getImageUrl());
+            user.setImageUrl(profileUrl.isEmpty() ? null : profileUrl);
+        }
     }
 
     /**
      * 사용자 비밀번호 초기화
-     *
-     * @param userPasswordResetRequest 사용자 번호
-     * @return 사용자 번호
      */
     @Transactional
     public String resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
@@ -104,9 +138,6 @@ public class UserInformationService {
 
     /**
      * 사용자 비밀번호 변경
-     *
-     * @param userSeq                   사용자 번호
-     * @param userPasswordChangeRequest {@link UserPasswordChangeRequest}
      */
     @Transactional
     public void changePassword(Long userSeq,
@@ -127,9 +158,6 @@ public class UserInformationService {
 
     /**
      * 사용자 닉네임 중복 확인
-     *
-     * @param nickname 닉네임
-     * @return 중복 여부
      */
     @Transactional(readOnly = true)
     public Boolean checkNickname(String nickname) {
@@ -138,10 +166,6 @@ public class UserInformationService {
 
     /**
      * 사용자 정보 조회
-     *
-     * @param userSeq 사용자 번호
-     * @param country CompletableFuture 객체
-     * @return 사용자 정보
      */
     @Transactional(readOnly = true)
     public UserSignInDto getUser(Long userSeq, CompletableFuture<Pair<String, String>> country) {
@@ -172,9 +196,6 @@ public class UserInformationService {
 
     /**
      * 토큰 재발급
-     *
-     * @param token 토큰
-     * @return 토큰
      */
     @Transactional
     public Pair<String, String> refreshToken(String token) {
@@ -201,9 +222,6 @@ public class UserInformationService {
 
     /**
      * 사용자 차단
-     *
-     * @param userSeq  차단대상 사용자 고유번호
-     * @param adminSeq 관리자 고유번호
      */
     @Transactional
     public void blockOrUnblockUser(Long userSeq,
@@ -217,10 +235,6 @@ public class UserInformationService {
 
     /**
      * 사용자 정보 조회
-     *
-     * @param userSeq   사용자 고유번호
-     * @param userEmail 사용자 이메일
-     * @return {@link User}
      */
     private User getUser(Long userSeq, String userEmail) {
         if (userSeq != null) {

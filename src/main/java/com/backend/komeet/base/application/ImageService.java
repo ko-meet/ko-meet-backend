@@ -29,16 +29,12 @@ public class ImageService {
 
     /**
      * 파일 업로드
-     *
-     * @param multipartFiles 파일
-     * @param imagePath      이미지 타입에 대한 경로
-     * @return 업로드한 파일의 URL
      */
     public ImageDto saveFiles(List<MultipartFile> multipartFiles, String imagePath) {
         List<String> imageUrls = new ArrayList<>();
 
         multipartFiles.forEach(multipartFile ->
-            imageUrls.add(saveFileAndGetUrl(multipartFile, imagePath))
+                imageUrls.add(saveFileAndGetUrl(multipartFile, imagePath))
         );
 
         return ImageDto.from(imageUrls);
@@ -46,10 +42,6 @@ public class ImageService {
 
     /**
      * 파일 업로드
-     *
-     * @param multipartFile 파일
-     * @param imagePath     이미지 타입에 대한 경로
-     * @return 업로드한 파일의 URL
      */
     private String saveFileAndGetUrl(MultipartFile multipartFile, String imagePath) {
         String originalFileName = generateFileName(multipartFile, imagePath);
@@ -59,10 +51,6 @@ public class ImageService {
 
     /**
      * 파일 이름 생성
-     *
-     * @param multipartFile 파일
-     * @param imagePath     이미지 타입에 대한 경로
-     * @return 파일 이름
      */
     private String generateFileName(MultipartFile multipartFile, String imagePath) {
         return imagePath + "/" +
@@ -75,9 +63,6 @@ public class ImageService {
 
     /**
      * 파일 업로드
-     *
-     * @param multipartFile    파일
-     * @param originalFileName 파일 이름
      */
     private void uploadFileToS3(MultipartFile multipartFile, String originalFileName) {
         ObjectMetadata metadata = new ObjectMetadata();
@@ -98,9 +83,6 @@ public class ImageService {
 
     /**
      * 파일 URL 생성
-     *
-     * @param originalFileName 파일 이름
-     * @return 파일 URL
      */
     private String generateFileUrl(String originalFileName) {
         return amazonS3.getUrl(bucket, originalFileName).toString();
@@ -108,8 +90,6 @@ public class ImageService {
 
     /**
      * 파일 삭제
-     *
-     * @param imagePath 파일 경로
      */
     public void deleteFile(String imagePath) {
         // 파일 삭제
@@ -118,9 +98,6 @@ public class ImageService {
 
     /**
      * 파일 이름에서 확장자 추출
-     *
-     * @param file 파일
-     * @return 파일 확장자
      */
     private String getFileExtension(MultipartFile file) {
         // 파일 이름에서 확장자 추출
@@ -131,6 +108,6 @@ public class ImageService {
                 return originalFilename.substring(lastDotIndex + 1);
             }
         }
-        return ""; // 확장자가 없는 경우 빈 문자열 반환
+        return "png"; // 확장자가 없는 경우 png 반환
     }
 }
