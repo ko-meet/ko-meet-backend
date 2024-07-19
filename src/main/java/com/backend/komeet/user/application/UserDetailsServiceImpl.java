@@ -26,10 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * 사용자 인증을 위해 사용자 정보를 조회하는 메서드
-     *
-     * @param email 사용자 이메일
-     * @return UserDetails
-     * @throws UsernameNotFoundException 사용자 정보를 찾을 수 없을 때 발생하는 예외
      */
     @Transactional(readOnly = true)
     @Override
@@ -48,9 +44,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * 사용자 정보를 조회하는 메서드
-     *
-     * @param email 사용자 이메일
-     * @return {@link com.backend.komeet.user.model.entities.User}
      */
     private com.backend.komeet.user.model.entities.User getUser(String email) {
         return userRepository

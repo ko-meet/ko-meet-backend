@@ -29,27 +29,22 @@ public class UserSignUpService {
 
     /**
      * 사용자 회원가입
-     *
-     * @param userSignUpRequest 사용자 회원가입 요청
      */
     @Transactional
-    public Pair<Long, String> signUp(UserSignUpRequest userSignUpRequest) {
+    public Pair<Long, String> signUp(
+            UserSignUpRequest userSignUpRequest
+    ) {
         validateUserNotExists(userSignUpRequest.getEmail());
-
         String encodedPassword =
                 passwordEncoder.encode(userSignUpRequest.getPassword());
-
         User user = userRepository.save(
                 User.from(userSignUpRequest, encodedPassword)
         );
-
         return Pair.of(user.getSeq(), user.getNickName());
     }
 
     /**
      * 사용자가 존재하는지 검증
-     *
-     * @param email 사용자 이메일
      */
     private void validateUserNotExists(String email) {
         userRepository
@@ -61,9 +56,6 @@ public class UserSignUpService {
 
     /**
      * 이메일로 사용자 정보 가져오기
-     *
-     * @param email 사용자 이메일
-     * @return 사용자 정보
      */
     @Transactional(readOnly = true)
     public UserDto getUserByEmail(String email) {
@@ -74,11 +66,9 @@ public class UserSignUpService {
 
     /**
      * 사용자 이메일 인증
-     *
-     * @param userSeq 사용자 시퀀스
      */
     @Transactional
-    public Pair<String,Boolean> verifyEmail(Long userSeq) {
+    public Pair<String, Boolean> verifyEmail(Long userSeq) {
         User user = getUser(userSeq);
         String resultString = "이메일 인증이 완료되었습니다.";
         UserStatus currentUserStatus = user.getUserStatus();
@@ -88,15 +78,12 @@ public class UserSignUpService {
 
     /**
      * 사용자 상태에 따른 인증 결과 가져오기
-     *
-     * @param currentUserStatus 현재 사용자 상태
-     * @param user              사용자
-     * @param resultString      결과 문자열
-     * @return 인증 결과
      */
-    private Pair<String, Boolean> getVerificationResult(UserStatus currentUserStatus,
-                                                        User user,
-                                                        String resultString) {
+    private Pair<String, Boolean> getVerificationResult(
+            UserStatus currentUserStatus,
+            User user,
+            String resultString
+    ) {
         boolean isLoginAvailable = true;
         switch (currentUserStatus) {
             case PENDING:
@@ -119,9 +106,6 @@ public class UserSignUpService {
 
     /**
      * 사용자 정보 가져오기
-     *
-     * @param userSeq 사용자 시퀀스
-     * @return {@link User}
      */
     private User getUser(Long userSeq) {
         return userRepository

@@ -23,11 +23,6 @@ public class EmailService {
 
     /**
      * 비동기적으로 이메일을 발송
-     *
-     * @param to      수신자 이메일 주소
-     * @param subject 이메일 제목
-     * @param htmlBody    이메일 내용
-     * @throws RuntimeException 이메일 전송 중 발생하는 예외를 런타임 예외로 감싸서 던집니다.
      */
     @Async
     public void sendHtmlEmail(String to, String subject, String htmlBody) {

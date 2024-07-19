@@ -47,10 +47,11 @@ public class UserInformationService {
      * 사용자 정보 수정
      */
     @Transactional
-    public void updateInformation(Long userSeq,
-                                  CompletableFuture<Pair<String, String>> country,
-                                  UserInfoUpdateRequest userInfoUpdateRequest) {
-
+    public void updateInformation(
+            Long userSeq,
+            CompletableFuture<Pair<String, String>> country,
+            UserInfoUpdateRequest userInfoUpdateRequest
+    ) {
         User user = getUser(userSeq, "");
         setUserCountryIfItsChanged(country, userInfoUpdateRequest, user);
         setUserNickNameIfItsChanged(userInfoUpdateRequest.getNickName(), user);
@@ -60,79 +61,18 @@ public class UserInformationService {
     }
 
     /**
-     * 사용자 나라 변경
-     */
-    private static void setUserCountryIfItsChanged(
-            CompletableFuture<Pair<String, String>> country,
-            UserInfoUpdateRequest userInfoUpdateRequest,
-            User user) {
-        try {
-            if (userInfoUpdateRequest.getCountry() != null && country.get() != null) {
-                Pair<String, String> countryPair =
-                        CountryUtil.fetchLocation(country);
-                user.setRegion(countryPair.getSecond());
-                user.setCountry(userInfoUpdateRequest.getCountry());
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            log.info(e.getMessage());
-        }
-    }
-
-    /**
-     * 사용자 닉네임 변경
-     */
-    private static void setUserNickNameIfItsChanged(String userNickName,
-                                                    User user) {
-        if (userNickName != null) {
-            user.setNickName(userNickName);
-        }
-    }
-
-    /**
-     * 사용자 관심 나라 변경
-     */
-    private static void setUserInterestCountryIfItsChanged(Countries interestCountry,
-                                                           User user) {
-        if (interestCountry != null) {
-            user.setInterestCountry(interestCountry);
-        }
-    }
-
-    /**
-     * 사용자 상태 변경
-     */
-    private static void setUserStatusIfItsChanged(UserStatus status,
-                                                  User user) {
-        if (status != null) {
-            user.setUserStatus(status);
-        }
-    }
-
-    /**
-     * 사용자 프로필 이미지 변경
-     */
-    private void setUserImageProfileIfItsChanged(String profileUrl,
-                                                        User user) {
-        if (profileUrl != null) {
-            imageService.deleteFile(user.getImageUrl());
-            user.setImageUrl(profileUrl.isEmpty() ? null : profileUrl);
-        }
-    }
-
-    /**
      * 사용자 비밀번호 초기화
      */
     @Transactional
-    public String resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
+    public String resetPassword(
+            UserPasswordResetRequest userPasswordResetRequest
+    ) {
         User user = getUser(null, userPasswordResetRequest.getEmail());
-
         if (!user.getCountry().equals(userPasswordResetRequest.getCountry())) {
             throw new CustomException(USER_INFO_NOT_FOUND);
         }
-
         String temporaryPassword = UUIDUtil.generateUUID(10);
         user.setPassword(passwordEncoder.encode(temporaryPassword));
-
         return temporaryPassword;
     }
 
@@ -140,20 +80,18 @@ public class UserInformationService {
      * 사용자 비밀번호 변경
      */
     @Transactional
-    public void changePassword(Long userSeq,
-                               UserPasswordChangeRequest userPasswordChangeRequest) {
+    public void changePassword(
+            Long userSeq,
+            UserPasswordChangeRequest userPasswordChangeRequest
+    ) {
         User user = getUser(userSeq, "");
-
-        if (!passwordEncoder.matches(
-                userPasswordChangeRequest.getExistingPassword(), user.getPassword())
-        ) {
+        String existingPassword = userPasswordChangeRequest.getExistingPassword();
+        String newPassword = userPasswordChangeRequest.getNewPassword();
+        String currentPassword = user.getPassword();
+        if (!passwordEncoder.matches(existingPassword, currentPassword)) {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
-
-        user.setPassword(
-                passwordEncoder.encode(userPasswordChangeRequest.getNewPassword())
-        );
-
+        user.setPassword(passwordEncoder.encode(newPassword));
     }
 
     /**
@@ -168,16 +106,15 @@ public class UserInformationService {
      * 사용자 정보 조회
      */
     @Transactional(readOnly = true)
-    public UserSignInDto getUser(Long userSeq, CompletableFuture<Pair<String, String>> country) {
+    public UserSignInDto getUser(
+            Long userSeq,
+            CompletableFuture<Pair<String, String>> country
+    ) {
 
         User user = getUser(userSeq, "");
-
         boolean isLocationMatch = false;
-
         Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
-
-        if (user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
-                user.getRegion().equals(countryPair.getSecond())) {
+        if (areLocationsSame(user, countryPair)) {
             isLocationMatch = true;
         }
 
@@ -204,19 +141,11 @@ public class UserInformationService {
             throw new CustomException(USER_INFO_NOT_FOUND);
         }
         String accessToken = jwtProvider.issueAccessToken(
-                TokenIssuanceDto.from(
-                        userRepository
-                                .findByEmail(userEmail)
-                                .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND))
-                )
+                TokenIssuanceDto.from(getUser(null, userEmail))
         );
-
         String refreshToken = jwtProvider.issueRefreshToken();
-
         redisService.deleteValueByKey(TOKEN_PREFIX + token);
-        redisService.saveKeyAndValue(
-                TOKEN_PREFIX + refreshToken, userEmail, REFRESH_TOKEN_EXPIRE_TIME);
-
+        redisService.saveKeyAndValue(TOKEN_PREFIX + refreshToken, userEmail, REFRESH_TOKEN_EXPIRE_TIME);
         return Pair.of(accessToken, refreshToken);
     }
 
@@ -224,9 +153,11 @@ public class UserInformationService {
      * 사용자 차단
      */
     @Transactional
-    public void blockOrUnblockUser(Long userSeq,
-                                   Long adminSeq,
-                                   UserStatus status) {
+    public void blockOrUnblockUser(
+            Long userSeq,
+            Long adminSeq,
+            UserStatus status
+    ) {
         if (!getUser(adminSeq, "").getUserRole().equals(ROLE_ADMIN)) {
             throw new CustomException(NOT_AN_ADMIN_USER);
         }
@@ -236,7 +167,10 @@ public class UserInformationService {
     /**
      * 사용자 정보 조회
      */
-    private User getUser(Long userSeq, String userEmail) {
+    private User getUser(
+            Long userSeq,
+            String userEmail
+    ) {
         if (userSeq != null) {
             return userRepository
                     .findById(userSeq)
@@ -247,5 +181,85 @@ public class UserInformationService {
                     .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
         }
         return new User();
+    }
+
+    /**
+     * 사용자 나라 변경
+     */
+    private static void setUserCountryIfItsChanged(
+            CompletableFuture<Pair<String, String>> country,
+            UserInfoUpdateRequest userInfoUpdateRequest,
+            User user
+    ) {
+        try {
+            if (userInfoUpdateRequest.getCountry() != null && country.get() != null) {
+                Pair<String, String> countryPair = CountryUtil.fetchLocation(country);
+                user.setRegion(countryPair.getSecond());
+                user.setCountry(userInfoUpdateRequest.getCountry());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    /**
+     * 사용자 닉네임 변경
+     */
+    private static void setUserNickNameIfItsChanged(
+            String userNickName,
+            User user
+    ) {
+        if (userNickName != null) {
+            user.setNickName(userNickName);
+        }
+    }
+
+    /**
+     * 사용자 관심 나라 변경
+     */
+    private static void setUserInterestCountryIfItsChanged(
+            Countries interestCountry,
+            User user
+    ) {
+        if (interestCountry != null) {
+            user.setInterestCountry(interestCountry);
+        }
+    }
+
+    /**
+     * 사용자 상태 변경
+     */
+    private static void setUserStatusIfItsChanged(
+            UserStatus status,
+            User user
+    ) {
+        if (status != null) {
+            user.setUserStatus(status);
+        }
+    }
+
+    /**
+     * 사용자 프로필 이미지 변경
+     */
+    private void setUserImageProfileIfItsChanged(
+            String profileUrl,
+            User user
+    ) {
+        if (profileUrl != null) {
+            imageService.deleteFile(user.getImageUrl());
+            user.setImageUrl(profileUrl.isEmpty() ? null : profileUrl);
+        }
+    }
+
+
+    /**
+     * 위치 정보 일치여부 체크
+     */
+    private static boolean areLocationsSame(
+            User user,
+            Pair<String, String> countryPair
+    ) {
+        return user.getCountry().getCountryName().equals(countryPair.getFirst()) &&
+                user.getRegion().equals(countryPair.getSecond());
     }
 }

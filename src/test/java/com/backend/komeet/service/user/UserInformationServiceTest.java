@@ -1,13 +1,14 @@
 package com.backend.komeet.service.user;
 
+import com.backend.komeet.base.application.ImageService;
+import com.backend.komeet.base.application.RedisService;
 import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.user.application.UserInformationService;
+import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.presentation.request.UserPasswordChangeRequest;
 import com.backend.komeet.user.presentation.request.UserPasswordResetRequest;
-import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.repositories.UserRepository;
-import com.backend.komeet.base.application.RedisService;
-import com.backend.komeet.user.application.UserInformationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +33,19 @@ class UserInformationServiceTest {
     private RedisService redisService;
     @Mock
     private JwtProvider jwtProvider;
+    @Mock
+    private ImageService imageService;
     private UserInformationService userInformationService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         userInformationService = new UserInformationService(
-                userRepository, passwordEncoder, redisService, jwtProvider
+                userRepository,
+                passwordEncoder,
+                redisService,
+                jwtProvider,
+                imageService
         );
     }
 
