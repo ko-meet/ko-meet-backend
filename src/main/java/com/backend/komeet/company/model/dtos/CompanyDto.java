@@ -23,6 +23,8 @@ public class CompanyDto {
     private String companyHomepage;
     private String companyCountry;
     private String companyLogo;
+    private String companyCountryCode;
+    private String companyIndustryCode;
     private Long companyManagerUserSeq;
 
     public static CompanyDto from(Company company){
@@ -37,6 +39,8 @@ public class CompanyDto {
                 .companyLogo(company.getCompanyLogo())
                 .companyCountry(company.getCompanyCountry().getCountryName())
                 .companyManagerUserSeq(company.getCompanyManagerUserSeq())
+                .companyCountryCode(company.getCompanyCountry().getCountryName())
+                .companyIndustryCode(company.getIndustry().toString())
                 .build();
     }
 }
