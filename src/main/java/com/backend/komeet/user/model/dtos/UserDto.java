@@ -29,7 +29,9 @@ public class UserDto {
     private UserRole userRole;
     private UserStatus userStatus;
 
-    public static UserDto from(User user) {
+    public static UserDto from(
+            User user
+    ) {
         return UserDto.builder()
                 .seq(user.getSeq())
                 .nickName(user.getNickName())

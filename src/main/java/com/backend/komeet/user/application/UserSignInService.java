@@ -75,7 +75,9 @@ public class UserSignInService {
     /**
      * 사용자 상태가 활성화 상태인지 체크
      */
-    private static void validateIfUserStateIsActive(User user) {
+    private static void validateIfUserStateIsActive(
+            User user
+    ) {
         if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
             throw new CustomException(USER_STATUS_NOT_ACTIVE);
         }

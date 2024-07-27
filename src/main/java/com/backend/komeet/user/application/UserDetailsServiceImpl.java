@@ -29,7 +29,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(
+            String email
+    ) throws UsernameNotFoundException {
         com.backend.komeet.user.model.entities.User userEntity = getUser(email);
 
         List<GrantedAuthority> authorities =
@@ -45,7 +47,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 사용자 정보를 조회하는 메서드
      */
-    private com.backend.komeet.user.model.entities.User getUser(String email) {
+    private com.backend.komeet.user.model.entities.User getUser(
+            String email
+    ) {
         return userRepository
                         .findByEmail(email)
                         .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));

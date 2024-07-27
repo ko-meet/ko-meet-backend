@@ -74,13 +74,11 @@ public class User extends BaseEntity {
 
     /**
      * User 팩토리 메서드
-     *
-     * @param userSignUpRequest 회원가입 요청
-     * @param encodedPassword   암호화된 패스워드
-     * @return User
      */
-    public static User from(UserSignUpRequest userSignUpRequest,
-                            String encodedPassword) {
+    public static User from(
+            UserSignUpRequest userSignUpRequest,
+            String encodedPassword
+    ) {
         Countries interestCountry =
                 userSignUpRequest.getInterestCountry() != null ?
                         Countries.getCountry(userSignUpRequest.getInterestCountry()) : null;

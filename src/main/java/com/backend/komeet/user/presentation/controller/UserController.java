@@ -39,15 +39,13 @@ public class UserController {
     private final UserReportService userReportService;
 
     /**
-     * 사용자 회원가입
-     *
-     * @param userSignUpRequest 사용자 회원가입 요청 DTO
-     * @return ResponseEntity<Void>
+     * 사용자 회원가입\
      */
     @PostMapping
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
     public ResponseEntity<ApiResponse> signUp(
-            @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
+            @Valid @RequestBody UserSignUpRequest userSignUpRequest
+    ) {
 
         Pair<Long, String> userSeqAndNickName =
                 userSignUpService.signUp(userSignUpRequest);
@@ -67,14 +65,12 @@ public class UserController {
 
     /**
      * 이메일 재 인증
-     *
-     * @param userEmailRequest 이메일 재 인증 요청 DTO
-     * @return ResponseEntity<Void>
      */
     @PostMapping("/authentication-mail")
     @ApiOperation(value = "이메일 재 인증", notes = "이메일 재 인증 진행")
     public ResponseEntity<Void> reAuthenticationMail(
-            @Valid @RequestBody UserEmailRequest userEmailRequest) {
+            @Valid @RequestBody UserEmailRequest userEmailRequest
+    ) {
 
         UserDto user =
                 userSignUpService.getUserByEmail(userEmailRequest.getEmail());
@@ -94,14 +90,12 @@ public class UserController {
 
     /**
      * 사용자 로그인
-     *
-     * @param userSignInRequest 사용자 로그인 요청 DTO
-     * @return ResponseEntity<UserSignInResponse>
      */
     @PostMapping("/sign-in")
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
     public ResponseEntity<ApiResponse> signIn(
-            @Valid @RequestBody UserSignInRequest userSignInRequest) {
+            @Valid @RequestBody UserSignInRequest userSignInRequest
+    ) {
 
         UserDto userDto
                 = userSignUpService.getUserByEmail(userSignInRequest.getEmail());
@@ -119,15 +113,13 @@ public class UserController {
 
     /**
      * 사용자 로그아웃
-     *
-     * @param token 토큰
-     * @return ResponseEntity<Void> 로그아웃 결과
      */
     @PatchMapping("/information")
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
     public ResponseEntity<ApiResponse> updateInformation(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
+            @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
+    ) {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
@@ -146,14 +138,12 @@ public class UserController {
 
     /**
      * 비밀번호 재설정
-     *
-     * @param passwordResetRequest 비밀번호 재설정 요청 DTO
-     * @return ResponseEntity<Void> 비밀번호 재설정 결과
      */
     @PatchMapping("/password/reset")
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호 재설정 진행")
     public ResponseEntity<ApiResponse> resetPassword(
-            @Valid @RequestBody UserPasswordResetRequest passwordResetRequest) {
+            @Valid @RequestBody UserPasswordResetRequest passwordResetRequest
+    ) {
 
         String temporaryPassword =
                 userInformationService.resetPassword(passwordResetRequest);
@@ -169,16 +159,13 @@ public class UserController {
 
     /**
      * 비밀번호 변경
-     *
-     * @param token                     토큰
-     * @param userPasswordChangeRequest 비밀번호 변경 요청 DTO
-     * @return ResponseEntity<Void> 비밀번호 변경 결과
      */
     @PatchMapping("/password/change")
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
     public ResponseEntity<ApiResponse> changePassword(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
+            @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
+    ) {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
@@ -189,14 +176,12 @@ public class UserController {
 
     /**
      * 닉네임 중복 체크
-     *
-     * @param nickname 닉네임
-     * @return ResponseEntity<ApiResponse> 닉네임 중복 체크 결과
      */
     @GetMapping("/nicknames")
     @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
     public ResponseEntity<ApiResponse> checkNickname(
-            @RequestParam String nickname) {
+            @RequestParam String nickname
+    ) {
 
         return ResponseEntity
                 .status(OK)
@@ -205,18 +190,14 @@ public class UserController {
 
     /**
      * 사용자 신고
-     *
-     * @param token             토큰
-     * @param userSeq           신고대상자 고유번호
-     * @param userReportRequest {@link UserReportRequest}
-     * @return {@link ResponseEntity<Void>}
      */
     @PatchMapping("/{userSeq}/report")
     @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
     public ResponseEntity<Void> reportUser(
             @RequestHeader(AUTHORIZATION) String token,
             @PathVariable Long userSeq,
-            @Valid @RequestBody UserReportRequest userReportRequest) {
+            @Valid @RequestBody UserReportRequest userReportRequest
+    ) {
 
         Long reporterSeq = jwtProvider.getIdFromToken(token);
         userReportService.reportValidation(userSeq, reporterSeq);
@@ -226,16 +207,13 @@ public class UserController {
 
     /**
      * 사용자 차단
-     *
-     * @param token   토큰
-     * @param userSeq 차단대상자 고유번호
-     * @return {@link ResponseEntity<Void>}
      */
     @PatchMapping("/{userSeq}/block")
     @ApiOperation(value = "사용자 차단", notes = "사용자 차단 진행")
     public ResponseEntity<Void> blockUser(
             @RequestHeader(AUTHORIZATION) String token,
-            @PathVariable Long userSeq) {
+            @PathVariable Long userSeq
+    ) {
 
         Long adminSeq = jwtProvider.getIdFromToken(token);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, BLOCKED);
@@ -244,16 +222,13 @@ public class UserController {
 
     /**
      * 사용자 차단 해제
-     *
-     * @param token   토큰
-     * @param userSeq 차단대상자 고유번호
-     * @return {@link ResponseEntity<Void>}
      */
     @PatchMapping("/{userSeq}/unblock")
     @ApiOperation(value = "사용자 차단 해제", notes = "사용자 차단 해제 진행")
     public ResponseEntity<Void> unblockUser(
             @RequestHeader(AUTHORIZATION) String token,
-            @PathVariable Long userSeq) {
+            @PathVariable Long userSeq
+    ) {
 
         Long adminSeq = jwtProvider.getIdFromToken(token);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, ACTIVE);
