@@ -1,8 +1,11 @@
 package com.backend.komeet.chat.model.dtos;
 
-import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.chat.model.entities.Chat;
-import lombok.*;
+import com.backend.komeet.user.model.dtos.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,12 +28,11 @@ public class ChatDto {
     private LocalDateTime createdAt;
 
     /**
-     * ChatDto 객체를 Chat 객체로 변환하는 메서드
-     *
-     * @param chat Chat 객체
-     * @return ChatDto 객체
+     * ChatDto 객체를 Chat 객체로 변환하는 메서드=
      */
-    public static ChatDto from(Chat chat) {
+    public static ChatDto from(
+            Chat chat
+    ) {
         return ChatDto.builder()
                 .id(chat.getSeq())
                 .chatRoomSeq(chat.getChatRoom().getSeq())

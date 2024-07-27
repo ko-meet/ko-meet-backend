@@ -13,10 +13,19 @@ import java.util.Optional;
  */
 public interface ChatRoomQRepository {
 
-    Page<ChatRoomDto> getChatRooms(User user, Pageable pageable);
+    Page<ChatRoomDto> getChatRooms(
+            User user,
+            Pageable pageable
+    );
 
-    Optional<ChatRoomDto> getChatRoom(User user1, User user2);
+    Optional<ChatRoomDto> getChatRoom(
+            User user1,
+            User user2
+    );
 
-    List<ChatRoomDto> searchChatRoomsByUserNickName(User user, String keyword);
+    List<ChatRoomDto> searchChatRoomsByUserNickName(
+            User user,
+            String keyword
+    );
 
 }
