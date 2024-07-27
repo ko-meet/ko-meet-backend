@@ -1,8 +1,11 @@
 package com.backend.komeet.chat.model.dtos;
 
-import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.chat.model.entities.ChatRoom;
-import lombok.*;
+import com.backend.komeet.user.model.dtos.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +25,9 @@ public class ChatRoomDto {
     private Integer unreadCountForRecipient;
     private LocalDateTime lastChatTime;
 
-    public static ChatRoomDto from(ChatRoom chatRoom) {
+    public static ChatRoomDto from(
+            ChatRoom chatRoom
+    ) {
         return ChatRoomDto.builder()
                 .seq(chatRoom.getSeq())
                 .sender(UserDto.from(chatRoom.getSender()))

@@ -28,7 +28,9 @@ public class CompanyDto {
     private String companyRegion;
     private Long companyManagerUserSeq;
 
-    public static CompanyDto from(Company company){
+    public static CompanyDto from(
+            Company company
+    ){
         return CompanyDto.builder()
                 .seq(company.getSeq())
                 .industry(company.getIndustry().getIndustry())

@@ -23,14 +23,13 @@ public class ChatQRepositoryImpl implements ChatQRepository {
 
     /**
      * 채팅 목록을 조회 하는 메서드
-     *
-     * @param chatRoomSeq 채팅방 식별자
-     * @param userSeq     사용자 식별자
-     * @param pageable    페이지 정보
-     * @return 채팅방 목록
      */
     @Override
-    public Page<ChatDto> getChats(Long chatRoomSeq, Long userSeq, Pageable pageable) {
+    public Page<ChatDto> getChats(
+            Long chatRoomSeq,
+            Long userSeq,
+            Pageable pageable
+    ) {
 
         QChat chat = QChat.chat;
         Predicate predicate =
@@ -60,12 +59,11 @@ public class ChatQRepositoryImpl implements ChatQRepository {
 
     /**
      * 사용자가 읽지 않은 채팅이 있는지 확인하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @return 읽지 않은 채팅 여부
      */
     @Override
-    public boolean hasUnreadMessages(Long userSeq) {
+    public boolean hasUnreadMessages(
+            Long userSeq
+    ) {
         QChat chat = QChat.chat;
         Predicate predicate = chat.recipient.seq.eq(userSeq)
                 .and(chat.readStatus.isFalse())
@@ -76,13 +74,13 @@ public class ChatQRepositoryImpl implements ChatQRepository {
                 .where(predicate)
                 .fetchCount() > 0;
     }
+
     /**
      * 전체 결과 개수를 조회하는 메서드
-     *
-     * @param predicate 조건
-     * @return 전체 결과 개수
      */
-    private Long getLength(Predicate predicate) {
+    private Long getLength(
+            Predicate predicate
+    ) {
         QChat post = QChat.chat;
         return jpaQueryFactory.selectFrom(post)
                 .where(predicate)

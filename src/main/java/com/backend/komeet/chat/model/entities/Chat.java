@@ -52,23 +52,14 @@ public class Chat extends BaseEntity {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> attachments;
 
-    /**
-     * 채팅 팩토리 메서드
-     *
-     * @param chatRoom  채팅방
-     * @param content   내용
-     * @param sender    발신자
-     * @param recipient 수신자
-     * @param readStatus 읽음 상태
-     * @param attachments 첨부파일
-     * @return Chat
-     */
-    public static Chat from(ChatRoom chatRoom,
-                            String content,
-                            User sender,
-                            User recipient,
-                            Boolean readStatus,
-                            List<String> attachments) {
+    public static Chat from(
+            ChatRoom chatRoom,
+            String content,
+            User sender,
+            User recipient,
+            Boolean readStatus,
+            List<String> attachments
+    ) {
         return Chat.builder()
                 .chatRoom(chatRoom)
                 .content(content)

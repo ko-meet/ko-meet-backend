@@ -16,7 +16,9 @@ public class TokenIssuanceDto {
     private UserRole userRole;
     private Countries country;
 
-    public static TokenIssuanceDto from(User user) {
+    public static TokenIssuanceDto from(
+            User user
+    ) {
         return TokenIssuanceDto.builder()
                 .id(user.getSeq())
                 .email(user.getEmail())

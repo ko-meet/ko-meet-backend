@@ -1,9 +1,9 @@
 package com.backend.komeet.user.presentation.controller;
 
 import com.backend.komeet.base.presentation.response.ApiResponse;
+import com.backend.komeet.user.application.GeocoderService;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.response.LocationResponse;
-import com.backend.komeet.user.application.GeocoderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +28,13 @@ public class LocationController {
 
     /**
      * 위치 정보
-     *
-     * @param latitude  위도
-     * @param longitude 경도
-     * @return {@link ResponseEntity<ApiResponse>} 위치 정보
      */
     @GetMapping
     @ApiOperation(value = "위치 정보", notes = "위치 정보를 가져옵니다.")
-    public ResponseEntity<ApiResponse> getLocation(@RequestParam Double latitude,
-                                                   @RequestParam Double longitude) {
+    public ResponseEntity<ApiResponse> getLocation(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude
+    ) {
         Pair<String, String> country =
                 geocoderService.getCountry(latitude, longitude).join();
 

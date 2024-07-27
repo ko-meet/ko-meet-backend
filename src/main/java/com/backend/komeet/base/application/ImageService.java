@@ -30,7 +30,10 @@ public class ImageService {
     /**
      * 파일 업로드
      */
-    public ImageDto saveFiles(List<MultipartFile> multipartFiles, String imagePath) {
+    public ImageDto saveFiles(
+            List<MultipartFile> multipartFiles,
+            String imagePath
+    ) {
         List<String> imageUrls = new ArrayList<>();
 
         multipartFiles.forEach(multipartFile ->
@@ -43,7 +46,10 @@ public class ImageService {
     /**
      * 파일 업로드
      */
-    private String saveFileAndGetUrl(MultipartFile multipartFile, String imagePath) {
+    private String saveFileAndGetUrl(
+            MultipartFile multipartFile,
+            String imagePath
+    ) {
         String originalFileName = generateFileName(multipartFile, imagePath);
         uploadFileToS3(multipartFile, originalFileName);
         return generateFileUrl(originalFileName);
@@ -52,7 +58,10 @@ public class ImageService {
     /**
      * 파일 이름 생성
      */
-    private String generateFileName(MultipartFile multipartFile, String imagePath) {
+    private String generateFileName(
+            MultipartFile multipartFile,
+            String imagePath
+    ) {
         return imagePath + "/" +
                 UUID.randomUUID()
                         .toString()
@@ -64,7 +73,10 @@ public class ImageService {
     /**
      * 파일 업로드
      */
-    private void uploadFileToS3(MultipartFile multipartFile, String originalFileName) {
+    private void uploadFileToS3(
+            MultipartFile multipartFile,
+            String originalFileName
+    ) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
@@ -84,23 +96,27 @@ public class ImageService {
     /**
      * 파일 URL 생성
      */
-    private String generateFileUrl(String originalFileName) {
+    private String generateFileUrl(
+            String originalFileName
+    ) {
         return amazonS3.getUrl(bucket, originalFileName).toString();
     }
 
     /**
      * 파일 삭제
      */
-    public void deleteFile(String imagePath) {
-        // 파일 삭제
+    public void deleteFile(
+            String imagePath
+    ) {
         amazonS3.deleteObject(bucket, imagePath);
     }
 
     /**
      * 파일 이름에서 확장자 추출
      */
-    private String getFileExtension(MultipartFile file) {
-        // 파일 이름에서 확장자 추출
+    private String getFileExtension(
+            MultipartFile file
+    ) {
         String originalFilename = file.getOriginalFilename();
         if (originalFilename != null) {
             int lastDotIndex = originalFilename.lastIndexOf(".");

@@ -37,12 +37,11 @@ public class ChatRoom extends BaseEntity {
 
     /**
      * 채팅방 팩토리 메서드
-     *
-     * @param sender    발신자
-     * @param recipient 수신자
-     * @return ChatRoom
      */
-    public static ChatRoom from(User sender, User recipient) {
+    public static ChatRoom from(
+            User sender,
+            User recipient
+    ) {
         return ChatRoom.builder()
                 .sender(sender)
                 .recipient(recipient)

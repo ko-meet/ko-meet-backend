@@ -22,13 +22,12 @@ public class NoticeRegisterService {
 
     /**
      * 공지사항 등록
-     *
-     * @param userSeq 사용자 고유번호
-     * @param request 공지사항 등록 요청
      */
     @Transactional
-    public void registerNotice(Long userSeq,
-                               NoticeRegisterRequest request) {
+    public void registerNotice(
+            Long userSeq,
+            NoticeRegisterRequest request
+    ) {
         if (!isUserAdmin(userSeq)) {
             throw new CustomException(NOT_AN_ADMIN_USER);
         }
@@ -37,11 +36,10 @@ public class NoticeRegisterService {
 
     /**
      * 사용자가 관리자가 아닌지 확인
-     *
-     * @param userSeq 사용자 고유번호
-     * @return 사용자가 관리자가 아닌지 여부
      */
-    private boolean isUserAdmin(Long userSeq) {
+    private boolean isUserAdmin(
+            Long userSeq
+    ) {
         return getUser(userSeq)
                 .getUserRole()
                 .equals(ROLE_ADMIN);
@@ -49,12 +47,10 @@ public class NoticeRegisterService {
 
     /**
      * 사용자 정보 조회
-     *
-     * @param userSeq 사용자 고유번호
-     * @param userSeq 사용자 고유번호
-     * @return 사용자 정보
      */
-    private User getUser(Long userSeq) {
+    private User getUser(
+            Long userSeq
+    ) {
         return userRepository
                 .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));

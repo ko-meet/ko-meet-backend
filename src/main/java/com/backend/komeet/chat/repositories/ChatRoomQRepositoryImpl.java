@@ -1,9 +1,9 @@
 package com.backend.komeet.chat.repositories;
 
+import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.chat.model.entities.QChat;
 import com.backend.komeet.chat.model.entities.QChatRoom;
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,13 +26,12 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 채팅방 목록을 조회하는 메서드
-     *
-     * @param user     사용자
-     * @param pageable 페이지 정보
-     * @return 채팅방 목록
      */
     @Override
-    public Page<ChatRoomDto> getChatRooms(User user, Pageable pageable) {
+    public Page<ChatRoomDto> getChatRooms(
+            User user,
+            Pageable pageable
+    ) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         Predicate predicate =
                 (chatRoom.sender.eq(user).and(chatRoom.isVisibleToSender.isTrue()))
@@ -57,12 +55,11 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 채팅방을 조회하는 메서드
-     *
-     * @param user1 사용자1
-     * @param user2 사용자2
-     * @return 채팅방
      */
-    public Optional<ChatRoomDto> getChatRoom(User user1, User user2) {
+    public Optional<ChatRoomDto> getChatRoom(
+            User user1,
+            User user2
+    ) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         Predicate predicate =
                 chatRoom.sender.eq(user1).and(chatRoom.recipient.eq(user2))
@@ -76,14 +73,12 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 채팅방 검색 메서드
-     *
-     * @param user    사용자
-     * @param keyword 검색어
-     * @return 채팅방 목록
      */
     @Override
-    public List<ChatRoomDto> searchChatRoomsByUserNickName(User user,
-                                                           String keyword) {
+    public List<ChatRoomDto> searchChatRoomsByUserNickName(
+            User user,
+            String keyword
+    ) {
         QChatRoom chatRoom = QChatRoom.chatRoom;
         keyword = keyword.trim();
         Predicate predicate =
@@ -109,11 +104,10 @@ public class ChatRoomQRepositoryImpl implements ChatRoomQRepository {
 
     /**
      * 전체 결과 개수를 조회하는 메서드
-     *
-     * @param predicate 조건
-     * @return 전체 결과 개수
      */
-    private Long getLength(Predicate predicate) {
+    private Long getLength(
+            Predicate predicate
+    ) {
         QChat post = QChat.chat;
         return jpaQueryFactory.selectFrom(post)
                 .where(predicate)

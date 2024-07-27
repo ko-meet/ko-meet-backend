@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.infrastructure.exception.ErrorCode.EMAIL_SEND_FAILED;
 
 /**
  * 이메일 발송 서비스
@@ -25,7 +25,11 @@ public class EmailService {
      * 비동기적으로 이메일을 발송
      */
     @Async
-    public void sendHtmlEmail(String to, String subject, String htmlBody) {
+    public void sendHtmlEmail(
+            String to,
+            String subject,
+            String htmlBody
+    ) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {
@@ -34,7 +38,7 @@ public class EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);  // true는 HTML을 의미함
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Failed to send email", e);
             throw new CustomException(EMAIL_SEND_FAILED);
         }

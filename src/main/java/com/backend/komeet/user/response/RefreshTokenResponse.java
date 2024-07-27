@@ -11,7 +11,9 @@ public class RefreshTokenResponse {
     private String accessToken;
     private String refreshToken;
 
-    public static RefreshTokenResponse from(Pair<String, String> tokens) {
+    public static RefreshTokenResponse from(
+            Pair<String, String> tokens
+    ) {
         return RefreshTokenResponse.builder()
                 .accessToken(tokens.getFirst())
                 .refreshToken(tokens.getSecond())
