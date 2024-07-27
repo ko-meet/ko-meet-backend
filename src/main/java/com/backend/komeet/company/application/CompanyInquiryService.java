@@ -16,14 +16,18 @@ public class CompanyInquiryService {
     /**
      * 단일 회사 정보 조회
      */
-    public CompanyDto getCompany(Long userSeq) {
+    public CompanyDto getCompany(
+            Long userSeq
+    ) {
         return CompanyDto.from(getCompanyEntity(userSeq));
     }
 
     /**
      * 회사 엔티티 조회
      */
-    private Company getCompanyEntity(Long userSeq) {
+    private Company getCompanyEntity(
+            Long userSeq
+    ) {
         return companyRepository
                 .findByCompanyManagerUserSeq(userSeq)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMPANY_NOT_FOUND));

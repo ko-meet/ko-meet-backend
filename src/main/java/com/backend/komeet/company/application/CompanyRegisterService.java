@@ -69,6 +69,7 @@ public class CompanyRegisterService {
         updateCompanyLogoIfItsNotNull(company, request.getCompanyLogo());
         updateCompanyPhoneIfItsNotNull(company, request.getCompanyPhone());
         updateCompanyCountryNameIfItsNotNull(company, request.getCompanyName());
+        updateCompanyRegionIfItsNotNull(company, request.getCompanyRegion());
         updateIndustryIfItsNotNull(company, request);
     }
 
