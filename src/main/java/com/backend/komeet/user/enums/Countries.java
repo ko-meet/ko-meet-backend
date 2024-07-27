@@ -36,14 +36,18 @@ public enum Countries {
     private final String countryCode;
     private final String countryKoreanName;
 
-    public static Countries getCountry(String countryName) {
+    public static Countries getCountry(
+            String countryName
+    ) {
         return Arrays.stream(Countries.values())
                 .filter(country -> country.getCountryName().equals(countryName))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static Countries getCountryByKoreanName(String countryKoreanName) {
+    public static Countries getCountryByKoreanName(
+            String countryKoreanName
+    ) {
         return Arrays.stream(Countries.values())
                 .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
                 .findFirst()

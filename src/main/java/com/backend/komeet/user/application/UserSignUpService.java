@@ -46,7 +46,9 @@ public class UserSignUpService {
     /**
      * 사용자가 존재하는지 검증
      */
-    private void validateUserNotExists(String email) {
+    private void validateUserNotExists(
+            String email
+    ) {
         userRepository
                 .findByEmail(email)
                 .ifPresent(user -> {
@@ -58,7 +60,9 @@ public class UserSignUpService {
      * 이메일로 사용자 정보 가져오기
      */
     @Transactional(readOnly = true)
-    public UserDto getUserByEmail(String email) {
+    public UserDto getUserByEmail(
+            String email
+    ) {
         return UserDto.from(userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND)));
@@ -68,7 +72,9 @@ public class UserSignUpService {
      * 사용자 이메일 인증
      */
     @Transactional
-    public Pair<String, Boolean> verifyEmail(Long userSeq) {
+    public Pair<String, Boolean> verifyEmail(
+            Long userSeq
+    ) {
         User user = getUser(userSeq);
         String resultString = "이메일 인증이 완료되었습니다.";
         UserStatus currentUserStatus = user.getUserStatus();
@@ -86,19 +92,13 @@ public class UserSignUpService {
     ) {
         boolean isLoginAvailable = true;
         switch (currentUserStatus) {
-            case PENDING:
-                user.setUserStatus(ACTIVE);
-                break;
-            case ACTIVE:
-                resultString = "이미 인증된 사용자입니다.";
-                break;
-            case BLOCKED:
+            case PENDING -> user.setUserStatus(ACTIVE);
+            case ACTIVE -> resultString = "이미 인증된 사용자입니다.";
+            case BLOCKED -> {
                 resultString = "차단된 사용자입니다.";
                 isLoginAvailable = false;
-                break;
-            default:
-                resultString = "이메일 인증이 필요한 사용자가 아닙니다.";
-                break;
+            }
+            default -> resultString = "이메일 인증이 필요한 사용자가 아닙니다.";
         }
         return Pair.of(resultString, isLoginAvailable);
     }
@@ -107,7 +107,9 @@ public class UserSignUpService {
     /**
      * 사용자 정보 가져오기
      */
-    private User getUser(Long userSeq) {
+    private User getUser(
+            Long userSeq
+    ) {
         return userRepository
                 .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));

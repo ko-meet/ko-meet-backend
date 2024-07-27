@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeQRepository {
-    Boolean existsByTargetCountriesContainingAndReadUsersNotContaining(Countries country,
-                                                                       Long seq);
+    Boolean existsByTargetCountriesContainingAndReadUsersNotContaining(
+            Countries country,
+            Long seq
+    );
 }

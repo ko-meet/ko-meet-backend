@@ -21,15 +21,14 @@ public class EmailVerificationController {
 
     /**
      * 사용자 이메일 인증
-     *
-     * @param userSeq 사용자 시퀀스
-     * @return ResponseEntity<Void>
      */
     @GetMapping("/{userSeq}/verification")
     @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
-    public String verifyEmail(@PathVariable Long userSeq,
-                              Model model) {
-        Pair<String,Boolean> result = userSignUpService.verifyEmail(userSeq);
+    public String verifyEmail(
+            @PathVariable Long userSeq,
+            Model model
+    ) {
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
         model.addAttribute("message", result.getFirst());
         model.addAttribute("isLoginAvailable", result.getSecond());
         return "verification-result";

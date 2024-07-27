@@ -24,13 +24,12 @@ public class NoticeInquiryService {
 
     /**
      * 공지사항 조회
-     *
-     * @param userSeq 사용자 고유번호
-     * @param page    페이지 번호
-     * @return {@link Page<NoticeDto>}
      */
     @Transactional(readOnly = true)
-    public Page<NoticeDto> getNotices(Long userSeq, Integer page) {
+    public Page<NoticeDto> getNotices(
+            Long userSeq,
+            Integer page
+    ) {
         User user = getUser(userSeq);
         Pageable pageable = PageRequest.of(page, 10);
         return noticeRepository.getNotices(user, pageable);
@@ -38,13 +37,12 @@ public class NoticeInquiryService {
 
     /**
      * 공지사항 상세조회
-     *
-     * @param userSeq   사용자 고유번호
-     * @param noticeSeq 공지사항 고유번호
-     * @return {@link NoticeDto}
      */
     @Transactional
-    public NoticeDto getNotice(Long userSeq, Long noticeSeq) {
+    public NoticeDto getNotice(
+            Long userSeq,
+            Long noticeSeq
+    ) {
         Notice notice = getNoticeBySeq(noticeSeq);
         validateCountry(userSeq, notice);
         addReadUserIfItsUnreadUser(userSeq, notice);
@@ -56,12 +54,11 @@ public class NoticeInquiryService {
 
     /**
      * 공지사항 존재 여부 확인
-     *
-     * @param userSeq 사용자 고유번호
-     * @return 공지사항 존재 여부
      */
     @Transactional(readOnly = true)
-    public Boolean isNoticeExist(Long userSeq) {
+    public Boolean isNoticeExist(
+            Long userSeq
+    ) {
         User user = getUser(userSeq);
         return noticeRepository.existsByTargetCountriesContainingAndReadUsersNotContaining(
                 user.getCountry(), user.getSeq()
@@ -70,11 +67,11 @@ public class NoticeInquiryService {
 
     /**
      * 공지사항 조회시 읽은 사용자 추가
-     *
-     * @param userSeq 사용자 고유번호
-     * @param notice  공지사항
      */
-    private static void addReadUserIfItsUnreadUser(Long userSeq, Notice notice) {
+    private static void addReadUserIfItsUnreadUser(
+            Long userSeq,
+            Notice notice
+    ) {
         if (!notice.getReadUsers().contains(userSeq)) {
             notice.getReadUsers().add(userSeq);
         }
@@ -82,11 +79,11 @@ public class NoticeInquiryService {
 
     /**
      * 사용자 국가 검증
-     *
-     * @param userSeq 사용자 고유번호
-     * @param notice  공지사항
      */
-    private void validateCountry(Long userSeq, Notice notice) {
+    private void validateCountry(
+            Long userSeq,
+            Notice notice
+    ) {
         if (!notice.getTargetCountries().contains(getUser(userSeq).getCountry())) {
             throw new CustomException(NOT_ELIGIBLE_COUNTRY);
         }
@@ -94,11 +91,10 @@ public class NoticeInquiryService {
 
     /**
      * 공지사항 조회
-     *
-     * @param noticeSeq 공지사항 고유번호
-     * @return {@link Notice}
      */
-    private Notice getNoticeBySeq(Long noticeSeq) {
+    private Notice getNoticeBySeq(
+            Long noticeSeq
+    ) {
         return noticeRepository
                 .findById(noticeSeq)
                 .orElseThrow(() -> new CustomException(NOTICE_NOT_FOUND));
@@ -106,11 +102,10 @@ public class NoticeInquiryService {
 
     /**
      * 사용자 정보 조회
-     *
-     * @param userSeq 사용자 고유번호
-     * @return {@link User}
      */
-    private User getUser(Long userSeq) {
+    private User getUser(
+            Long userSeq
+    ) {
         return userRepository
                 .findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));

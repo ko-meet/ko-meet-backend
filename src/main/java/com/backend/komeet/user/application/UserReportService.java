@@ -37,7 +37,10 @@ public class UserReportService {
      * 사용자 신고 유효성 검사
      */
     @Transactional(readOnly = true)
-    public void reportValidation(Long targetUserSeq, Long reporterUserSeq) {
+    public void reportValidation(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    ) {
         if (checkIfItsMyself(targetUserSeq, reporterUserSeq)) {
             throw new CustomException(CANNOT_REPORT_MYSELF);
         }
@@ -105,7 +108,9 @@ public class UserReportService {
     /**
      * 분산 락을 시도하고 결과를 반환
      */
-    private boolean tryAcquireLock(Long targetUserSeq) {
+    private boolean tryAcquireLock(
+            Long targetUserSeq
+    ) {
         boolean lockAcquired = false;
         int retryCount = 0;
         while (!lockAcquired && retryCount < MAX_RETRY) {
@@ -142,7 +147,9 @@ public class UserReportService {
     /**
      * 사용자의 신고 횟수를 가져옴
      */
-    private static long getReportCount(User targetUser) {
+    private static long getReportCount(
+            User targetUser
+    ) {
         return targetUser.getReportedCount() == null ?
                 0 : targetUser.getReportedCount();
     }
@@ -150,7 +157,9 @@ public class UserReportService {
     /**
      * 사용자 정보를 조회
      */
-    private User getUser(Long targetUserSeq) {
+    private User getUser(
+            Long targetUserSeq
+    ) {
         return userRepository
                 .findById(targetUserSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));

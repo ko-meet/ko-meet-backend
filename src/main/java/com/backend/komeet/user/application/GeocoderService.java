@@ -73,7 +73,9 @@ public class GeocoderService {
     /**
      * JSON 문자열에서 compound_code 키의 값을 추출
      */
-    private String extractCompoundCode(String jsonResponse) {
+    private String extractCompoundCode(
+            String jsonResponse
+    ) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(jsonResponse);

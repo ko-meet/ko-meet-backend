@@ -29,26 +29,26 @@ public class ChatService {
 
     /**
      * 채팅방 목록을 조회하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @param page    페이지
-     * @return 채팅방 목록
      */
     @Transactional(readOnly = true)
-    public Page<ChatDto> getChats(Long chatRoomSeq, Long userSeq, Integer page) {
+    public Page<ChatDto> getChats(
+            Long chatRoomSeq,
+            Long userSeq,
+            Integer page
+    ) {
         Pageable pageable = PageRequest.of(page, 50);
         return chatRepository.getChats(chatRoomSeq, userSeq, pageable);
     }
 
     /**
      * 채팅방에 채팅을 추가하는 메서드
-     *
-     * @param chatRoomSeq 채팅방 식별자
-     * @param userSeq     사용자 식별자
-     * @param content     채팅 내용
      */
     @Transactional
-    public void addChat(Long chatRoomSeq, Long userSeq, ChatContentRequest content) {
+    public void addChat(
+            Long chatRoomSeq,
+            Long userSeq,
+            ChatContentRequest content
+    ) {
         ChatRoom chatRoom = chatRoomRepository
                 .findById(chatRoomSeq)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
@@ -67,11 +67,11 @@ public class ChatService {
 
     /**
      * 채팅을 저장하는 메서드
-     *
-     * @param chatRequest 채팅 메세지 요청
      */
     @Transactional
-    public Chat saveChat(ChatRequest chatRequest) {
+    public Chat saveChat(
+            ChatRequest chatRequest
+    ) {
         ChatRoom chatRoom = chatRoomRepository
                 .findById(chatRequest.getChatRoomSeq())
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
@@ -93,13 +93,12 @@ public class ChatService {
 
     /**
      * 채팅을 읽음으로 표시하는 메서드
-     *
-     * @param chatSeq 채팅 식별자
-     * @param userSeq 사용자 식별자
      */
     @Transactional
-    public void markAsRead(Long chatSeq, Long userSeq) {
-
+    public void markAsRead(
+            Long chatSeq,
+            Long userSeq
+    ) {
         Chat chat = chatRepository
                 .findById(chatSeq)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
@@ -111,23 +110,22 @@ public class ChatService {
 
     /**
      * 채팅방 송신자 확인 메서드
-     *
-     * @param sender  채팅방 송신자
-     * @param userSeq 사용자 식별자
-     * @return 채팅방 송신자 확인 결과
      */
-    private boolean senderCheck(User sender, Long userSeq) {
+    private boolean senderCheck(
+            User sender,
+            Long userSeq
+    ) {
         return sender.getSeq().equals(userSeq);
     }
 
     /**
      * 사용자가 채팅방에 속해있는지 확인하는 메서드
-     *
-     * @param sender    채팅방 송신자
-     * @param recipient 채팅방 수신자
-     * @param userSeq   사용자 식별자
      */
-    private void isValidUser(User sender, User recipient, Long userSeq) {
+    private void isValidUser(
+            User sender,
+            User recipient,
+            Long userSeq
+    ) {
         if (!sender.getSeq().equals(userSeq) && !recipient.getSeq().equals(userSeq)) {
             throw new CustomException(INVALID_USER);
         }
@@ -135,11 +133,11 @@ public class ChatService {
 
     /**
      * 채팅방을 보이도록 설정하는 메서드
-     *
-     * @param isSender 채팅방 송신자 여부
-     * @param chatRoom 채팅방
      */
-    private void setChatRoomVisible(boolean isSender, ChatRoom chatRoom) {
+    private void setChatRoomVisible(
+            boolean isSender,
+            ChatRoom chatRoom
+    ) {
         if (isSender) {
             chatRoom.setIsVisibleToRecipient(true);
         } else {

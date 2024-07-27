@@ -55,11 +55,11 @@ public class Notice extends BaseEntity {
 
     /**
      * Notice 팩토리 메서드
-     *
-     * @param userSeq 사용자 고유번호
-     * @param request {@link NoticeRegisterRequest}
      */
-    public static Notice from(Long userSeq, NoticeRegisterRequest request) {
+    public static Notice from(
+            Long userSeq,
+            NoticeRegisterRequest request
+    ) {
         return Notice.builder()
                 .title(request.getTitle())
                 .authorUserSeq(userSeq)

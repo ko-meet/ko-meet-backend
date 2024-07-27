@@ -32,16 +32,13 @@ public class ChatController {
 
     /**
      * 채팅방 목록조회
-     *
-     * @param token 토큰
-     * @param page  페이지
-     * @return {@link ResponseEntity<ApiResponse>} 채팅방 목록
      */
     @ApiOperation(value = "채팅방 목록조회", notes = "채팅방 목록을 조회합니다.")
     @GetMapping("/rooms")
     public ResponseEntity<ApiResponse> getChatRooms(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestParam(value = "page", defaultValue = "0") Integer page) {
+            @RequestParam(value = "page", defaultValue = "0") Integer page
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         Page<ChatRoomDto> chatList = chatRoomService.getChatRooms(userSeq, page);
         return ResponseEntity.status(OK).body(new ApiResponse(chatList));
@@ -49,18 +46,14 @@ public class ChatController {
 
     /**
      * 채팅 내역 조회
-     *
-     * @param token       토큰
-     * @param chatRoomSeq 채팅방 번호
-     * @param page        페이지
-     * @return {@link ResponseEntity<ApiResponse>} 채팅 내역
      */
     @ApiOperation(value = "채팅 내역 조회", notes = "채팅 내역을 조회합니다.")
     @GetMapping("/rooms/{chatRoomSeq}")
     public ResponseEntity<ApiResponse> getChats(
             @RequestHeader(AUTHORIZATION) String token,
             @PathVariable Long chatRoomSeq,
-            @RequestParam(value = "page", defaultValue = "0") Integer page) {
+            @RequestParam(value = "page", defaultValue = "0") Integer page
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         Page<ChatDto> chatList = chatService.getChats(chatRoomSeq, userSeq, page);
         return ResponseEntity.status(OK).body(new ApiResponse(chatList));
@@ -68,16 +61,13 @@ public class ChatController {
 
     /**
      * 채팅방 생성
-     *
-     * @param token          토큰
-     * @param counterpartSeq 상대방 번호
-     * @return {@link ResponseEntity<ApiResponse>} 채팅방 생성 결과
      */
     @ApiOperation(value = "채팅방 생성", notes = "채팅방을 생성합니다.")
     @PostMapping("/rooms")
     public ResponseEntity<ApiResponse> createChatRoom(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestParam Long counterpartSeq) {
+            @RequestParam Long counterpartSeq
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         Long chatRoomSeq = chatRoomService.createChatRoom(userSeq, counterpartSeq);
         return ResponseEntity.status(OK).body(new ApiResponse(chatRoomSeq));
@@ -85,18 +75,14 @@ public class ChatController {
 
     /**
      * 채팅 추가
-     *
-     * @param token       토큰
-     * @param chatRoomSeq 채팅방 번호
-     * @param content     {@link ChatContentRequest} 채팅 내용
-     * @return {@link ResponseEntity<ApiResponse>} 채팅 추가 결과
      */
     @ApiOperation(value = "채팅 추가", notes = "채팅을 추가합니다.")
     @PostMapping("/rooms/{chatRoomSeq}")
     public ResponseEntity<ApiResponse> addChat(
             @RequestHeader(AUTHORIZATION) String token,
             @PathVariable Long chatRoomSeq,
-            @RequestBody ChatContentRequest content) {
+            @RequestBody ChatContentRequest content
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         chatService.addChat(chatRoomSeq, userSeq, content);
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
@@ -104,16 +90,13 @@ public class ChatController {
 
     /**
      * 채팅방 삭제
-     *
-     * @param token       토큰
-     * @param chatRoomSeq 채팅방 번호
-     * @return {@link ResponseEntity<ApiResponse>} 채팅방 삭제 결과
      */
     @ApiOperation(value = "채팅방 삭제", notes = "채팅방을 삭제합니다.")
     @DeleteMapping("/rooms/{chatRoomSeq}")
     public ResponseEntity<ApiResponse> deleteChatRoom(
             @RequestHeader(AUTHORIZATION) String token,
-            @PathVariable Long chatRoomSeq) {
+            @PathVariable Long chatRoomSeq
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         chatRoomService.deleteChatRoom(chatRoomSeq, userSeq);
         return ResponseEntity.status(NO_CONTENT).build();
@@ -121,16 +104,13 @@ public class ChatController {
 
     /**
      * 채팅방 검색
-     *
-     * @param token   토큰
-     * @param keyword 검색어
-     * @return {@link ResponseEntity<ApiResponse>} 채팅방 목록
      */
     @ApiOperation(value = "채팅방 검색", notes = "채팅방을 검색합니다.")
     @GetMapping("/rooms/search")
     public ResponseEntity<ApiResponse> searchChatRooms(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestParam String keyword) {
+            @RequestParam String keyword
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         return ResponseEntity
                 .status(OK)
@@ -139,14 +119,12 @@ public class ChatController {
 
     /**
      * 신규 채팅 여부 조회
-     *
-     * @param token 토큰
-     * @return {@link ResponseEntity<ApiResponse>} 신규 채팅 여부
      */
     @ApiOperation(value = "신규 채팅 여부 조회", notes = "신규 채팅 여부를 조회합니다.")
     @GetMapping("/rooms/new")
     public ResponseEntity<ApiResponse> getNewChatRooms(
-            @RequestHeader(AUTHORIZATION) String token) {
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
         return ResponseEntity
                 .status(OK)

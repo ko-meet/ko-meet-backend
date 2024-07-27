@@ -135,7 +135,9 @@ public class UserInformationService {
      * 토큰 재발급
      */
     @Transactional
-    public Pair<String, String> refreshToken(String token) {
+    public Pair<String, String> refreshToken(
+            String token
+    ) {
         String userEmail = redisService.getValueByKey(TOKEN_PREFIX + token);
         if (userEmail == null) {
             throw new CustomException(USER_INFO_NOT_FOUND);

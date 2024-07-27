@@ -26,12 +26,11 @@ public class WebSocketController {
 
     /**
      * 메시지 전송
-     *
-     * @param chatRequest 채팅 요청
-     * @return {@link ChatDto} 채팅 DTO
      */
     @MessageMapping("/chat/send")
-    public ChatDto sendMessage(@Payload ChatRequest chatRequest) {
+    public ChatDto sendMessage(
+            @Payload ChatRequest chatRequest
+    ) {
         Chat chat = chatService.saveChat(chatRequest);// 메시지 저장
         ChatDto chatDto = ChatDto.from(chat);
         messagingTemplate.convertAndSend(
@@ -50,12 +49,11 @@ public class WebSocketController {
 
     /**
      * 메시지 읽음 처리
-     *
-     * @param readChatDto 읽음 처리 요청
-     * @return {@link ReadChatDto} 읽음 처리 DTO
      */
     @MessageMapping("/chat/read")
-    public ReadChatDto markMessageAsRead(@Payload ReadChatDto readChatDto) {
+    public ReadChatDto markMessageAsRead(
+            @Payload ReadChatDto readChatDto
+    ) {
         chatService.markAsRead(readChatDto.getChatSeq(), readChatDto.getUserSeq());
         messagingTemplate.convertAndSend("/topic/readChat", readChatDto);
         return readChatDto;
