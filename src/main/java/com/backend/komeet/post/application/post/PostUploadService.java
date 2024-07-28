@@ -32,12 +32,12 @@ public class PostUploadService {
 
     /**
      * 게시물을 생성하는 메서드
-     *
-     * @param userId            사용자 식별자
-     * @param postUploadRequest 게시물 생성 요청 데이터
      */
     @Transactional
-    public void uploadPost(Long userId, PostUploadRequest postUploadRequest) {
+    public void uploadPost(
+            Long userId,
+            PostUploadRequest postUploadRequest
+    ) {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
@@ -47,18 +47,15 @@ public class PostUploadService {
 
     /**
      * 게시물을 조회하는 메서드
-     *
-     * @param country       국가
-     * @param sortingMethod 정렬 방식
-     * @param isPublic      공개 여부
-     * @return 조회된 게시물
      */
     @Transactional(readOnly = true)
-    public Page<PostDto> getPosts(Countries country,
+    public Page<PostDto> getPosts(
+            Countries country,
                                   SortingMethods sortingMethod,
                                   String isPublic,
                                   Categories category,
-                                  Integer page) {
+                                  Integer page
+    ) {
 
         Pageable pageable = PageRequest.of(page, 10);
 
@@ -69,12 +66,11 @@ public class PostUploadService {
 
     /**
      * 게시물 상세 조회 메서드
-     *
-     * @param postSeq 게시물 식별자
-     * @return 조회된 게시물
      */
     @Transactional(readOnly = true)
-    public PostDto getPost(Long postSeq) {
+    public PostDto getPost(
+            Long postSeq
+    ) {
         return PostDto.from(
                 postRepository
                         .findById(postSeq)
@@ -84,25 +80,24 @@ public class PostUploadService {
 
     /**
      * 게시물 검색 메서드
-     *
-     * @param keyword 검색어
-     * @param page
-     * @return 검색된 게시물
      */
     @Transactional(readOnly = true)
-    public Page<SearchResultDto> searchKeyword(String keyword, Integer page) {
+    public Page<SearchResultDto> searchKeyword(
+            String keyword,
+            Integer page
+    ) {
         Pageable pageable = PageRequest.of(page, 15);
         return postRepository.searchPostsByKeyword(keyword, pageable);
     }
 
     /**
      * 사용자 게시물 목록 조회 메서드
-     * @param userId 사용자 식별자
-     * @param page 페이지 번호
-     * @return 내 게시물 목록
      */
     @Transactional(readOnly = true)
-    public Page<PostDto> getUserPosts(Long userId, Integer page) {
+    public Page<PostDto> getUserPosts(
+            Long userId,
+            Integer page
+    ) {
         Pageable pageable = PageRequest.of(page, 15);
         return postRepository.getMyPosts(userId, pageable);
     }

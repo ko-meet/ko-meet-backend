@@ -32,11 +32,13 @@ public class PostQRepositoryImpl implements PostQRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<PostDto> getPosts(Countries country,
+    public Page<PostDto> getPosts(
+            Countries country,
                                   SortingMethods sortingMethod,
                                   String isPublic,
                                   Categories category,
-                                  Pageable pageable) {
+                                  Pageable pageable
+    ) {
 
         QPost post = QPost.post;
 
@@ -76,7 +78,10 @@ public class PostQRepositoryImpl implements PostQRepository {
     }
 
     @Override
-    public Page<SearchResultDto> searchPostsByKeyword(String keyword, Pageable pageable) {
+    public Page<SearchResultDto> searchPostsByKeyword(
+            String keyword,
+            Pageable pageable
+    ) {
         QPost post = QPost.post;
 
         // 검색 조건 설정
@@ -104,7 +109,10 @@ public class PostQRepositoryImpl implements PostQRepository {
     }
 
     @Override
-    public Page<PostDto> getMyPosts(Long userId, Pageable pageable) {
+    public Page<PostDto> getMyPosts(
+            Long userId,
+            Pageable pageable
+    ) {
         QPost post = QPost.post;
         Predicate predicate = post.user.seq.eq(userId);
         Long total = getLength(predicate);
@@ -123,22 +131,22 @@ public class PostQRepositoryImpl implements PostQRepository {
         return new PageImpl<>(results, pageable, total);
     }
 
-    private OrderSpecifier<?> getOrderSpecifier(SortingMethods sortingMethod, QPost post) {
-        switch (sortingMethod) {
-            case CREATED_DATE:
-                return post.createdAt.desc();
-            case VIEW_COUNT:
-                return post.viewCount.desc();
-            case LIKE_COUNT:
-                return post.likeCount.desc();
-            case COMMENT_COUNT:
-                return post.comments.size().desc();
-            default:
-                return post.createdAt.desc();
-        }
+    private OrderSpecifier<?> getOrderSpecifier(
+            SortingMethods sortingMethod,
+            QPost post
+    ) {
+        return switch (sortingMethod) {
+            case CREATED_DATE -> post.createdAt.desc();
+            case VIEW_COUNT -> post.viewCount.desc();
+            case LIKE_COUNT -> post.likeCount.desc();
+            case COMMENT_COUNT -> post.comments.size().desc();
+            default -> post.createdAt.desc();
+        };
     }
 
-    private Long getLength(Predicate predicate) {
+    private Long getLength(
+            Predicate predicate
+    ) {
         QPost post = QPost.post;
         return jpaQueryFactory.selectFrom(post)
                 .where(predicate)

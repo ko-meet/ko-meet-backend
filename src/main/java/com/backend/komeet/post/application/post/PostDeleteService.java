@@ -23,12 +23,12 @@ public class PostDeleteService {
 
     /**
      * 게시물을 삭제하는 메서드
-     *
-     * @param userId  사용자 식별자
-     * @param postSeq 게시물 식별자
      */
     @Transactional
-    public void deletePost(Long userId, Long postSeq) {
+    public void deletePost(
+            Long userId,
+            Long postSeq
+    ) {
         Post post = getPost(postSeq);
         User user = getUser(userId);
         if (!post.getUser().equals(user)) {
@@ -39,11 +39,10 @@ public class PostDeleteService {
 
     /**
      * 게시물 식별자로 게시물을 조회하는 메서드
-     *
-     * @param postSeq 게시물 식별자
-     * @return 게시물
      */
-    private Post getPost(Long postSeq) {
+    private Post getPost(
+            Long postSeq
+    ) {
         Post post = postRepository
                 .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
@@ -55,11 +54,10 @@ public class PostDeleteService {
 
     /**
      * 사용자 식별자로 사용자를 조회하는 메서드
-     *
-     * @param userId 사용자 식별자
-     * @return 사용자
      */
-    private User getUser(Long userId) {
+    private User getUser(
+            Long userId
+    ) {
         return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
