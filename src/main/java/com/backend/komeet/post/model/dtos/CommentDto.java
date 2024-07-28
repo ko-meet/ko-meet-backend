@@ -28,7 +28,9 @@ public class CommentDto {
     private PostStatus status;
     private LocalDateTime createdAt;
 
-    public static CommentDto from(Comment comments) {
+    public static CommentDto from(
+            Comment comments
+    ) {
         return CommentDto.builder()
                 .seq(comments.getSeq())
                 .user(UserDto.from(comments.getUser()))
