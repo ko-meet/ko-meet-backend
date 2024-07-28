@@ -26,16 +26,13 @@ public class BookmarkController {
 
     /**
      * 북마크 등록
-     *
-     * @param postSeq 게시물 번호
-     * @param token   토큰
-     * @return {@link ResponseEntity<ApiResponse>} 북마크 등록 결과
      */
     @PostMapping("/posts/{postSeq}")
     @ApiOperation(value = "북마크 등록", notes = "게시물을 북마크에 등록합니다.")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long postSeq,
-            @RequestHeader(AUTHORIZATION) String token) {
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
@@ -46,14 +43,12 @@ public class BookmarkController {
 
     /**
      * 북마크 조회
-     *
-     * @param token 토큰
-     * @return {@link ResponseEntity<ApiResponse>} 북마크 목록
      */
     @GetMapping
     @ApiOperation(value = "북마크 조회", notes = "사용자의 북마크를 조회합니다.")
     public ResponseEntity<ApiResponse> getBookmarks(
-            @RequestHeader(AUTHORIZATION) String token) {
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
 
