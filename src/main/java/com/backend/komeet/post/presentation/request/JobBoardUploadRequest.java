@@ -26,17 +26,9 @@ public class JobBoardUploadRequest {
     private Long likeCount;
     private List<String> tags;
     private List<String> attachments;
-    private Countries country;
-    private String region;
-    private Industry industry;
     private LocalDateTime deadline;
     private Experience experience;
     private String salary;
-    private String company;
-    private String companyEmail;
-    private String companyPhone;
-    private String companyAddress;
-    private String companyHomepage;
-    private String companyLogo;
+    private Long companySeq;
     private PostStatus status;
 }

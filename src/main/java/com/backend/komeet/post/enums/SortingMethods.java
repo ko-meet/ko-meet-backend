@@ -16,7 +16,9 @@ public enum SortingMethods {
 
     private final String sortingMethod;
 
-    public static SortingMethods getSortingMethod(String sortingMethod) {
+    public static SortingMethods getSortingMethod(
+            String sortingMethod
+    ) {
         for (SortingMethods method : SortingMethods.values()) {
             if (method.getSortingMethod().equals(sortingMethod)) {
                 return method;

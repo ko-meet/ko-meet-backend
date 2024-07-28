@@ -1,5 +1,6 @@
 package com.backend.komeet.service.common;
 
+import com.backend.komeet.company.model.entities.Company;
 import com.backend.komeet.notice.enums.NoticeType;
 import com.backend.komeet.notice.model.entities.Notice;
 import com.backend.komeet.post.enums.Experience;
@@ -106,4 +107,17 @@ public class TestEntityGenerator {
             .industry(Industry.ALL)
             .build();
 
+    public static Company company = Company.builder()
+            .seq(1L)
+            .industry(Industry.ALL)
+            .companyName("회사이름")
+            .companyEmail("회사이메일")
+            .companyPhone("회사전화번호")
+            .companyAddress("회사주소")
+            .companyHomepage("회사홈페이지")
+            .companyCountry(LAOS)
+            .companyRegion("회사지역")
+            .companyLogo("회사로고")
+            .companyManagerUserSeq(1L)
+            .build();
 }

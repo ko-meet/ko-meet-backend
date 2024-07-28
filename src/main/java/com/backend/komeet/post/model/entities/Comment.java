@@ -60,13 +60,12 @@ public class Comment extends BaseEntity {
 
     /**
      * 댓글 팩토리 메서드
-     *
-     * @param user    작성자
-     * @param post    게시글
-     * @param content 내용
-     * @return comment
      */
-    public static Comment from(User user, Post post, String content) {
+    public static Comment from(
+            User user,
+            Post post,
+            String content
+    ) {
         return Comment.builder()
                 .user(user)
                 .post(post)

@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.filters;
+package com.backend.komeet.global.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -21,8 +21,10 @@ import java.util.stream.Collectors;
 @Component
 public class LogFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogFilter.class);
-    private static final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private static final Logger logger =
+            LoggerFactory.getLogger(LogFilter.class);
+    private static final ObjectMapper objectMapper =
+            new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_YELLOW = "\u001B[33m";
@@ -33,7 +35,11 @@ public class LogFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(
+            ServletRequest request,
+            ServletResponse response,
+            FilterChain chain
+    )
             throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -102,7 +108,9 @@ public class LogFilter implements Filter {
     public void destroy() {
     }
 
-    private Map<String, String> getHeadersInfo(HttpServletRequest request) {
+    private Map<String, String> getHeadersInfo(
+            HttpServletRequest request
+    ) {
         Map<String, String> map = new HashMap<>();
         for (String headerName : new java.util.ArrayList<>(java.util.Collections.list(request.getHeaderNames()))) {
             map.put(headerName, request.getHeader(headerName));
@@ -110,7 +118,9 @@ public class LogFilter implements Filter {
         return map;
     }
 
-    private Map<String, String> getHeadersInfo(HttpServletResponse response) {
+    private Map<String, String> getHeadersInfo(
+            HttpServletResponse response
+    ) {
         Map<String, String> map = new HashMap<>();
         for (String headerName : response.getHeaderNames()) {
             map.put(headerName, response.getHeader(headerName));
@@ -123,7 +133,9 @@ public class LogFilter implements Filter {
 
         private final String requestBody;
 
-        public MultiReadHttpServletRequest(HttpServletRequest request) throws IOException {
+        public MultiReadHttpServletRequest(
+                HttpServletRequest request
+        ) throws IOException {
             super(request);
             StringBuilder stringBuilder = new StringBuilder();
             try (BufferedReader bufferedReader = request.getReader()) {

@@ -6,7 +6,7 @@ import com.backend.komeet.chat.application.ChatService;
 import com.backend.komeet.chat.model.dtos.ChatDto;
 import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.chat.presentation.request.ChatContentRequest;
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

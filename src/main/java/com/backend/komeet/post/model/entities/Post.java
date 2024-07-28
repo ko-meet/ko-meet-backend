@@ -89,12 +89,11 @@ public class Post extends BaseEntity {
 
     /**
      * 게시물 팩토리 메서드
-     *
-     * @param postUploadRequest 게시물 업로드 요청
-     * @param user              작성자
-     * @return Post
      */
-    public static Post from(PostUploadRequest postUploadRequest, User user) {
+    public static Post from(
+            PostUploadRequest postUploadRequest,
+            User user
+    ) {
         return Post.builder()
                 .title(postUploadRequest.getTitle())
                 .content(postUploadRequest.getContent())

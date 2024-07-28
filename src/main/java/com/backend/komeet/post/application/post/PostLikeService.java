@@ -1,8 +1,8 @@
 package com.backend.komeet.post.application.post;
 
-import com.backend.komeet.infrastructure.components.RedisDistributedLock;
+import com.backend.komeet.global.components.RedisDistributedLock;
 import com.backend.komeet.post.model.entities.Post;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 
 /**
  * 게시물 좋아요 관련 서비스
@@ -26,13 +26,13 @@ public class PostLikeService {
 
     /**
      * 게시물 좋아요를 처리하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @param postSeq 게시물 식별자
      */
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void likePost(Long userSeq, Long postSeq) {
+    public void likePost(
+            Long userSeq,
+            Long postSeq
+    ) {
         int maxRetries = 3;
         int retries = 0;
         long retryIntervalMillis = 1000; // 1초 간격으로 재시도
@@ -65,13 +65,11 @@ public class PostLikeService {
 
     /**
      * 좋아요 작업을 처리하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @param postSeq 게시물 식별자
-     * @return 작업 성공 여부
-     * @throws CustomException 작업 실패
      */
-    private Long processLike(Long userSeq, Long postSeq) throws CustomException {
+    private Long processLike(
+            Long userSeq,
+            Long postSeq
+    ) throws CustomException {
         Post post = getPost(postSeq);
 
         boolean lockAcquired = false;
@@ -99,11 +97,10 @@ public class PostLikeService {
 
     /**
      * 게시물 식별자로 게시물을 조회하는 메서드
-     *
-     * @param seq 게시물 식별자
-     * @return 게시물
      */
-    private Post getPost(Long seq) {
+    private Post getPost(
+            Long seq
+    ) {
         return postRepository
                 .findById(seq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));

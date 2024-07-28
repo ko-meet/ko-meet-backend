@@ -1,6 +1,6 @@
 package com.backend.komeet.service.user;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.user.application.UserSignUpService;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.presentation.request.UserSignUpRequest;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.EXISTING_USER;
+import static com.backend.komeet.global.exception.ErrorCode.EXISTING_USER;
 import static com.backend.komeet.user.enums.Countries.SOUTH_KOREA;
 import static com.backend.komeet.user.enums.UserRole.ROLE_USER;
 import static com.backend.komeet.user.enums.UserStatus.PENDING;

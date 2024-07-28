@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.persistence;
+package com.backend.komeet.global.persistence;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -38,12 +38,11 @@ public class RedisConfig {
 
     /**
      * RedisTemplate을 반환하는 메서드
-     *
-     * @param redisConnectionFactory RedisConnectionFactory 인스턴스
-     * @return RedisTemplate 인스턴스
      */
     @Bean
-    public RedisTemplate<Object, Object> sortedSetTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<Object, Object> sortedSetTemplate(
+            RedisConnectionFactory redisConnectionFactory
+    ) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setDefaultSerializer(new StringRedisSerializer()); // StringRedisSerializer 사용
@@ -52,12 +51,11 @@ public class RedisConfig {
 
     /**
      * RedisCacheManager를 반환하는 메서드
-     *
-     * @param redisConnectionFactory RedisConnectionFactory 인스턴스
-     * @return RedisCacheManager 인스턴스
      */
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+    public RedisCacheManager cacheManager(
+            RedisConnectionFactory redisConnectionFactory
+    ) {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(3)) // 캐시 만료 기간 4시간
                 .serializeKeysWith(

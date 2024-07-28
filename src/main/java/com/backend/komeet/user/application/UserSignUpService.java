@@ -1,6 +1,6 @@
 package com.backend.komeet.user.application;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.user.model.entities.User;
@@ -13,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.EXISTING_USER;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.EXISTING_USER;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 import static com.backend.komeet.user.enums.UserStatus.ACTIVE;
 
 /**

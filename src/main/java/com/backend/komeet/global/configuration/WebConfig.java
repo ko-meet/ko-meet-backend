@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -8,7 +8,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(
+            CorsRegistry registry
+    ) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173","https://ko-meet-front.vercel.app/")
                 .allowedMethods("*")

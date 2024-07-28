@@ -1,9 +1,12 @@
 package com.backend.komeet.post.model.dtos;
 
-import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.PostStatus;
-import lombok.*;
+import com.backend.komeet.post.model.entities.Post;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,12 +44,11 @@ public class SearchResultDto {
 
     /**
      * 게시물을 검색 결과로 변환하는 메서드
-     *
-     * @param post    검색된 게시물
-     * @param keyword 검색 키워드
-     * @return 검색 결과 DTO
      */
-    public static SearchResultDto from(Post post, String keyword) {
+    public static SearchResultDto from(
+            Post post,
+            String keyword
+    ) {
         String contentResult = extractKeyword(
                 post.getContent(), keyword, 50, 5
         );
@@ -81,17 +83,13 @@ public class SearchResultDto {
 
     /**
      * 키워드를 기준으로 앞뒤로 일정 길이만큼의 문자열을 추출하는 메서드
-     *
-     * @param text    추출할 문자열
-     * @param keyword 키워드
-     * @param after   키워드 뒤로 추출할 길이
-     * @param before  키워드 앞으로 추출할 길이
-     * @return 추출된 문자열
      */
-    private static String extractKeyword(String text,
-                                         String keyword,
-                                         int after,
-                                         int before) {
+    private static String extractKeyword(
+            String text,
+            String keyword,
+            int after,
+            int before
+    ) {
 
         int keywordIndex = text.indexOf(keyword);
         if (keywordIndex != -1) {
@@ -105,12 +103,11 @@ public class SearchResultDto {
 
     /**
      * 키워드를 기준으로 태그를 추출하는 메서드
-     *
-     * @param tags    태그 목록
-     * @param keyword 키워드
-     * @return 추출된 태그 목록
      */
-    private static List<String> extractTags(List<String> tags, String keyword) {
+    private static List<String> extractTags(
+            List<String> tags,
+            String keyword
+    ) {
         if (tags.isEmpty()) {
             return Collections.emptyList();
         }

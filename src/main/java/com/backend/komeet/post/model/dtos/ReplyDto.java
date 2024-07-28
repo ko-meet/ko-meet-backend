@@ -25,7 +25,9 @@ public class ReplyDto {
     private PostStatus status;
     private LocalDateTime createdAt;
 
-    public static ReplyDto from(Reply reply){
+    public static ReplyDto from(
+            Reply reply
+    ){
         return ReplyDto.builder()
                 .seq(reply.getSeq())
                 .user(UserDto.from(reply.getAuthor()))

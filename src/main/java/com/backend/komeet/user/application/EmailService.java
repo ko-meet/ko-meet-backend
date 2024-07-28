@@ -1,6 +1,6 @@
 package com.backend.komeet.user.application;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.EMAIL_SEND_FAILED;
+import static com.backend.komeet.global.exception.ErrorCode.EMAIL_SEND_FAILED;
 
 /**
  * 이메일 발송 서비스

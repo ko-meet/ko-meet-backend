@@ -3,7 +3,7 @@ package com.backend.komeet.base.application;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.backend.komeet.base.model.dtos.ImageDto;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.IMAGE_UPLOAD_FAILED;
+import static com.backend.komeet.global.exception.ErrorCode.IMAGE_UPLOAD_FAILED;
 
 /**
  * 이미지 업로드, 삭제를 위한 서비스

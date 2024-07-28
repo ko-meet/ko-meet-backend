@@ -1,8 +1,5 @@
 package com.backend.komeet.post.application.jobboard;
 
-import com.backend.komeet.post.enums.Experience;
-import com.backend.komeet.post.enums.Industry;
-import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.repositories.JobBoardRepository;
 import com.backend.komeet.user.repositories.UserRepository;
@@ -26,20 +23,15 @@ public class JobBoardSearchService {
 
     /**
      * 구인구직 게시판 목록을 조회하는 메서드
-     *
-     * @param country       국가
-     * @param sortingMethod {@link SortingMethods} 정렬 방식
-     * @param industry      {@link Industry} 업종
-     * @param experience    {@link Experience} 경력
-     * @param page          페이지 정보
-     * @return {@link Page<JobBoardDto>} 구인구직 게시판 목록
      */
     @Transactional(readOnly = true)
-    public Page<JobBoardDto> getJobBoards(String country,
-                                          String sortingMethod,
-                                          String industry,
-                                          String experience,
-                                          Integer page) {
+    public Page<JobBoardDto> getJobBoards(
+            String country,
+            String sortingMethod,
+            String industry,
+            String experience,
+            Integer page
+    ) {
 
         Pageable pageable = PageRequest.of(page, 10);
 

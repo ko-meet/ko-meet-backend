@@ -1,11 +1,9 @@
 package com.backend.komeet.post.presentation.controller;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
 import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.post.enums.Experience;
-import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.application.jobboard.JobBoardDetailService;
 import com.backend.komeet.post.application.jobboard.JobBoardSearchService;
 import com.backend.komeet.post.application.jobboard.JobBoardUploadService;
@@ -35,16 +33,13 @@ public class JobBoardController {
 
     /**
      * 구인구직 게시글 업로드
-     *
-     * @param token           토큰
-     * @param jobBoardRequest {@link JobBoardUploadRequest} 구인구직 게시글 업로드 요청
-     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 업로드 결과
      */
     @PostMapping
     @ApiOperation(value = "구인구직 게시글 업로드", notes = "구인구직 게시글을 업로드합니다.")
     public ResponseEntity<ApiResponse> uploadJobBoard(
             @RequestHeader(AUTHORIZATION) String token,
-            @RequestBody JobBoardUploadRequest jobBoardRequest) {
+            @RequestBody JobBoardUploadRequest jobBoardRequest
+    ) {
 
         Long userSeq = jwtProvider.getIdFromToken(token);
         jobBoardUploadService.postJobBoard(jobBoardRequest, userSeq);
@@ -53,13 +48,6 @@ public class JobBoardController {
 
     /**
      * 구인구직 게시글 목록 조회
-     *
-     * @param country       국가
-     * @param sortingMethod 정렬 방식
-     * @param industry      {@link Industry} 업종
-     * @param experience    {@link Experience} 경력
-     * @param page          페이지
-     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 조회 결과
      */
     @GetMapping
     @ApiOperation(value = "구인구직 게시글 조회", notes = "구인구직 게시글을 조회합니다.")
@@ -68,7 +56,8 @@ public class JobBoardController {
             @RequestParam(required = false) String sortingMethod,
             @RequestParam(required = false) String industry,
             @RequestParam(required = false) String experience,
-            @RequestParam(required = false) Integer page) {
+            @RequestParam(required = false) Integer page
+    ) {
         Page<JobBoardDto> jobBoards = jobBoardSearchService.getJobBoards(
                 country, sortingMethod, industry, experience, page
         );
@@ -77,13 +66,12 @@ public class JobBoardController {
 
     /**
      * 구인구직 게시글 상세 조회
-     *
-     * @param jobBoardSeq 구인구직 게시글 번호
-     * @return {@link ResponseEntity<ApiResponse>} 구인구직 게시글 상세 조회 결과
      */
     @GetMapping("/{jobBoardSeq}")
     @ApiOperation(value = "구인구직 게시글 상세 조회", notes = "구인구직 게시글을 상세 조회합니다.")
-    public ResponseEntity<ApiResponse> getJobBoardDetail(@PathVariable Long jobBoardSeq) {
+    public ResponseEntity<ApiResponse> getJobBoardDetail(
+            @PathVariable Long jobBoardSeq
+    ) {
         JobBoardDto jobBoard = jobBoardDetailService.getJobBoardDetail(jobBoardSeq);
         return ResponseEntity.status(OK).body(new ApiResponse(jobBoard));
     }

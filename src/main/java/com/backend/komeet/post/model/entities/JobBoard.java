@@ -1,12 +1,13 @@
 package com.backend.komeet.post.model.entities;
 
 import com.backend.komeet.base.model.entities.BaseEntity;
-import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
-import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.company.model.entities.Company;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
+import com.backend.komeet.user.enums.Countries;
+import com.backend.komeet.user.model.entities.User;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
@@ -105,13 +106,12 @@ public class JobBoard extends BaseEntity {
 
     /**
      * 게시물 팩토리 메서드
-     *
-     * @param postUploadRequest 게시물 업로드 요청 DTO
-     * @param user              사용자
-     * @return JobBoard
      */
-    public static JobBoard from(JobBoardUploadRequest postUploadRequest,
-                                User user) {
+    public static JobBoard from(
+            JobBoardUploadRequest postUploadRequest,
+            Company company,
+            User user
+    ) {
         return JobBoard.builder()
                 .title(postUploadRequest.getTitle())
                 .content(postUploadRequest.getContent())
@@ -122,18 +122,18 @@ public class JobBoard extends BaseEntity {
                 .attachments(postUploadRequest.getAttachments())
                 .likeUsers(new ArrayList<>())
                 .bookmarkUsers(new ArrayList<>())
-                .country(postUploadRequest.getCountry())
-                .region(postUploadRequest.getRegion())
-                .industry(postUploadRequest.getIndustry())
+                .country(company.getCompanyCountry())
+                .region(company.getCompanyRegion())
+                .industry(company.getIndustry())
                 .deadline(postUploadRequest.getDeadline())
                 .experience(postUploadRequest.getExperience())
                 .salary(postUploadRequest.getSalary())
-                .company(postUploadRequest.getCompany())
-                .companyEmail(postUploadRequest.getCompanyEmail())
-                .companyPhone(postUploadRequest.getCompanyPhone())
-                .companyAddress(postUploadRequest.getCompanyAddress())
-                .companyHomepage(postUploadRequest.getCompanyHomepage())
-                .companyLogo(postUploadRequest.getCompanyLogo())
+                .company(company.getCompanyName())
+                .companyEmail(company.getCompanyEmail())
+                .companyPhone(company.getCompanyPhone())
+                .companyAddress(company.getCompanyAddress())
+                .companyHomepage(company.getCompanyHomepage())
+                .companyLogo(company.getCompanyLogo())
                 .status(NORMAL)
                 .build();
     }

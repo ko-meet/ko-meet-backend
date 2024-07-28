@@ -1,9 +1,9 @@
 package com.backend.komeet.user.application;
 
 import com.backend.komeet.base.application.RedisService;
-import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.infrastructure.security.JwtProvider;
-import com.backend.komeet.infrastructure.util.CountryUtil;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.security.JwtProvider;
+import com.backend.komeet.global.util.CountryUtil;
 import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 
 /**
  * 사용자 로그인 서비스

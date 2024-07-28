@@ -36,7 +36,9 @@ public class PostDto {
     private PostStatus status;
     private String createdAt;
 
-    public static PostDto from(Post post) {
+    public static PostDto from(
+            Post post
+    ) {
         return PostDto.builder()
                 .seq(post.getSeq())
                 .title(post.getTitle())
