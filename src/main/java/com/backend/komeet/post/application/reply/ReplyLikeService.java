@@ -26,13 +26,13 @@ public class ReplyLikeService {
 
     /**
      * 대댓글 좋아요를 처리하는 메서드
-     *
-     * @param userSeq  사용자 식별자
-     * @param replySeq 대댓글 식별자
      */
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void likeReply(Long userSeq, Long replySeq) {
+    public void likeReply(
+            Long userSeq,
+            Long replySeq
+    ) {
         int maxRetries = 3;
         int retries = 0;
         long retryIntervalMillis = 1000; // 1초 간격으로 재시도
@@ -69,13 +69,11 @@ public class ReplyLikeService {
 
     /**
      * 좋아요 작업을 처리하는 메서드
-     *
-     * @param userSeq  사용자 식별자
-     * @param replySeq 게시물 식별자
-     * @return 작업 성공 여부
-     * @throws CustomException 작업 실패
      */
-    private Integer processLike(Long userSeq, Long replySeq) throws CustomException {
+    private Integer processLike(
+            Long userSeq,
+            Long replySeq
+    ) throws CustomException {
         Reply reply = getReply(replySeq);
 
         boolean lockAcquired = false;
@@ -103,11 +101,10 @@ public class ReplyLikeService {
 
     /**
      * 게시물 식별자로 게시물을 조회하는 메서드
-     *
-     * @param seq 게시물 식별자
-     * @return 게시물
      */
-    private Reply getReply(Long seq) {
+    private Reply getReply(
+            Long seq
+    ) {
         return replyRepository
                 .findById(seq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    boolean existsByReportedUserSeqAndReporterUserSeq(Long targetUserSeq,
-                                                      Long reporterUserSeq);
+    boolean existsByReportedUserSeqAndReporterUserSeq(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    );
 }
