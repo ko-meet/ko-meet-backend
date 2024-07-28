@@ -1,13 +1,13 @@
 package com.backend.komeet.service.user;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
 import com.backend.komeet.user.model.dtos.UserSignInDto;
 import com.backend.komeet.user.presentation.request.UserSignInRequest;
 import com.backend.komeet.user.enums.Countries;
-import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.infrastructure.exception.ErrorCode;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.exception.ErrorCode;
 import com.backend.komeet.user.repositories.UserRepository;
 import com.backend.komeet.base.application.RedisService;
 import com.backend.komeet.user.application.UserSignInService;

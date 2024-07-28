@@ -2,7 +2,7 @@ package com.backend.komeet.service.user;
 
 import com.backend.komeet.base.application.ImageService;
 import com.backend.komeet.base.application.RedisService;
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.user.application.UserInformationService;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.model.entities.User;

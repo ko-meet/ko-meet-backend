@@ -3,7 +3,7 @@ package com.backend.komeet.post.application.bookmark;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.model.dtos.PostDto;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.BookmarkRepository;
 import com.backend.komeet.post.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.POST_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 
 /**
  * 북마크 생성 서비스
@@ -29,12 +29,12 @@ public class BookmarkCreationService {
 
     /**
      * 북마크를 생성하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @param postSeq 게시물 식별자
      */
     @Transactional
-    public void createBookmark(Long userSeq, Long postSeq) {
+    public void createBookmark(
+            Long userSeq,
+            Long postSeq
+    ) {
         Bookmark bookmark = getBookmark(userSeq);
         Post post = getPost(postSeq);
         List<Post> bookmarkPosts = bookmark.getBookmarkPosts();
@@ -49,12 +49,11 @@ public class BookmarkCreationService {
 
     /**
      * 북마크 목록을 조회하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @return 북마크 목록
      */
     @Transactional(readOnly = true)
-    public List<PostDto> getBookmarkList(Long userSeq) {
+    public List<PostDto> getBookmarkList(
+            Long userSeq
+    ) {
         return getBookmark(userSeq)
                 .getBookmarkPosts()
                 .stream()
@@ -64,11 +63,10 @@ public class BookmarkCreationService {
 
     /**
      * 게시물을 조회하는 메서드
-     *
-     * @param postSeq 게시물 식별자
-     * @return 게시물
      */
-    private Post getPost(Long postSeq) {
+    private Post getPost(
+            Long postSeq
+    ) {
         return postRepository
                 .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
@@ -76,11 +74,10 @@ public class BookmarkCreationService {
 
     /**
      * 북마크를 조회하는 메서드
-     *
-     * @param userSeq 사용자 식별자
-     * @return 북마크
      */
-    private Bookmark getBookmark(Long userSeq) {
+    private Bookmark getBookmark(
+            Long userSeq
+    ) {
         Bookmark bookmark = bookmarkRepository.findByUserSeq(userSeq).orElseGet(
                 () -> bookmarkRepository.save(
                         Bookmark.builder()

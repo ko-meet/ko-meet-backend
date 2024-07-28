@@ -49,13 +49,12 @@ public class Reply extends BaseEntity {
 
     /**
      * 대댓글 팩토리 메서드
-     *
-     * @param user    작성자
-     * @param comment 댓글
-     * @param content 내용
-     * @return Reply
      */
-    public static Reply from(User user, Comment comment, String content) {
+    public static Reply from(
+            User user,
+            Comment comment,
+            String content
+    ) {
         return Reply.builder()
                 .author(user)
                 .comment(comment)

@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.exception;
+package com.backend.komeet.global.exception;
 
 import lombok.Builder;
 import lombok.Getter;

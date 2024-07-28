@@ -1,7 +1,7 @@
 package com.backend.komeet.notice.presentation.controller;
 
 import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.notice.application.NoticeInquiryService;
 import com.backend.komeet.notice.application.NoticeModifyService;
 import com.backend.komeet.notice.application.NoticeRegisterService;

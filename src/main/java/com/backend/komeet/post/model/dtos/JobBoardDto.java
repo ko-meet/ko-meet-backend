@@ -46,11 +46,10 @@ public class JobBoardDto {
 
     /**
      * JobBoardDto 팩토리 메서드
-     *
-     * @param jobBoard {@link JobBoard}
-     * @return {@link JobBoardDto}
      */
-    public static JobBoardDto from(JobBoard jobBoard) {
+    public static JobBoardDto from(
+            JobBoard jobBoard
+    ) {
         return JobBoardDto.builder()
                 .seq(jobBoard.getSeq())
                 .title(jobBoard.getTitle())

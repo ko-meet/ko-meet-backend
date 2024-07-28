@@ -1,10 +1,10 @@
 package com.backend.komeet.post.application.post;
 
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Post;
-import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.post.presentation.request.PostUpdateRequest;
-import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.post.repositories.PostRepository;
+import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.backend.komeet.post.enums.PostStatus.*;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.*;
+import static com.backend.komeet.post.enums.PostStatus.MODIFIED;
 
 /**
  * 게시물 업로드 관련 서비스
@@ -27,14 +26,13 @@ public class PostUpdateService {
 
     /**
      * 게시물을 수정하는 메서드
-     *
-     * @param userId            사용자 식별자
-     * @param postUpdateRequest 게시물 수정 요청 데이터
      */
     @Transactional
-    public void updatePost(Long userId,
-                           Long postSeq,
-                           PostUpdateRequest postUpdateRequest) {
+    public void updatePost(
+            Long userId,
+            Long postSeq,
+            PostUpdateRequest postUpdateRequest
+    ) {
 
         User user = getUser(userId);
         Post post = getPost(postSeq);
@@ -69,14 +67,12 @@ public class PostUpdateService {
 
     /**
      * 리스트를 업데이트하는 메서드
-     *
-     * @param originList 기존 리스트
-     * @param addList    추가 리스트
-     * @param deleteList 삭제 리스트
      */
-    private void updateList(List<String> originList,
-                            List<String> addList,
-                            List<String> deleteList) {
+    private void updateList(
+            List<String> originList,
+            List<String> addList,
+            List<String> deleteList
+    ) {
 
         if (addList != null && !addList.isEmpty()) {
             originList.addAll(addList);
@@ -88,11 +84,10 @@ public class PostUpdateService {
 
     /**
      * 사용자 식별자로 사용자를 조회하는 메서드
-     *
-     * @param userId 사용자 식별자
-     * @return 사용자
      */
-    private User getUser(Long userId) {
+    private User getUser(
+            Long userId
+    ) {
         return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
@@ -100,11 +95,10 @@ public class PostUpdateService {
 
     /**
      * 게시물 식별자로 게시물을 조회하는 메서드
-     *
-     * @param seq 게시물 식별자
-     * @return 게시물
      */
-    private Post getPost(Long seq) {
+    private Post getPost(
+            Long seq
+    ) {
         return postRepository
                 .findById(seq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
@@ -112,11 +106,11 @@ public class PostUpdateService {
 
     /**
      * 조회수를 증가시키는 메서드
-     *
-     * @param postSeq 게시물 식별자
      */
     @Transactional
-    public void increaseViewCount(Long postSeq) {
+    public void increaseViewCount(
+            Long postSeq
+    ) {
         Post post = postRepository
                 .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));

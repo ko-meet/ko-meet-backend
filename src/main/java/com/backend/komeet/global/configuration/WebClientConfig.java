@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +12,6 @@ public class WebClientConfig {
 
     /**
      * WebClient.Builder를 Bean으로 등록
-     *
-     * @return WebClient.Builder 인스턴스
      */
     @Bean
     public WebClient.Builder webClientBuilder() {

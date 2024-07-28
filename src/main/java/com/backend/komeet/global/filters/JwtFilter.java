@@ -1,6 +1,6 @@
-package com.backend.komeet.infrastructure.filters;
+package com.backend.komeet.global.filters;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -36,19 +36,19 @@ public class JwtFilter extends OncePerRequestFilter {
 
     /**
      * 주어진 URI가 화이트리스트에 있는지 여부를 판별
-     * @param requestURI 현재 요청의 URI
-     * @return 화이트리스트에 포함되어 있지 않으면 true, 포함되어 있으면 false 반환
      */
-    private boolean isFilterCheck(String requestURI) {
+    private boolean isFilterCheck(
+            String requestURI
+    ) {
         return !PatternMatchUtils.simpleMatch(ALL_WHITELIST, requestURI);
     }
 
     /**
      * HTTP 요청에서 헤더를 통해 JWT 토큰 추출
-     * @param request 현재의 HTTP 요청
-     * @return 추출된 JWT 토큰 또는 null
      */
-    private String extractTokenFromRequest(HttpServletRequest request) {
+    private String extractTokenFromRequest(
+            HttpServletRequest request
+    ) {
         String bearerToken = request.getHeader(AUTHORIZATION);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -59,16 +59,13 @@ public class JwtFilter extends OncePerRequestFilter {
     /**
      * 실제 필터 로직이 구현된 메서드로, 토큰을 추출하고 검증하여 사용자 인증,
      * 화이트리스트에 있는 경우 필터를 건너뛰어 다음 필터로 진행
-     *
-     * @param request 현재의 HTTP 요청
-     * @param response HTTP 응답
-     * @param chain 다음 필터로 전달하기 위한 FilterChain 객체
-     * @throws IOException
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain
+    ) throws IOException {
 
         String token = extractTokenFromRequest(request);
 

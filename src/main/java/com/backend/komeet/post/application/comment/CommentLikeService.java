@@ -1,8 +1,8 @@
 package com.backend.komeet.post.application.comment;
 
-import com.backend.komeet.infrastructure.components.RedisDistributedLock;
+import com.backend.komeet.global.components.RedisDistributedLock;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Comment;
-import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.post.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.COMMENT_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.COMMENT_NOT_FOUND;
 
 /**
  * 대댓글 좋아요 서비스
@@ -26,13 +26,13 @@ public class CommentLikeService {
 
     /**
      * 대댓글 좋아요를 처리하는 메서드
-     *
-     * @param userSeq    사용자 식별자
-     * @param commentSeq 대댓글 식별자
      */
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void likeComment(Long userSeq, Long commentSeq) {
+    public void likeComment(
+            Long userSeq,
+            Long commentSeq
+    ) {
         int maxRetries = 3;
         int retries = 0;
         long retryIntervalMillis = 1000; // 1초 간격으로 재시도
@@ -68,13 +68,11 @@ public class CommentLikeService {
 
     /**
      * 좋아요 작업을 처리하는 메서드
-     *
-     * @param userSeq    사용자 식별자
-     * @param commentSeq 게시물 식별자
-     * @return 작업 성공 여부
-     * @throws CustomException 작업 실패
      */
-    private Integer processLike(Long userSeq, Long commentSeq) throws CustomException {
+    private Integer processLike(
+            Long userSeq,
+            Long commentSeq
+    ) throws CustomException {
         Comment comment = getComment(commentSeq);
 
         boolean lockAcquired = false;
@@ -102,11 +100,10 @@ public class CommentLikeService {
 
     /**
      * 게시물 식별자로 게시물을 조회하는 메서드
-     *
-     * @param seq 게시물 식별자
-     * @return 게시물
      */
-    private Comment getComment(Long seq) {
+    private Comment getComment(
+            Long seq
+    ) {
         return commentRepository
                 .findById(seq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));

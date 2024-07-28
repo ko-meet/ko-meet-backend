@@ -1,6 +1,6 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
-import com.backend.komeet.infrastructure.exception.AsyncUncaughtExceptionHandlerCustom;
+import com.backend.komeet.global.exception.AsyncUncaughtExceptionHandlerCustom;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
@@ -18,8 +18,6 @@ public class AsyncConfig extends AsyncConfigurerSupport {
 
     /**
      * 비동기 작업에 사용될 Executor 설정
-     *
-     * @return 사용될 Executor
      */
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -33,8 +31,6 @@ public class AsyncConfig extends AsyncConfigurerSupport {
 
     /**
      * 비동기 작업 중 예외 처리를 담당하는 핸들러 반환
-     *
-     * @return 비동기 작업 중 발생하는 예외를 처리하는 핸들러
      */
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new AsyncUncaughtExceptionHandlerCustom();
