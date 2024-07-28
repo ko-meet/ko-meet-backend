@@ -58,13 +58,9 @@ public class TestRequestGenerator {
                 .content("내용")
                 .attachments(List.of("test"))
                 .tags(List.of("test"))
-                .company("회사")
-                .country(SOUTH_KOREA)
-                .companyAddress("주소")
-                .companyHomepage("홈페이지")
-                .companyLogo("로고")
                 .deadline(LocalDateTime.MAX)
                 .salary("연봉")
+                .companySeq(1L)
                 .build();
     }
 }

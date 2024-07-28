@@ -1,5 +1,6 @@
 package com.backend.komeet.service.jobboard;
 
+import com.backend.komeet.company.repositories.CompanyRepository;
 import com.backend.komeet.infrastructure.exception.CustomException;
 import com.backend.komeet.post.application.jobboard.JobBoardUploadService;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
@@ -31,13 +32,15 @@ public class JobBoardUploadServiceTest {
     private JobBoardRepository jobBoardRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private CompanyRepository companyRepository;
     private JobBoardUploadService jobBoardUploadService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         jobBoardUploadService = new JobBoardUploadService(
-                jobBoardRepository, userRepository
+                jobBoardRepository, userRepository, companyRepository
         );
     }
 
@@ -52,6 +55,7 @@ public class JobBoardUploadServiceTest {
         // given
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
         when(jobBoardRepository.save(any(JobBoard.class))).thenReturn(jobBoard);
+        when(companyRepository.findById(any(Long.class))).thenReturn(Optional.of(TestEntityGenerator.company));
 
         // when
         JobBoardDto result = jobBoardUploadService.postJobBoard(jobBoardUploadRequest, 1L);
