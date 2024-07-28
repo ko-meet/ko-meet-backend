@@ -3,7 +3,7 @@ package com.backend.komeet.post.application.bookmark;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.model.dtos.PostDto;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.BookmarkRepository;
 import com.backend.komeet.post.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.POST_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 
 /**
  * 북마크 생성 서비스

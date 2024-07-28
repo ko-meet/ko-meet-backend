@@ -1,7 +1,7 @@
 package com.backend.komeet.user.application;
 
-import com.backend.komeet.infrastructure.components.RedisDistributedLock;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.components.RedisDistributedLock;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.ReportRepository;
 import com.backend.komeet.user.model.entities.Report;
 import com.backend.komeet.user.model.entities.User;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 import static com.backend.komeet.user.enums.ReportReason.OTHER;
 
 /**

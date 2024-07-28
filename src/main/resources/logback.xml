@@ -30,7 +30,7 @@
     </root>
 
     <!-- 상세 로그 설정 -->
-    <logger name="com.backend.komeet.infrastructure.filters.LogFilter" level="DEBUG"/>
+    <logger name="com.backend.komeet.global.filters.LogFilter" level="DEBUG"/>
     <logger name="org.springframework.web" level="ERROR"/>
     <logger name="org.hibernate.SQL" level="DEBUG"/>
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="DEBUG"/>

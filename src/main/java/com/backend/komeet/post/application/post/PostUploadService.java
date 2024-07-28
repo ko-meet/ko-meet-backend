@@ -8,7 +8,7 @@ import com.backend.komeet.post.presentation.request.PostUploadRequest;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.post.enums.SortingMethods;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.PostRepository;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.POST_NOT_FOUND;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
  * 게시물 업로드 관련 서비스

@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.util;
+package com.backend.komeet.global.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -6,10 +6,10 @@ import lombok.experimental.UtilityClass;
 public class UUIDUtil {
     /**
      * UUID 생성
-     *
-     * @return UUID
      */
-    public String generateUUID(Integer length) {
+    public String generateUUID(
+            Integer length
+    ) {
         return java.util.UUID
                 .randomUUID()
                 .toString()

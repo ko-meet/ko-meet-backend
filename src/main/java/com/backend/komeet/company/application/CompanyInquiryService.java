@@ -3,8 +3,8 @@ package com.backend.komeet.company.application;
 import com.backend.komeet.company.model.dtos.CompanyDto;
 import com.backend.komeet.company.model.entities.Company;
 import com.backend.komeet.company.repositories.CompanyRepository;
-import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.infrastructure.exception.ErrorCode;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

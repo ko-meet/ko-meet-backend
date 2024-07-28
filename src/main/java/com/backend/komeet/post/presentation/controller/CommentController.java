@@ -1,6 +1,6 @@
 package com.backend.komeet.post.presentation.controller;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.post.presentation.request.CommentUploadRequest;
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.post.application.comment.CommentLikeService;

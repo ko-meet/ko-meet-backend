@@ -1,6 +1,6 @@
 package com.backend.komeet.post.application.post;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.presentation.request.PostUpdateRequest;
 import com.backend.komeet.post.repositories.PostRepository;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 import static com.backend.komeet.post.enums.PostStatus.MODIFIED;
 
 /**

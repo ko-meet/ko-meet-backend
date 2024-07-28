@@ -5,7 +5,7 @@ import com.backend.komeet.company.application.CompanyInquiryService;
 import com.backend.komeet.company.application.CompanyRegisterService;
 import com.backend.komeet.company.model.dtos.CompanyDto;
 import com.backend.komeet.company.presentation.request.CompanyRegisterRequest;
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

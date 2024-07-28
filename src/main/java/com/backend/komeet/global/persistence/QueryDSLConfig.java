@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.persistence;
+package com.backend.komeet.global.persistence;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +18,6 @@ public class QueryDSLConfig {
     /**
      * Bean으로 등록된 JPAQueryFactory를 반환하는 메서드
      * JPAQueryFactory는 QueryDSL을 사용하여 JPA 쿼리를 생성하는 데 사용
-     *
-     * @return JPAQueryFactory 인스턴스
      */
     @Bean
     public JPAQueryFactory jpaQueryFactory() {

@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig implements WebMvcConfigurer {
     /**
      * Swagger Docket을 설정하기 위한 빈 생성
-     *
-     * @return Swagger Docket 객체
      */
     @Bean
     public Docket api() {
@@ -36,8 +34,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     /**
      * API 정보를 설정하기 위한 ApiInfo 객체 생성.
-     *
-     * @return ApiInfo 객체
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -53,10 +49,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     /**
      * 리소스 핸들러를 추가하기 위해 메서드 재정의
-     * <p>
-     * 이 메서드는 Swagger UI를 위한 리소스 핸들러 구성
-     *
-     * @param registry 리소스 핸들러를 등록하는 데 사용되는 ResourceHandlerRegistry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

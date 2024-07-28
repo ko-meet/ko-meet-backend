@@ -1,6 +1,6 @@
 package com.backend.komeet.service.jobboard;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.application.jobboard.JobBoardDetailService;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.repositories.JobBoardRepository;
@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.JOB_BOARD_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.JOB_BOARD_NOT_FOUND;
 import static com.backend.komeet.service.common.TestEntityGenerator.jobBoard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

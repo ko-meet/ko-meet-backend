@@ -1,6 +1,6 @@
 package com.backend.komeet.notice.application;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.notice.model.entities.Notice;
 import com.backend.komeet.notice.presentation.request.NoticeModifyRequest;
 import com.backend.komeet.notice.repositories.NoticeRepository;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
 import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
 

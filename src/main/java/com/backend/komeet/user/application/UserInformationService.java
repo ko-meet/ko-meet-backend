@@ -2,10 +2,10 @@ package com.backend.komeet.user.application;
 
 import com.backend.komeet.base.application.ImageService;
 import com.backend.komeet.base.application.RedisService;
-import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.infrastructure.security.JwtProvider;
-import com.backend.komeet.infrastructure.util.CountryUtil;
-import com.backend.komeet.infrastructure.util.UUIDUtil;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.security.JwtProvider;
+import com.backend.komeet.global.util.CountryUtil;
+import com.backend.komeet.global.util.UUIDUtil;
 import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.enums.UserStatus;
 import com.backend.komeet.user.model.dtos.TokenIssuanceDto;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
 
 /**

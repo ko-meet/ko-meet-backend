@@ -1,6 +1,6 @@
 package com.backend.komeet.post.presentation.controller;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
 import com.backend.komeet.post.presentation.request.PostUpdateRequest;
 import com.backend.komeet.post.presentation.request.PostUploadRequest;

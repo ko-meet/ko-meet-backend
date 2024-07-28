@@ -2,7 +2,7 @@ package com.backend.komeet.post.application.jobboard;
 
 import com.backend.komeet.company.model.entities.Company;
 import com.backend.komeet.company.repositories.CompanyRepository;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.model.entities.JobBoard;
 import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.COMPANY_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
  * 구인구직 게시판 업로드 서비스

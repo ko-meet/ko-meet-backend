@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -27,7 +27,6 @@ public class S3Config {
 
     /**
      * AWS S3 Client Bean 생성
-     * @return AmazonS3Client
      */
     @Bean
     public AmazonS3Client amazonS3Client() {

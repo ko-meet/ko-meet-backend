@@ -1,6 +1,6 @@
 package com.backend.komeet.post.application.reply;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Comment;
 import com.backend.komeet.post.model.entities.Reply;
 import com.backend.komeet.post.presentation.request.CommentUploadRequest;
@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.COMMENT_NOT_FOUND;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.COMMENT_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
  * 대댓글 업로드 서비스

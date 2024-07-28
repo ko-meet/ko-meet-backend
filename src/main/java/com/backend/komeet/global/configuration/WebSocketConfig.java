@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.configuration;
+package com.backend.komeet.global.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -15,11 +15,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * 클라이언트가 웹소켓을 통해 연결할 엔드포인트를 정의하고 CORS를 허용
-     *
-     * @param registry {@link StompEndpointRegistry}StompEndpointRegistry 객체
      */
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(
+            StompEndpointRegistry registry
+    ) {
         // 클라이언트가 웹소켓을 통해 연결할 엔드포인트를 정의하고 CORS를 허용
         registry.addEndpoint("/ws")
                 .setAllowedOrigins(
@@ -30,11 +30,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * 클라이언트에서 보낸 메시지를 처리할 prefix와 메시지 브로커가 보낼 메시지의 prefix를 정의
-     *
-     * @param registry {@link MessageBrokerRegistry} MessageBrokerRegistry 객체
      */
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
+    public void configureMessageBroker(
+            MessageBrokerRegistry registry
+    ) {
         // 클라이언트에서 보낸 메시지를 처리할 prefix와 메시지 브로커가 보낼 메시지의 prefix를 정의
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");

@@ -1,13 +1,13 @@
 package com.backend.komeet.post.application.jobboard;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.repositories.JobBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.JOB_BOARD_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.JOB_BOARD_NOT_FOUND;
 
 /**
  * 구인 게시판 상세 조회 서비스

@@ -1,11 +1,9 @@
 package com.backend.komeet.post.presentation.controller;
 
-import com.backend.komeet.infrastructure.security.JwtProvider;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
 import com.backend.komeet.base.presentation.response.ApiResponse;
-import com.backend.komeet.post.enums.Experience;
-import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.application.jobboard.JobBoardDetailService;
 import com.backend.komeet.post.application.jobboard.JobBoardSearchService;
 import com.backend.komeet.post.application.jobboard.JobBoardUploadService;

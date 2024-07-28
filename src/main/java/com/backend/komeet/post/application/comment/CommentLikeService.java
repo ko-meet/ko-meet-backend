@@ -1,7 +1,7 @@
 package com.backend.komeet.post.application.comment;
 
-import com.backend.komeet.infrastructure.components.RedisDistributedLock;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.components.RedisDistributedLock;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Comment;
 import com.backend.komeet.post.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.COMMENT_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.COMMENT_NOT_FOUND;
 
 /**
  * 대댓글 좋아요 서비스

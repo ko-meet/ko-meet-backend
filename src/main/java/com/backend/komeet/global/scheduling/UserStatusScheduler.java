@@ -1,6 +1,5 @@
-package com.backend.komeet.infrastructure.scheduling;
+package com.backend.komeet.global.scheduling;
 
-import com.backend.komeet.user.application.UserInformationService;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

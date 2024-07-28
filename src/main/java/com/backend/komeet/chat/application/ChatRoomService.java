@@ -4,8 +4,8 @@ import com.backend.komeet.chat.model.dtos.ChatRoomDto;
 import com.backend.komeet.chat.model.entities.ChatRoom;
 import com.backend.komeet.chat.repositories.ChatRepository;
 import com.backend.komeet.chat.repositories.ChatRoomRepository;
-import com.backend.komeet.infrastructure.exception.CustomException;
-import com.backend.komeet.infrastructure.exception.ErrorCode;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.exception.ErrorCode;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 
 /**
  * 채팅방 서비스

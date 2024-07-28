@@ -1,6 +1,6 @@
 package com.backend.komeet.service.post;
 
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.application.post.PostDeleteService;
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.repositories.PostRepository;
@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.ALREADY_DELETED_POST;
+import static com.backend.komeet.global.exception.ErrorCode.ALREADY_DELETED_POST;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

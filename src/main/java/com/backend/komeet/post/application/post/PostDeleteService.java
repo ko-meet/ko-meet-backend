@@ -2,7 +2,7 @@ package com.backend.komeet.post.application.post;
 
 import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.repositories.PostRepository;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 
 /**
  * 게시물 삭제 관련 서비스

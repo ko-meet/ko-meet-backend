@@ -6,7 +6,7 @@ import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.chat.model.dtos.ChatDto;
 import com.backend.komeet.chat.presentation.request.ChatContentRequest;
 import com.backend.komeet.chat.presentation.request.ChatRequest;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.chat.repositories.ChatRepository;
 import com.backend.komeet.chat.repositories.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
 
 /**
  * 채팅방 관련 서비스

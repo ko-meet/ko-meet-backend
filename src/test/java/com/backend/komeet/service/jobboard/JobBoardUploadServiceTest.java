@@ -1,7 +1,7 @@
 package com.backend.komeet.service.jobboard;
 
 import com.backend.komeet.company.repositories.CompanyRepository;
-import com.backend.komeet.infrastructure.exception.CustomException;
+import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.application.jobboard.JobBoardUploadService;
 import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.model.entities.JobBoard;
@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.komeet.infrastructure.exception.ErrorCode.USER_INFO_NOT_FOUND;
+import static com.backend.komeet.global.exception.ErrorCode.USER_INFO_NOT_FOUND;
 import static com.backend.komeet.service.common.TestRequestGenerator.createJobBoardUploadRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

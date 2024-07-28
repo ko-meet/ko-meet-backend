@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.exception;
+package com.backend.komeet.global.exception;
 
 import lombok.Getter;
 
@@ -11,8 +11,6 @@ public class CustomException extends RuntimeException {
 
     /**
      * ErrorCode를 받아서 예외를 생성한다.
-     *
-     * @param e ErrorCode
      */
     public CustomException(ErrorCode e) {
         super(e.getMessage());

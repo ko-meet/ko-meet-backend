@@ -1,4 +1,4 @@
-package com.backend.komeet.infrastructure.exception;
+package com.backend.komeet.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,11 @@ public class GlobalExceptionHandler {
 
     /**
      * Validation 예외 처리
-     *
-     * @param exception MethodArgumentNotValidException 예외 객체
-     * @return ResponseEntity<List < String>> 유효성 검사 오류 목록
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidException(
-            MethodArgumentNotValidException exception) {
+            MethodArgumentNotValidException exception
+    ) {
 
         List<String> errors = new ArrayList<>();
         exception
@@ -37,12 +35,11 @@ public class GlobalExceptionHandler {
 
     /**
      * CustomException 예외 처리
-     *
-     * @param exception CustomException 예외 객체
-     * @return ResponseEntity<ErrorResponse> 사용자 정의 예외 응답
      */
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
+    public ResponseEntity<ErrorResponse> handleCustomException(
+            CustomException exception
+    ) {
         ErrorResponse errorResponse =
                 ErrorResponse
                         .builder()
@@ -59,12 +56,11 @@ public class GlobalExceptionHandler {
 
     /**
      * 별도로 정의되지 않았으나 발생한 예외 처리
-     *
-     * @param exception Exception 예외 객체
-     * @return ResponseEntity<ErrorResponse> 정의되지 않은 예외 응답
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> undefinedException(Exception exception) {
+    public ResponseEntity<ErrorResponse> undefinedException(
+            Exception exception
+    ) {
         ErrorResponse errorResponse =
                 ErrorResponse
                         .builder()
