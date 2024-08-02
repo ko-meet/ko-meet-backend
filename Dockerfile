@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # base 이미지 설정
-FROM adoptopenjdk/openjdk18
+FROM eclipse-temurin:18
 
 # jar 파일 위치를 변수로 설정
 ARG JAR_FILE=/build/libs/*-SNAPSHOT.jar
