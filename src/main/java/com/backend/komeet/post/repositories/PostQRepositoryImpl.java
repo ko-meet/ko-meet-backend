@@ -1,13 +1,17 @@
 package com.backend.komeet.post.repositories;
 
+import com.backend.komeet.post.enums.Categories;
+import com.backend.komeet.post.enums.SortingMethods;
+import com.backend.komeet.post.model.dtos.CommentDto;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
-
-import com.backend.komeet.post.enums.Categories;
+import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.post.model.entities.Post;
+import com.backend.komeet.post.model.entities.QComment;
 import com.backend.komeet.post.model.entities.QPost;
 import com.backend.komeet.user.enums.Countries;
-import com.backend.komeet.post.enums.SortingMethods;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,7 +21,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
@@ -34,48 +40,73 @@ public class PostQRepositoryImpl implements PostQRepository {
     @Override
     public Page<PostDto> getPosts(
             Countries country,
-                                  SortingMethods sortingMethod,
-                                  String isPublic,
-                                  Categories category,
-                                  Pageable pageable
+            SortingMethods sortingMethod,
+            String isPublic,
+            Categories category,
+            Pageable pageable
     ) {
-
         QPost post = QPost.post;
-
+        QComment comment = QComment.comment;
         BooleanBuilder predicateBuilder = new BooleanBuilder();
 
-        if (!category.equals(Categories.ALL) || !country.equals(Countries.ALL)) {
-            if (!category.equals(Categories.ALL)) {
-                predicateBuilder.and(post.category.eq(category));
-            }
-            if (!country.equals(Countries.ALL)) {
-                predicateBuilder.and(post.country.eq(country));
-            }
+        if (!category.equals(Categories.ALL)) {
+            predicateBuilder.and(post.category.eq(category));
+        }
+        if (!country.equals(Countries.ALL)) {
+            predicateBuilder.and(post.country.eq(country));
         }
 
         predicateBuilder.and(post.isPublic.eq(isPublic)).and(post.status.ne(DELETED));
-
         Predicate predicate = predicateBuilder.getValue();
 
         // 정렬 조건 설정
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
 
-        // 전체 결과 개수 계산
-        Long total = getLength(predicate);
-
-        // 데이터 조회 및 정렬
-        List<PostDto> results = jpaQueryFactory.selectFrom(post)
+        // 데이터와 전체 개수 한 번에 조회
+        QueryResults<Post> results = jpaQueryFactory
+                .selectFrom(post)
+                .leftJoin(post.user).fetchJoin()
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .fetchResults();
+
+        long total = results.getTotal();
+        List<Post> posts = results.getResults();
+
+        // 댓글 조회를 Batch Fetching으로 최적화
+        Map<Long, List<Comment>> commentsMap = jpaQueryFactory
+                .selectFrom(comment)
+                .leftJoin(comment.post).fetchJoin()
                 .fetch()
                 .stream()
-                .map(PostDto::from)
+                .collect(
+                        Collectors.groupingBy(
+                                commentTbl -> commentTbl.getPost().getSeq()
+                        )
+                );
+
+        // 결과 변환 및 정렬
+        List<PostDto> postDtos = posts.stream()
+                .map(postTbl -> {
+                    PostDto postDto = PostDto.from(postTbl);
+                    postDto.setComments(
+                            commentsMap.getOrDefault(
+                                            postTbl.getSeq(),
+                                            Collections.emptyList()
+                                    )
+                                    .stream()
+                                    .map(CommentDto::from)
+                                    .collect(Collectors.toList())
+                    );
+                    return postDto;
+                })
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageImpl<>(postDtos, pageable, total);
     }
+
 
     @Override
     public Page<SearchResultDto> searchPostsByKeyword(
