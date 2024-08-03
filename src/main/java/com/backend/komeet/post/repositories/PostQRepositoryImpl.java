@@ -1,5 +1,7 @@
 package com.backend.komeet.post.repositories;
 
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.global.exception.ErrorCode;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.CommentDto;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.backend.komeet.global.exception.ErrorCode.*;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
 
 /**
@@ -160,6 +163,37 @@ public class PostQRepositoryImpl implements PostQRepository {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+    @Override
+    public PostDto getPost(
+            Long postSeq
+    ) {
+        QPost post = QPost.post;
+        QComment comment = QComment.comment;
+
+        Post postTbl = jpaQueryFactory.selectFrom(post)
+                .leftJoin(post.user).fetchJoin()
+                .where(post.seq.eq(postSeq))
+                .fetchOne();
+
+        if (postTbl == null) {
+            throw new CustomException(POST_NOT_FOUND);
+        }
+
+        List<Comment> comments = jpaQueryFactory.selectFrom(comment)
+                .leftJoin(comment.post).fetchJoin()
+                .where(comment.post.eq(postTbl))
+                .fetch();
+
+        PostDto postDto = PostDto.from(postTbl);
+        postDto.setComments(
+                comments.stream()
+                        .map(CommentDto::from)
+                        .collect(Collectors.toList())
+        );
+
+        return postDto;
     }
 
     private OrderSpecifier<?> getOrderSpecifier(

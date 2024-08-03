@@ -47,11 +47,8 @@ public class PostController {
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody PostUploadRequest postUploadRequest
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         postUploadService.uploadPost(userId, postUploadRequest);
-
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -65,11 +62,8 @@ public class PostController {
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody PostUpdateRequest postUpdateRequest
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
-
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -82,11 +76,8 @@ public class PostController {
             @PathVariable Long postSeq,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         postDeleteService.deletePost(userId, postSeq);
-
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -99,11 +90,8 @@ public class PostController {
             @PathVariable Long postSeq,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         postLikeService.likePost(userId, postSeq);
-
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -119,7 +107,6 @@ public class PostController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer page
     ) {
-
         return ResponseEntity.status(OK).body(
                 new ApiResponse(
                         postUploadService.getPosts(
@@ -141,9 +128,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> increaseViewCount(
             @PathVariable Long postSeq
     ) {
-
         postUpdateService.increaseViewCount(postSeq);
-
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -155,7 +140,6 @@ public class PostController {
     public ResponseEntity<ApiResponse> getPost(
             @PathVariable Long postSeq
     ) {
-
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(postUploadService.getPost(postSeq)));
@@ -184,7 +168,6 @@ public class PostController {
             @PathVariable Long userSeq,
             @PathVariable Integer page
     ) {
-
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(postUploadService.getUserPosts(userSeq, page)));
