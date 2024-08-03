@@ -29,4 +29,8 @@ public interface PostQRepository {
             Long userId,
             Pageable pageable
     );
+
+    PostDto getPost(
+            Long postSeq
+    );
 }
