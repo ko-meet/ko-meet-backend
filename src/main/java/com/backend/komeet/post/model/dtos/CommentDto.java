@@ -1,14 +1,16 @@
 package com.backend.komeet.post.model.dtos;
 
-import com.backend.komeet.user.model.dtos.UserDto;
-import com.backend.komeet.post.model.entities.Comment;
 import com.backend.komeet.post.enums.PostStatus;
-import lombok.*;
+import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.user.model.dtos.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 댓글 DTO
@@ -24,6 +26,7 @@ public class CommentDto {
     private List<ReplyDto> replies = new ArrayList<>();
     private int upVotes;
     private int downVotes;
+    private int replyCount;
     private List<Long> likeUsers;
     private PostStatus status;
     private LocalDateTime createdAt;
@@ -35,10 +38,8 @@ public class CommentDto {
                 .seq(comments.getSeq())
                 .user(UserDto.from(comments.getUser()))
                 .content(comments.getContent())
-                .replies(comments.getReplies()
-                        .stream()
-                        .map(ReplyDto::from)
-                        .collect(Collectors.toList()))
+                .replies(comments.getReplies().stream().map(ReplyDto::from).toList())
+                .replyCount(comments.getReplyCount())
                 .upVotes(comments.getUpVotes())
                 .downVotes(comments.getDownVotes())
                 .likeUsers(comments.getLikeUsers())

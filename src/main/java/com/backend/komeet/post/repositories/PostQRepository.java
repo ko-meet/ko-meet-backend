@@ -4,9 +4,12 @@ import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
+import com.backend.komeet.post.model.entities.Comment;
 import com.backend.komeet.user.enums.Countries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  * 게시글 관련 Querydsl 레포지토리 인터페이스
