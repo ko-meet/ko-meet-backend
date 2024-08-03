@@ -52,6 +52,9 @@ public class Comment extends BaseEntity {
     private List<Long> likeUsers;
 
     @Setter
+    private int replyCount;
+
+    @Setter
     private int upVotes;
     private int downVotes;
 
@@ -72,6 +75,7 @@ public class Comment extends BaseEntity {
                 .content(content)
                 .upVotes(0)
                 .downVotes(0)
+                .replyCount(0)
                 .replies(new ArrayList<>())
                 .status(NORMAL)
                 .build();

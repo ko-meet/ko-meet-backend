@@ -38,11 +38,8 @@ public class CommentController {
             @RequestHeader(AUTHORIZATION) String token,
             @Valid @RequestBody CommentUploadRequest commentUploadRequest
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         commentUploadService.uploadComment(userId, postSeq, commentUploadRequest);
-
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -55,11 +52,8 @@ public class CommentController {
             @PathVariable Long commentSeq,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userId = jwtProvider.getIdFromToken(token);
-
         commentLikeService.likeComment(userId, commentSeq);
-
         return ResponseEntity.status(CREATED).build();
     }
 }

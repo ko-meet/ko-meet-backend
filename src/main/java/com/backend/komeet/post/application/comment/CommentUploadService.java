@@ -37,6 +37,7 @@ public class CommentUploadService {
         User user = getUser(userId);
         Post post = getPost(postSeq);
         post.getComments().add(getComment(commentUploadRequest, user, post));
+        post.setCommentCount(post.getCommentCount() + 1);
     }
 
     /**
