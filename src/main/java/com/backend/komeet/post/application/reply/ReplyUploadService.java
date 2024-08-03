@@ -2,6 +2,7 @@ package com.backend.komeet.post.application.reply;
 
 import com.backend.komeet.global.exception.CustomException;
 import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.post.model.entities.Reply;
 import com.backend.komeet.post.presentation.request.CommentUploadRequest;
 import com.backend.komeet.post.repositories.CommentRepository;
@@ -27,7 +28,6 @@ public class ReplyUploadService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-
     /**
      * 대댓글을 업로드하는 메서드
      */
@@ -39,8 +39,10 @@ public class ReplyUploadService {
     ) {
         User user = getUser(userId);
         Comment comment = getComment(commentSeq);
-
         comment.getReplies().add(getReply(commentUploadRequest, user, comment));
+        comment.setReplyCount(comment.getReplyCount() + 1);
+        Post post = comment.getPost();
+        post.setCommentCount(post.getCommentCount() + 1);
     }
 
     /**
@@ -63,7 +65,7 @@ public class ReplyUploadService {
             Long commentSeq
     ) {
         return commentRepository
-                .findById(commentSeq)
+                .getComment(commentSeq)
                 .orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
     }
 

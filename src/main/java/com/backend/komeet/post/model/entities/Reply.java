@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,7 @@ public class Reply extends BaseEntity {
                 .content(content)
                 .upVotes(0)
                 .downVotes(0)
+                .likeUsers(new ArrayList<>())
                 .status(PostStatus.NORMAL)
                 .build();
     }
