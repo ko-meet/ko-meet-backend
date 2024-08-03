@@ -5,6 +5,7 @@ import com.backend.komeet.post.enums.PostStatus;
 import com.backend.komeet.post.model.entities.Post;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class PostDto {
     private String userNickName;
     @Setter
     private List<CommentDto> comments;
+    private Long commentCount;
     private Long viewCount;
     private Long likeCount;
     private List<String> tags;
@@ -50,8 +52,9 @@ public class PostDto {
                 .region(post.getUser().getRegion())
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
+                .commentCount(post.getCommentCount())
+                .comments(new ArrayList<>())
                 .tags(post.getTags())
-                .comments(List.of())
                 .attachments(post.getAttachments())
                 .bookmarkUsers(post.getBookmarkUsers())
                 .likeUsers(post.getLikeUsers())
