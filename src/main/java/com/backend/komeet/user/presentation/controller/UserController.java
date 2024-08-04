@@ -71,10 +71,8 @@ public class UserController {
     public ResponseEntity<Void> reAuthenticationMail(
             @Valid @RequestBody UserEmailRequest userEmailRequest
     ) {
-
         UserDto user =
                 userSignUpService.getUserByEmail(userEmailRequest.getEmail());
-
         emailService.sendHtmlEmail(
                 userEmailRequest.getEmail(),
                 EmailComponents.EMAIL_SIGN_UP_SUBJECT,
@@ -84,7 +82,6 @@ public class UserController {
                         String.format(EmailComponents.API_LINK, user.getSeq())
                 )
         );
-
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -96,18 +93,14 @@ public class UserController {
     public ResponseEntity<ApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest userSignInRequest
     ) {
-
         UserDto userDto
                 = userSignUpService.getUserByEmail(userSignInRequest.getEmail());
-
         CompletableFuture<Pair<String, String>> country = geocoderService.getCountry(
                 userSignInRequest.getLatitude(),
                 userSignInRequest.getLongitude()
         );
-
         UserSignInDto userSignInDto =
                 userSignInService.signIn(userSignInRequest, country);
-
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
 
@@ -120,19 +113,15 @@ public class UserController {
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
-
         CompletableFuture<Pair<String, String>> country =
                 geocoderService.getCountry(
                         userInfoUpdateRequest.getLatitude(),
                         userInfoUpdateRequest.getLongitude()
                 );
-
         userInformationService.updateInformation(
                 userSeq, country, userInfoUpdateRequest
         );
-
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
     }
 
@@ -147,13 +136,11 @@ public class UserController {
 
         String temporaryPassword =
                 userInformationService.resetPassword(passwordResetRequest);
-
 //        emailService.sendEmail(
 //                passwordResetRequest.getEmail(),
 //                PASSWORD_RESET_SUBJECT,
 //                String.format(PASSWORD_RESET_CONTENT, temporaryPassword)
 //        );
-
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -166,7 +153,6 @@ public class UserController {
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
 
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
@@ -182,27 +168,9 @@ public class UserController {
     public ResponseEntity<ApiResponse> checkNickname(
             @RequestParam String nickname
     ) {
-
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(userInformationService.checkNickname(nickname)));
-    }
-
-    /**
-     * 사용자 신고
-     */
-    @PatchMapping("/{userSeq}/report")
-    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
-    public ResponseEntity<Void> reportUser(
-            @RequestHeader(AUTHORIZATION) String token,
-            @PathVariable Long userSeq,
-            @Valid @RequestBody UserReportRequest userReportRequest
-    ) {
-
-        Long reporterSeq = jwtProvider.getIdFromToken(token);
-        userReportService.reportValidation(userSeq, reporterSeq);
-        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
-        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
@@ -214,7 +182,6 @@ public class UserController {
             @RequestHeader(AUTHORIZATION) String token,
             @PathVariable Long userSeq
     ) {
-
         Long adminSeq = jwtProvider.getIdFromToken(token);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, BLOCKED);
         return ResponseEntity.status(NO_CONTENT).build();
@@ -229,9 +196,24 @@ public class UserController {
             @RequestHeader(AUTHORIZATION) String token,
             @PathVariable Long userSeq
     ) {
-
         Long adminSeq = jwtProvider.getIdFromToken(token);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, ACTIVE);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    /**
+     * 사용자 신고
+     */
+    @PatchMapping("/{userSeq}/report")
+    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
+    public ResponseEntity<Void> reportUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq,
+            @Valid @RequestBody UserReportRequest userReportRequest
+    ) {
+        Long reporterSeq = jwtProvider.getIdFromToken(token);
+        userReportService.reportValidation(userSeq, reporterSeq);
+        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 }

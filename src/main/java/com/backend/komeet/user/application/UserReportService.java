@@ -2,10 +2,10 @@ package com.backend.komeet.user.application;
 
 import com.backend.komeet.global.components.RedisDistributedLock;
 import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.post.repositories.ReportRepository;
 import com.backend.komeet.user.model.entities.Report;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.presentation.request.UserReportRequest;
-import com.backend.komeet.user.repositories.ReportRepository;
 import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -165,4 +165,3 @@ public class UserReportService {
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }
-
