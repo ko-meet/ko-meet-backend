@@ -55,6 +55,7 @@ public class PostDto {
                 .commentCount(post.getCommentCount())
                 .comments(new ArrayList<>())
                 .tags(post.getTags())
+                .comments(List.of())
                 .attachments(post.getAttachments())
                 .bookmarkUsers(post.getBookmarkUsers())
                 .likeUsers(post.getLikeUsers())

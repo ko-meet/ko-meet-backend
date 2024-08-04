@@ -21,11 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
