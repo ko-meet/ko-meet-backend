@@ -2,7 +2,6 @@ package com.backend.komeet.user.presentation.controller;
 
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.global.security.JwtProvider;
-import com.backend.komeet.service.user.UserReportService;
 import com.backend.komeet.user.application.*;
 import com.backend.komeet.user.enums.EmailComponents;
 import com.backend.komeet.user.model.dtos.UserDto;
