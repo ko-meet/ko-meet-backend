@@ -2,7 +2,7 @@ package com.backend.komeet.user.application;
 
 import com.backend.komeet.global.components.RedisDistributedLock;
 import com.backend.komeet.global.exception.CustomException;
-import com.backend.komeet.post.repositories.ReportRepository;
+import com.backend.komeet.user.repositories.ReportRepository;
 import com.backend.komeet.user.model.entities.Report;
 import com.backend.komeet.user.model.entities.User;
 import com.backend.komeet.user.presentation.request.UserReportRequest;
