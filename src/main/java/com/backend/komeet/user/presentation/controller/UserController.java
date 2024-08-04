@@ -88,17 +88,6 @@ public class UserController {
     }
 
     /**
-     * 사용자 이메일 인증
-     */
-    @GetMapping("/{userSeq}/verification")
-    @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
-    public ResponseEntity<ApiResponse> verifyEmail(
-            @PathVariable Long userSeq
-    ) {
-        userSignUpService.verifyEmail(userSeq);
-        return ResponseEntity.status(OK).build();
-    }
-    /**
      * 사용자 로그인
      */
     @PostMapping("/sign-in")
