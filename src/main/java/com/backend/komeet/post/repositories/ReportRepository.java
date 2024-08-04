@@ -1,6 +1,6 @@
-package com.backend.komeet.repository;
+package com.backend.komeet.post.repositories;
 
-import com.backend.komeet.domain.Report;
+import com.backend.komeet.user.model.entities.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    boolean existsByReportedUserSeqAndReporterUserSeq(Long targetUserSeq,
-                                                      Long reporterUserSeq);
+    boolean existsByReportedUserSeqAndReporterUserSeq(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    );
 }

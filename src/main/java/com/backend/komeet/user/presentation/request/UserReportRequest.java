@@ -1,11 +1,8 @@
-package com.backend.komeet.dto.request;
+package com.backend.komeet.user.presentation.request;
 
-import com.backend.komeet.enums.ReportReason;
+import com.backend.komeet.user.enums.ReportReason;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 사용자 신고 요청 DTO

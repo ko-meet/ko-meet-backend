@@ -1,12 +1,12 @@
-package com.backend.komeet.service.user;
+package com.backend.komeet.user.application;
 
-import com.backend.komeet.component.RedisDistributedLock;
-import com.backend.komeet.domain.Report;
-import com.backend.komeet.domain.User;
-import com.backend.komeet.dto.request.UserReportRequest;
-import com.backend.komeet.exception.CustomException;
-import com.backend.komeet.repository.ReportRepository;
-import com.backend.komeet.repository.UserRepository;
+import com.backend.komeet.global.components.RedisDistributedLock;
+import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.post.repositories.ReportRepository;
+import com.backend.komeet.user.model.entities.Report;
+import com.backend.komeet.user.model.entities.User;
+import com.backend.komeet.user.presentation.request.UserReportRequest;
+import com.backend.komeet.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import static com.backend.komeet.enums.ReportReason.OTHER;
-import static com.backend.komeet.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.*;
+import static com.backend.komeet.user.enums.ReportReason.OTHER;
 
 /**
  * 사용자 신고 관련 서비스
@@ -35,31 +35,30 @@ public class UserReportService {
 
     /**
      * 사용자 신고 유효성 검사
-     *
-     * @param targetUserSeq   신고대상 고유번호
-     * @param reporterUserSeq 신고자 고유 번호
      */
     @Transactional(readOnly = true)
-    public void reportValidation(Long targetUserSeq, Long reporterUserSeq) {
+    public void reportValidation(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    ) {
         if (checkIfItsMyself(targetUserSeq, reporterUserSeq)) {
             throw new CustomException(CANNOT_REPORT_MYSELF);
         }
-        if (reportRepository.existsByReportedUserSeqAndReporterUserSeq(targetUserSeq, reporterUserSeq)) {
+        if (isDuplicatedReport(targetUserSeq, reporterUserSeq)) {
             throw new CustomException(ALREADY_REPORTED);
         }
     }
 
     /**
      * 사용자 신고를 처리하는 메서드
-     *
-     * @param targetUserSeq   신고 대상 사용자 식별자
-     * @param reporterUserSeq 신고자 사용자 식별자
      */
     @Async
     @Transactional
-    public void reportUser(Long targetUserSeq,
-                           Long reporterUserSeq,
-                           UserReportRequest reportUserRequest) {
+    public void reportUser(
+            Long targetUserSeq,
+            Long reporterUserSeq,
+            UserReportRequest reportUserRequest
+    ) {
         if (tryAcquireLock(targetUserSeq)) {
             try {
                 processReport(targetUserSeq, reporterUserSeq);
@@ -85,24 +84,33 @@ public class UserReportService {
     }
 
     /**
-     * 자기 자신을 신고하는지 확인
-     *
-     * @param targetUserSeq   신고대상 고유번호
-     * @param reporterUserSeq 신고자 고유 번호
-     * @return boolean
+     * 이미 신고한 사용자인지 확인
      */
-    private static boolean checkIfItsMyself(Long targetUserSeq,
-                                            Long reporterUserSeq) {
+    private boolean isDuplicatedReport(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    ) {
+        return reportRepository.existsByReportedUserSeqAndReporterUserSeq(
+                targetUserSeq, reporterUserSeq
+        );
+    }
+
+    /**
+     * 자기 자신을 신고하는지 확인
+     */
+    private static boolean checkIfItsMyself(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    ) {
         return targetUserSeq.equals(reporterUserSeq);
     }
 
     /**
      * 분산 락을 시도하고 결과를 반환
-     *
-     * @param targetUserSeq 신고 대상 사용자 식별자
-     * @return 락 획득 여부
      */
-    private boolean tryAcquireLock(Long targetUserSeq) {
+    private boolean tryAcquireLock(
+            Long targetUserSeq
+    ) {
         boolean lockAcquired = false;
         int retryCount = 0;
         while (!lockAcquired && retryCount < MAX_RETRY) {
@@ -123,15 +131,13 @@ public class UserReportService {
 
     /**
      * 신고 로직을 처리
-     *
-     * @param targetUserSeq   신고 대상 사용자 식별자
-     * @param reporterUserSeq 신고자 사용자 식별자
      */
-    private void processReport(Long targetUserSeq, Long reporterUserSeq) {
+    private void processReport(
+            Long targetUserSeq,
+            Long reporterUserSeq
+    ) {
         User targetUser = getUser(targetUserSeq);
-
-        long reportCount = targetUser.getReportedCount() == null ?
-                0 : targetUser.getReportedCount();
+        long reportCount = getReportCount(targetUser);
         targetUser.setReportedCount(reportCount + 1);
         targetUser.setReportedDate(Date.valueOf(LocalDate.now()));
         userRepository.save(targetUser);
@@ -139,13 +145,23 @@ public class UserReportService {
     }
 
     /**
-     * 사용자 정보를 조회
-     *
-     * @param targetUserSeq 사용자 식별자
-     * @return {@link User}
+     * 사용자의 신고 횟수를 가져옴
      */
-    private User getUser(Long targetUserSeq) {
-        return userRepository.findById(targetUserSeq)
+    private static long getReportCount(
+            User targetUser
+    ) {
+        return targetUser.getReportedCount() == null ?
+                0 : targetUser.getReportedCount();
+    }
+
+    /**
+     * 사용자 정보를 조회
+     */
+    private User getUser(
+            Long targetUserSeq
+    ) {
+        return userRepository
+                .findById(targetUserSeq)
                 .orElseThrow(() -> new CustomException(USER_INFO_NOT_FOUND));
     }
 }
