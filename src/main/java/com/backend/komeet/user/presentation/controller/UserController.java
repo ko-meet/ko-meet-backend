@@ -1,5 +1,6 @@
 package com.backend.komeet.user.presentation.controller;
 
+import com.backend.komeet.base.application.RedisService;
 import com.backend.komeet.base.presentation.response.ApiResponse;
 import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.user.application.*;
@@ -183,22 +184,6 @@ public class UserController {
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(userInformationService.checkNickname(nickname)));
-    }
-
-    /**
-     * 사용자 신고
-     */
-    @PatchMapping("/{userSeq}/report")
-    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
-    public ResponseEntity<Void> reportUser(
-            @RequestHeader(AUTHORIZATION) String token,
-            @PathVariable Long userSeq,
-            @Valid @RequestBody UserReportRequest userReportRequest
-    ) {
-        Long reporterSeq = jwtProvider.getIdFromToken(token);
-        userReportService.reportValidation(userSeq, reporterSeq);
-        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
-        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     /**
