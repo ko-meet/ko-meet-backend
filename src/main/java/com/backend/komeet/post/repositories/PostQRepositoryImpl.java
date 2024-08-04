@@ -1,7 +1,6 @@
 package com.backend.komeet.post.repositories;
 
 import com.backend.komeet.global.exception.CustomException;
-import com.backend.komeet.global.exception.ErrorCode;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.CommentDto;
@@ -13,7 +12,6 @@ import com.backend.komeet.post.model.entities.QComment;
 import com.backend.komeet.post.model.entities.QPost;
 import com.backend.komeet.user.enums.Countries;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,13 +21,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static com.backend.komeet.global.exception.ErrorCode.*;
+import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
+import static com.backend.komeet.post.enums.SortingMethods.CREATED_DATE;
 
 /**
  * 게시글 관련 Querydsl 레포지토리 구현체
@@ -49,7 +45,6 @@ public class PostQRepositoryImpl implements PostQRepository {
             Pageable pageable
     ) {
         QPost post = QPost.post;
-        QComment comment = QComment.comment;
         BooleanBuilder predicateBuilder = new BooleanBuilder();
 
         if (!category.equals(Categories.ALL)) {
@@ -62,54 +57,36 @@ public class PostQRepositoryImpl implements PostQRepository {
         predicateBuilder.and(post.isPublic.eq(isPublic)).and(post.status.ne(DELETED));
         Predicate predicate = predicateBuilder.getValue();
 
-        // 정렬 조건 설정
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
 
-        // 데이터와 전체 개수 한 번에 조회
-        QueryResults<Post> results = jpaQueryFactory
-                .selectFrom(post)
+        List<Post> posts = jpaQueryFactory.selectFrom(post)
                 .leftJoin(post.user).fetchJoin()
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        long total = results.getTotal();
-        List<Post> posts = results.getResults();
+        long total = getSize(post, predicate);
 
-        // 댓글 조회를 Batch Fetching으로 최적화
-        Map<Long, List<Comment>> commentsMap = jpaQueryFactory
-                .selectFrom(comment)
-                .leftJoin(comment.post).fetchJoin()
-                .fetch()
-                .stream()
-                .collect(
-                        Collectors.groupingBy(
-                                commentTbl -> commentTbl.getPost().getSeq()
-                        )
-                );
-
-        // 결과 변환 및 정렬
-        List<PostDto> postDtos = posts.stream()
-                .map(postTbl -> {
-                    PostDto postDto = PostDto.from(postTbl);
-                    postDto.setComments(
-                            commentsMap.getOrDefault(
-                                            postTbl.getSeq(),
-                                            Collections.emptyList()
-                                    )
-                                    .stream()
-                                    .map(CommentDto::from)
-                                    .collect(Collectors.toList())
-                    );
-                    return postDto;
-                })
-                .collect(Collectors.toList());
+        List<PostDto> postDtos = convertIntoPostDtos(posts);
 
         return new PageImpl<>(postDtos, pageable, total);
     }
 
+    private static List<PostDto> convertIntoPostDtos(
+            List<Post> posts
+    ) {
+        return posts.stream()
+                .map(PostDto::from)
+                .toList();
+    }
+
+    private static List<Long> getPostIds(List<Post> posts) {
+        return posts.stream()
+                .map(Post::getSeq)
+                .toList();
+    }
 
     @Override
     public Page<SearchResultDto> searchPostsByKeyword(
@@ -118,26 +95,23 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         QPost post = QPost.post;
 
-        // 검색 조건 설정
         Predicate predicate = post.content.contains(keyword)
                 .or(post.title.contains(keyword))
                 .or(post.tags.any().contains(keyword));
 
-        // 전체 결과 개수 계산
-        Long total = getLength(predicate);
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
 
-        // 정렬 조건 설정
-        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(SortingMethods.CREATED_DATE, post);
-
-        List<SearchResultDto> results = jpaQueryFactory.selectFrom(post)
+        List<Post> posts = jpaQueryFactory.selectFrom(post)
+                .leftJoin(post.user).fetchJoin()
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(i -> SearchResultDto.from(i, keyword))
-                .collect(Collectors.toList());
+                .fetch();
+
+        long total = getSize(post, predicate);
+
+        List<SearchResultDto> results = convertIntoSearchResultDto(keyword, posts);
 
         return new PageImpl<>(results, pageable, total);
     }
@@ -148,21 +122,23 @@ public class PostQRepositoryImpl implements PostQRepository {
             Pageable pageable
     ) {
         QPost post = QPost.post;
-        Predicate predicate = post.user.seq.eq(userId);
-        Long total = getLength(predicate);
-        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(SortingMethods.CREATED_DATE, post);
 
-        List<PostDto> results = jpaQueryFactory.selectFrom(post)
+        Predicate predicate = post.user.seq.eq(userId);
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
+
+        List<Post> posts = jpaQueryFactory.selectFrom(post)
+                .leftJoin(post.user).fetchJoin()
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(PostDto::from)
-                .collect(Collectors.toList());
+                .fetch();
 
-        return new PageImpl<>(results, pageable, total);
+        long total = getSize(post, predicate);
+
+        List<PostDto> postDtos = convertIntoPostDtos(posts);
+
+        return new PageImpl<>(postDtos, pageable, total);
     }
 
     @Override
@@ -183,15 +159,18 @@ public class PostQRepositoryImpl implements PostQRepository {
 
         List<Comment> comments = jpaQueryFactory.selectFrom(comment)
                 .leftJoin(comment.post).fetchJoin()
-                .where(comment.post.eq(postTbl))
+                .leftJoin(comment.replies).fetchJoin()
+                .leftJoin(comment.user).fetchJoin()
+                .where(comment.post.seq.eq(postTbl.getSeq()))
                 .fetch();
 
+        List<CommentDto> commentDtos = comments.stream()
+                .distinct()
+                .map(CommentDto::from)
+                .toList();
+
         PostDto postDto = PostDto.from(postTbl);
-        postDto.setComments(
-                comments.stream()
-                        .map(CommentDto::from)
-                        .collect(Collectors.toList())
-        );
+        postDto.setComments(commentDtos);
 
         return postDto;
     }
@@ -209,12 +188,23 @@ public class PostQRepositoryImpl implements PostQRepository {
         };
     }
 
-    private Long getLength(
+    private int getSize(
+            QPost post,
             Predicate predicate
     ) {
-        QPost post = QPost.post;
         return jpaQueryFactory.selectFrom(post)
                 .where(predicate)
-                .fetchCount();
+                .fetch()
+                .size();
     }
+
+    private static List<SearchResultDto> convertIntoSearchResultDto(
+            String keyword,
+            List<Post> posts
+    ) {
+        return posts.stream()
+                .map(i -> SearchResultDto.from(i, keyword))
+                .toList();
+    }
+
 }

@@ -9,8 +9,6 @@ import com.backend.komeet.user.model.entities.User;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,6 +52,9 @@ public class Post extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Setter
+    private Long commentCount;
+
+    @Setter
     private Long viewCount;
 
     @Setter
@@ -61,22 +62,18 @@ public class Post extends BaseEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
     private List<String> tags;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
     private List<String> attachments;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
     private List<Long> likeUsers;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
     private List<Long> bookmarkUsers;
 
     @Setter
@@ -112,6 +109,7 @@ public class Post extends BaseEntity {
                 .comments(new ArrayList<>())
                 .likeCount(0L)
                 .viewCount(0L)
+                .commentCount(0L)
                 .user(user)
                 .status(NORMAL)
                 .build();
