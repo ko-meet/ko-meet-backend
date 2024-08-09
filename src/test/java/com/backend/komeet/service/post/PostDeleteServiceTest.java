@@ -51,7 +51,7 @@ class PostDeleteServiceTest {
         // when
         postDeleteService.deletePost(user.getSeq(), post.getSeq());
         // then
-        assertThat(post.getStatus()).isEqualTo(DELETED);
+        assertThat(post.getPostMetaData().getStatus()).isEqualTo(DELETED);
     }
 
     @Test
