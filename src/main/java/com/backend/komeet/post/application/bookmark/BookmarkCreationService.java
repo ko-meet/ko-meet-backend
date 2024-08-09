@@ -38,7 +38,7 @@ public class BookmarkCreationService {
         Bookmark bookmark = getBookmark(userSeq, isExist);
         Post post = getPost(postSeq);
         addOrRemoveBookmarkPost(post, bookmark, userSeq);
-        post.getBookmarkUsers().add(userSeq);
+        post.getPostMetaData().getBookmarkUsers().add(userSeq);
         saveBookmarkIfItsNewBookmark(isExist, bookmark);
     }
 
@@ -89,7 +89,7 @@ public class BookmarkCreationService {
             Bookmark bookmark,
             Long userSeq
     ) {
-        if (post.getBookmarkUsers().contains(userSeq)) {
+        if (post.getPostMetaData().getBookmarkUsers().contains(userSeq)) {
             post.removeBookmarkPost(bookmark);
         } else {
             post.addBookmarkPost(bookmark);

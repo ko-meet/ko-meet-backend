@@ -51,10 +51,13 @@ public class PostQRepositoryImpl implements PostQRepository {
             predicateBuilder.and(post.category.eq(category));
         }
         if (!country.equals(Countries.ALL)) {
-            predicateBuilder.and(post.country.eq(country));
+            predicateBuilder.and(post.postMetaData.country.eq(country));
         }
 
-        predicateBuilder.and(post.isPublic.eq(isPublic)).and(post.status.ne(DELETED));
+        predicateBuilder
+                .and(post.isPublic.eq(isPublic))
+                .and(post.postMetaData.status.ne(DELETED));
+
         Predicate predicate = predicateBuilder.getValue();
 
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
@@ -95,9 +98,9 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         QPost post = QPost.post;
 
-        Predicate predicate = post.content.contains(keyword)
-                .or(post.title.contains(keyword))
-                .or(post.tags.any().contains(keyword));
+        Predicate predicate = post.postMetaData.content.contains(keyword)
+                .or(post.postMetaData.title.contains(keyword))
+                .or(post.postMetaData.tags.any().contains(keyword));
 
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
 
@@ -181,8 +184,8 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         return switch (sortingMethod) {
             case CREATED_DATE -> post.createdAt.desc();
-            case VIEW_COUNT -> post.viewCount.desc();
-            case LIKE_COUNT -> post.likeCount.desc();
+            case VIEW_COUNT -> post.postMetaData.viewCount.desc();
+            case LIKE_COUNT -> post.postMetaData.likeCount.desc();
             case COMMENT_COUNT -> post.comments.size().desc();
             default -> post.createdAt.desc();
         };

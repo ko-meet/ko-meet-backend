@@ -24,7 +24,7 @@ public class BookmarkQRepositoryImpl implements BookmarkQRepository {
         QPost post = QPost.post;
         return jpaQueryFactory.selectFrom(post)
                 .join(bookmark).on(post.bookmarklist.contains(bookmark)).fetchJoin()
-                .where(bookmark.userSeq.eq(userSeq).and(post.status.eq(NORMAL)))
+                .where(bookmark.userSeq.eq(userSeq).and(post.postMetaData.status.eq(NORMAL)))
                 .orderBy(bookmark.createdAt.desc())
                 .fetch();
     }
