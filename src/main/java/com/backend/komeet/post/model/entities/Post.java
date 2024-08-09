@@ -43,6 +43,14 @@ public class Post extends BaseEntity {
     )
     private User user;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "bookmark_post",
+            joinColumns = @JoinColumn(name = "post_seq"),
+            inverseJoinColumns = @JoinColumn(name = "bookmark_seq")
+    )
+    private List<Bookmark> bookmarklist = new ArrayList<>();
+
     @OneToMany(
             mappedBy = "post",
             fetch = FetchType.LAZY,
@@ -50,15 +58,6 @@ public class Post extends BaseEntity {
             orphanRemoval = true
     )
     private List<Comment> comments = new ArrayList<>();
-
-    @Setter
-    private Long commentCount;
-
-    @Setter
-    private Long viewCount;
-
-    @Setter
-    private Long likeCount;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -78,6 +77,15 @@ public class Post extends BaseEntity {
 
     @Setter
     private String isPublic;
+
+    @Setter
+    private Long commentCount;
+
+    @Setter
+    private Long viewCount;
+
+    @Setter
+    private Long likeCount;
 
     @Enumerated(EnumType.STRING)
     private Countries country;
@@ -113,5 +121,25 @@ public class Post extends BaseEntity {
                 .user(user)
                 .status(NORMAL)
                 .build();
+    }
+
+    /**
+     * 게시물 북마크 추가
+     */
+    public void addBookmarkPost(
+            Bookmark bookmark
+    ) {
+        this.bookmarkUsers.add(bookmark.getUserSeq());
+        this.bookmarklist.add(bookmark);
+    }
+
+    /**
+     * 게시물 북마크 삭제
+     */
+    public void removeBookmarkPost(
+            Bookmark bookmark
+    ) {
+        this.bookmarkUsers.remove(bookmark.getUserSeq());
+        this.bookmarklist.remove(bookmark);
     }
 }
