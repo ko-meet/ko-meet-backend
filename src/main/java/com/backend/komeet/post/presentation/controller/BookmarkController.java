@@ -33,11 +33,8 @@ public class BookmarkController {
             @PathVariable Long postSeq,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
-
         bookmarkCreationService.createBookmark(userSeq, postSeq);
-
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -49,9 +46,7 @@ public class BookmarkController {
     public ResponseEntity<ApiResponse> getBookmarks(
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
-
         return ResponseEntity
                 .status(OK)
                 .body(new ApiResponse(bookmarkCreationService.getBookmarkList(userSeq))
