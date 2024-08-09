@@ -2,20 +2,18 @@ package com.backend.komeet.post.model.entities;
 
 import com.backend.komeet.base.model.entities.BaseEntity;
 import com.backend.komeet.company.model.entities.Company;
-import com.backend.komeet.post.enums.Experience;
-import com.backend.komeet.post.enums.Industry;
-import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.post.model.entities.metadata.CompanyMetaData;
+import com.backend.komeet.post.model.entities.metadata.PostMetaData;
 import com.backend.komeet.post.presentation.request.JobBoardUploadRequest;
-import com.backend.komeet.user.enums.Countries;
 import com.backend.komeet.user.model.entities.User;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.backend.komeet.post.enums.PostStatus.NORMAL;
 
@@ -34,75 +32,14 @@ public class JobBoard extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Setter
-    private String title;
-
-    @Setter
-    private String content;
-
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     private User user;
 
-    @Setter
-    private Long viewCount;
+    @Embedded
+    private PostMetaData postMetaData;
 
-    @Setter
-    private Long likeCount;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<String> tags;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<String> attachments;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Long> likeUsers;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Long> bookmarkUsers;
-
-    @Enumerated(EnumType.STRING)
-    private Countries country;
-
-    private String region;
-
-    @Enumerated(EnumType.STRING)
-    private Industry industry;
-
-    @Setter
-    private LocalDateTime deadline;
-
-    @Setter
-    private Experience experience;
-
-    @Setter
-    private String salary;
-
-    @Setter
-    private String company;
-
-    @Setter
-    private String companyEmail;
-
-    @Setter
-    private String companyPhone;
-
-    @Setter
-    private String companyAddress;
-
-    @Setter
-    private String companyHomepage;
-
-    @Setter
-    private String companyLogo;
-
-    @Setter
-    @Enumerated(EnumType.STRING)
-    private PostStatus status;
+    @Embedded
+    private CompanyMetaData companyMetaData;
 
     /**
      * 게시물 팩토리 메서드
@@ -113,28 +50,36 @@ public class JobBoard extends BaseEntity {
             User user
     ) {
         return JobBoard.builder()
-                .title(postUploadRequest.getTitle())
-                .content(postUploadRequest.getContent())
+                .postMetaData(
+                        PostMetaData.builder()
+                                .title(postUploadRequest.getTitle())
+                                .content(postUploadRequest.getContent())
+                                .viewCount(0L)
+                                .likeCount(0L)
+                                .tags(postUploadRequest.getTags())
+                                .attachments(postUploadRequest.getAttachments())
+                                .likeUsers(new ArrayList<>())
+                                .bookmarkUsers(new ArrayList<>())
+                                .country(company.getCompanyCountry())
+                                .region(company.getCompanyRegion())
+                                .status(NORMAL)
+                                .build()
+                )
+                .companyMetaData(
+                        CompanyMetaData.builder()
+                                .industry(company.getIndustry())
+                                .deadline(postUploadRequest.getDeadline())
+                                .experience(postUploadRequest.getExperience())
+                                .salary(postUploadRequest.getSalary())
+                                .company(company.getCompanyName())
+                                .companyEmail(company.getCompanyEmail())
+                                .companyPhone(company.getCompanyPhone())
+                                .companyAddress(company.getCompanyAddress())
+                                .companyHomepage(company.getCompanyHomepage())
+                                .companyLogo(company.getCompanyLogo())
+                                .build()
+                )
                 .user(user)
-                .viewCount(0L)
-                .likeCount(0L)
-                .tags(postUploadRequest.getTags())
-                .attachments(postUploadRequest.getAttachments())
-                .likeUsers(new ArrayList<>())
-                .bookmarkUsers(new ArrayList<>())
-                .country(company.getCompanyCountry())
-                .region(company.getCompanyRegion())
-                .industry(company.getIndustry())
-                .deadline(postUploadRequest.getDeadline())
-                .experience(postUploadRequest.getExperience())
-                .salary(postUploadRequest.getSalary())
-                .company(company.getCompanyName())
-                .companyEmail(company.getCompanyEmail())
-                .companyPhone(company.getCompanyPhone())
-                .companyAddress(company.getCompanyAddress())
-                .companyHomepage(company.getCompanyHomepage())
-                .companyLogo(company.getCompanyLogo())
-                .status(NORMAL)
                 .build();
     }
 }
