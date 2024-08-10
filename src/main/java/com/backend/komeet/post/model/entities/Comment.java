@@ -1,11 +1,10 @@
 package com.backend.komeet.post.model.entities;
 
 import com.backend.komeet.base.model.entities.BaseEntity;
-import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.post.model.entities.metadata.CommentMetaData;
 import com.backend.komeet.user.model.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -32,8 +31,6 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private String content;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_seq")
     @JsonIgnore
@@ -47,19 +44,11 @@ public class Comment extends BaseEntity {
     )
     private List<Reply> replies = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Long> likeUsers;
-
     @Setter
     private int replyCount;
 
-    @Setter
-    private int upVotes;
-    private int downVotes;
-
-    @Enumerated(EnumType.STRING)
-    private PostStatus status;
+    @Embedded
+    private CommentMetaData commentMetaData;
 
     /**
      * 댓글 팩토리 메서드
@@ -72,12 +61,17 @@ public class Comment extends BaseEntity {
         return Comment.builder()
                 .user(user)
                 .post(post)
-                .content(content)
-                .upVotes(0)
-                .downVotes(0)
+                .commentMetaData(
+                        CommentMetaData.builder()
+                                .content(content)
+                                .upVotes(0)
+                                .downVotes(0)
+                                .likeUsers(new ArrayList<>())
+                                .status(NORMAL)
+                                .build()
+                )
                 .replyCount(0)
                 .replies(new ArrayList<>())
-                .status(NORMAL)
                 .build();
     }
 }

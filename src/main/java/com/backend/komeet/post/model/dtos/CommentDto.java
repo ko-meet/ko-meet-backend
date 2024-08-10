@@ -2,6 +2,7 @@ package com.backend.komeet.post.model.dtos;
 
 import com.backend.komeet.post.enums.PostStatus;
 import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.post.model.entities.metadata.CommentMetaData;
 import com.backend.komeet.user.model.dtos.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,16 +35,17 @@ public class CommentDto {
     public static CommentDto from(
             Comment comments
     ) {
+        CommentMetaData commentMetaData = comments.getCommentMetaData();
         return CommentDto.builder()
                 .seq(comments.getSeq())
                 .user(UserDto.from(comments.getUser()))
-                .content(comments.getContent())
+                .content(commentMetaData.getContent())
                 .replies(comments.getReplies().stream().map(ReplyDto::from).toList())
                 .replyCount(comments.getReplyCount())
-                .upVotes(comments.getUpVotes())
-                .downVotes(comments.getDownVotes())
-                .likeUsers(comments.getLikeUsers())
-                .status(comments.getStatus())
+                .upVotes(commentMetaData.getUpVotes())
+                .downVotes(commentMetaData.getDownVotes())
+                .likeUsers(commentMetaData.getLikeUsers())
+                .status(commentMetaData.getStatus())
                 .createdAt(comments.getCreatedAt())
                 .build();
     }

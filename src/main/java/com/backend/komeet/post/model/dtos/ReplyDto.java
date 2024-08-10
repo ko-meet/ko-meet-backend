@@ -1,5 +1,6 @@
 package com.backend.komeet.post.model.dtos;
 
+import com.backend.komeet.post.model.entities.metadata.CommentMetaData;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.post.model.entities.Reply;
 import com.backend.komeet.post.enums.PostStatus;
@@ -28,14 +29,15 @@ public class ReplyDto {
     public static ReplyDto from(
             Reply reply
     ){
+        CommentMetaData commentMetaData = reply.getCommentMetaData();
         return ReplyDto.builder()
                 .seq(reply.getSeq())
-                .user(UserDto.from(reply.getAuthor()))
-                .content(reply.getContent())
-                .upVotes(reply.getUpVotes())
-                .downVotes(reply.getDownVotes())
-                .likeUsers(reply.getLikeUsers())
-                .status(reply.getStatus())
+                .user(UserDto.from(reply.getUser()))
+                .content(commentMetaData.getContent())
+                .upVotes(commentMetaData.getUpVotes())
+                .downVotes(commentMetaData.getDownVotes())
+                .likeUsers(commentMetaData.getLikeUsers())
+                .status(commentMetaData.getStatus())
                 .createdAt(reply.getCreatedAt())
                 .build();
     }
