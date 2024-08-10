@@ -5,10 +5,12 @@ import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
 import com.backend.komeet.post.model.entities.Comment;
+import com.backend.komeet.post.model.entities.Post;
 import com.backend.komeet.user.enums.Countries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,6 +36,10 @@ public interface PostQRepository {
     );
 
     PostDto getPost(
+            Long postSeq
+    );
+
+    Optional<Post> getPostWithBookmarkList(
             Long postSeq
     );
 }

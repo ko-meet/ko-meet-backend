@@ -50,11 +50,11 @@ public class SearchResultDto {
             String keyword
     ) {
         String contentResult = extractKeyword(
-                post.getContent(), keyword, 50, 5
+                post.getPostMetaData().getContent(), keyword, 50, 5
         );
 
         String titleResult = extractKeyword(
-                post.getTitle(), keyword, 20, 5
+                post.getPostMetaData().getTitle(), keyword, 20, 5
         );
 
         return SearchResultDto.builder()
@@ -65,15 +65,15 @@ public class SearchResultDto {
                 .userProfileUrl(post.getUser().getImageUrl())
                 .userNickName(post.getUser().getNickName())
                 .commentCounts(post.getComments().size())
-                .viewCount(post.getViewCount())
-                .likeCount(post.getLikeCount())
-                .tags(extractTags(post.getTags(), keyword))
-                .attachments(post.getAttachments())
-                .likeUsers(post.getLikeUsers())
-                .bookmarkUsers(post.getBookmarkUsers())
+                .viewCount(post.getPostMetaData().getViewCount())
+                .likeCount(post.getPostMetaData().getLikeCount())
+                .tags(extractTags(post.getPostMetaData().getTags(), keyword))
+                .attachments(post.getPostMetaData().getAttachments())
+                .likeUsers(post.getPostMetaData().getLikeUsers())
+                .bookmarkUsers(post.getPostMetaData().getBookmarkUsers())
                 .isPublic(post.getIsPublic())
                 .country(post.getUser().getCountry().getCountryName())
-                .status(post.getStatus())
+                .status(post.getPostMetaData().getStatus())
                 .region(post.getUser().getRegion())
                 .category(post.getCategory())
                 .keyword(keyword)

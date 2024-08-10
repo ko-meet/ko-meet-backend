@@ -50,6 +50,6 @@ class PostUpdateServiceTest {
         // when
         postUpdateService.updatePost(1L, 1L, postUpdateRequest);
         // then
-        assertThat(post.getContent()).isEqualTo("새내용");
+        assertThat(post.getPostMetaData().getContent()).isEqualTo("새내용");
     }
 }

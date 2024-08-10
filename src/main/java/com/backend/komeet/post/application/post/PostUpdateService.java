@@ -41,19 +41,19 @@ public class PostUpdateService {
             throw new CustomException(NO_AUTHORITY);
         }
         if (postUpdateRequest.getContent() != null) {
-            post.setContent(postUpdateRequest.getContent());
+            post.getPostMetaData().setContent(postUpdateRequest.getContent());
         }
         if (postUpdateRequest.getTitle() != null) {
-            post.setTitle(postUpdateRequest.getTitle());
+            post.getPostMetaData().setTitle(postUpdateRequest.getTitle());
         }
         updateList(
-                post.getTags(),
+                post.getPostMetaData().getTags(),
                 postUpdateRequest.getAddTags(),
                 postUpdateRequest.getDeleteTags()
         );
 
         updateList(
-                post.getAttachments(),
+                post.getPostMetaData().getAttachments(),
                 postUpdateRequest.getAddAttachments(),
                 postUpdateRequest.getDeleteAttachments()
         );
@@ -62,7 +62,7 @@ public class PostUpdateService {
             post.setIsPublic(postUpdateRequest.getIsPublic() ? "Y" : "N");
         }
 
-        post.setStatus(MODIFIED);
+        post.getPostMetaData().setStatus(MODIFIED);
     }
 
     /**
@@ -115,6 +115,6 @@ public class PostUpdateService {
                 .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
-        post.setViewCount(post.getViewCount() + 1);
+        post.getPostMetaData().setViewCount(post.getPostMetaData().getViewCount() + 1);
     }
 }

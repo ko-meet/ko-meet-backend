@@ -3,6 +3,7 @@ package com.backend.komeet.post.application.reply;
 import com.backend.komeet.global.components.RedisDistributedLock;
 import com.backend.komeet.post.model.entities.Reply;
 import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.post.model.entities.metadata.CommentMetaData;
 import com.backend.komeet.post.repositories.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,13 +83,14 @@ public class ReplyLikeService {
                     LOCK_KEY, replySeq.toString(), 10
             );
             if (lockAcquired) {
-                if (reply.getLikeUsers().remove(userSeq)) {
-                    reply.setUpVotes(reply.getUpVotes() - 1);
+                CommentMetaData commentMetaData = reply.getCommentMetaData();
+                if (commentMetaData.getLikeUsers().remove(userSeq)) {
+                    commentMetaData.setUpVotes(commentMetaData.getUpVotes() - 1);
                 } else {
-                    reply.getLikeUsers().add(userSeq);
-                    reply.setUpVotes(reply.getUpVotes() + 1);
+                    commentMetaData.getLikeUsers().add(userSeq);
+                    commentMetaData.setUpVotes(commentMetaData.getUpVotes() + 1);
                 }
-                return replyRepository.save(reply).getUpVotes();
+                return replyRepository.save(reply).getCommentMetaData().getUpVotes();
             } else {
                 return null;
             }

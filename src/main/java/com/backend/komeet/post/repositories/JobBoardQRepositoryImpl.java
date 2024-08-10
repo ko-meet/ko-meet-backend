@@ -44,13 +44,16 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
 
         // 조건에 맞게 필터링
         if (isNotNullAndSame(industry, Industry.ALL)) {
-            predicateBuilder.and(jobBoard.industry.eq(Industry.valueOf(industry)));
+            predicateBuilder.and(jobBoard.companyMetaData.industry
+                    .eq(Industry.valueOf(industry)));
         }
         if (isNotNullAndSame(country, Countries.ALL)) {
-            predicateBuilder.and(jobBoard.country.eq(Countries.valueOf(country)));
+            predicateBuilder.and(jobBoard.postMetaData.country
+                    .eq(Countries.valueOf(country)));
         }
         if (isNotNullAndSame(experience, Experience.ALL)) {
-            predicateBuilder.and(jobBoard.experience.eq(Experience.valueOf(experience)));
+            predicateBuilder.and(jobBoard.companyMetaData.experience
+                    .eq(Experience.valueOf(experience)));
         }
 
         // 정렬 조건 설정
@@ -79,8 +82,8 @@ public class JobBoardQRepositoryImpl implements JobBoardQRepository {
             QJobBoard jobBoard
     ) {
         return switch (SortingMethods.valueOf(sortingMethod)) {
-            case VIEW_COUNT -> jobBoard.viewCount.desc();
-            case LIKE_COUNT -> jobBoard.likeCount.desc();
+            case VIEW_COUNT -> jobBoard.postMetaData.viewCount.desc();
+            case LIKE_COUNT -> jobBoard.postMetaData.likeCount.desc();
             default -> jobBoard.createdAt.desc();
         };
     }

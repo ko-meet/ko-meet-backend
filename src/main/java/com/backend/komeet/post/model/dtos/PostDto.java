@@ -3,6 +3,7 @@ package com.backend.komeet.post.model.dtos;
 import com.backend.komeet.post.enums.Categories;
 import com.backend.komeet.post.enums.PostStatus;
 import com.backend.komeet.post.model.entities.Post;
+import com.backend.komeet.post.model.entities.metadata.PostMetaData;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -41,26 +42,26 @@ public class PostDto {
     public static PostDto from(
             Post post
     ) {
+        PostMetaData postMetaData = post.getPostMetaData();
         return PostDto.builder()
                 .seq(post.getSeq())
-                .title(post.getTitle())
-                .content(post.getContent())
+                .title(postMetaData.getTitle())
+                .content(postMetaData.getContent())
                 .userSeq(post.getUser().getSeq())
                 .userProfileUrl(post.getUser().getImageUrl())
                 .userNickName(post.getUser().getNickName())
                 .country(post.getUser().getCountry().getCountryName())
                 .region(post.getUser().getRegion())
-                .viewCount(post.getViewCount())
-                .likeCount(post.getLikeCount())
+                .viewCount(postMetaData.getViewCount())
+                .likeCount(postMetaData.getLikeCount())
                 .commentCount(post.getCommentCount())
                 .comments(new ArrayList<>())
-                .tags(post.getTags())
-                .comments(List.of())
-                .attachments(post.getAttachments())
-                .bookmarkUsers(post.getBookmarkUsers())
-                .likeUsers(post.getLikeUsers())
+                .tags(postMetaData.getTags())
+                .attachments(postMetaData.getAttachments())
+                .bookmarkUsers(postMetaData.getBookmarkUsers())
+                .likeUsers(postMetaData.getLikeUsers())
                 .isPublic(post.getIsPublic())
-                .status(post.getStatus())
+                .status(postMetaData.getStatus())
                 .category(post.getCategory())
                 .createdAt(post.getCreatedAt().toString())
                 .build();

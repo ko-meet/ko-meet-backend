@@ -34,7 +34,7 @@ public class PostDeleteService {
         if (!post.getUser().equals(user)) {
             throw new CustomException(NO_AUTHORITY);
         }
-        post.setStatus(DELETED);
+        post.getPostMetaData().setStatus(DELETED);
     }
 
     /**
@@ -46,7 +46,7 @@ public class PostDeleteService {
         Post post = postRepository
                 .findById(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        if (post.getStatus().equals(DELETED)) {
+        if (post.getPostMetaData().getStatus().equals(DELETED)) {
             throw new CustomException(ALREADY_DELETED_POST);
         }
         return post;
