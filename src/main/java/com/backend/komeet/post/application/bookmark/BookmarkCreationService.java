@@ -1,6 +1,8 @@
 package com.backend.komeet.post.application.bookmark;
 
 import com.backend.komeet.global.exception.CustomException;
+import com.backend.komeet.post.enums.PostType;
+import com.backend.komeet.post.model.dtos.JobBoardDto;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.Post;
@@ -30,12 +32,13 @@ public class BookmarkCreationService {
      * 북마크를 생성하는 메서드
      */
     @Transactional
-    public void createBookmark(
+    public void createPostBookmark(
             Long userSeq,
-            Long postSeq
+            Long postSeq,
+            PostType postType
     ) {
         AtomicBoolean isExist = new AtomicBoolean(true);
-        Bookmark bookmark = getBookmark(userSeq, isExist);
+        Bookmark bookmark = getBookmark(userSeq, postType, isExist);
         Post post = getPost(postSeq);
         addOrRemoveBookmarkPost(post, bookmark, userSeq);
         post.getPostMetaData().getBookmarkUsers().add(userSeq);
@@ -46,14 +49,14 @@ public class BookmarkCreationService {
      * 북마크 목록을 조회하는 메서드
      */
     @Transactional(readOnly = true)
-    public List<PostDto> getBookmarkList(
-            Long userSeq
+    public List<?> getBookmarkList(
+            Long userSeq,
+            PostType postType
     ) {
-        return bookmarkRepository
-                .getBookmarkPostsByUserSeq(userSeq)
-                .stream()
-                .map(PostDto::from)
-                .toList();
+        return switch (postType) {
+            case POST -> getPostsBookmarked(userSeq);
+            case JOB_BOARD -> getJobBoardsBookmarked(userSeq);
+        };
     }
 
     /**
@@ -63,7 +66,7 @@ public class BookmarkCreationService {
             Long postSeq
     ) {
         return postRepository
-                .findById(postSeq)
+                .getPostWithBookmarkList(postSeq)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
     }
 
@@ -72,12 +75,13 @@ public class BookmarkCreationService {
      */
     private Bookmark getBookmark(
             Long userSeq,
+            PostType postType,
             AtomicBoolean isExist
     ) {
         return bookmarkRepository.findByUserSeq(userSeq)
                 .orElseGet(() -> {
                     isExist.set(false);
-                    return Bookmark.from(userSeq);
+                    return Bookmark.from(userSeq, postType);
                 });
     }
 
@@ -90,9 +94,9 @@ public class BookmarkCreationService {
             Long userSeq
     ) {
         if (post.getPostMetaData().getBookmarkUsers().contains(userSeq)) {
-            post.removeBookmarkPost(bookmark);
+            post.removeBookmarkPost(bookmark, userSeq);
         } else {
-            post.addBookmarkPost(bookmark);
+            post.addBookmarkPost(bookmark, userSeq);
         }
     }
 
@@ -106,6 +110,28 @@ public class BookmarkCreationService {
         if (!isExist.get()) {
             bookmarkRepository.save(bookmark);
         }
+    }
+
+    /**
+     * 북마크된 게시물 목록을 조회하는 메서드
+     */
+    private List<JobBoardDto> getJobBoardsBookmarked(Long userSeq) {
+        return bookmarkRepository
+                .getBookmarkJobBoardsByUserSeq(userSeq)
+                .stream()
+                .map(JobBoardDto::from)
+                .toList();
+    }
+
+    /**
+     * 북마크된 구인공고 목록을 조회하는 메서드
+     */
+    private List<PostDto> getPostsBookmarked(Long userSeq) {
+        return bookmarkRepository
+                .getBookmarkPostsByUserSeq(userSeq)
+                .stream()
+                .map(PostDto::from)
+                .toList();
     }
 
 }

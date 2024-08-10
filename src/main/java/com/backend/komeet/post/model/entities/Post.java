@@ -96,9 +96,9 @@ public class Post extends BaseEntity {
      * 게시물 북마크 추가
      */
     public void addBookmarkPost(
-            Bookmark bookmark
-    ) {
-        this.postMetaData.getBookmarkUsers().add(bookmark.getUserSeq());
+            Bookmark bookmark,
+            Long userSeq) {
+        this.postMetaData.getBookmarkUsers().add(userSeq);
         this.bookmarklist.add(bookmark);
     }
 
@@ -106,9 +106,9 @@ public class Post extends BaseEntity {
      * 게시물 북마크 삭제
      */
     public void removeBookmarkPost(
-            Bookmark bookmark
-    ) {
-        this.postMetaData.getBookmarkUsers().remove(bookmark.getUserSeq());
+            Bookmark bookmark,
+            Long userSeq) {
+        this.postMetaData.getBookmarkUsers().remove(userSeq);
         this.bookmarklist.remove(bookmark);
     }
 }

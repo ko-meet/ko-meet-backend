@@ -14,6 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.backend.komeet.post.enums.PostStatus.NORMAL;
 
@@ -40,6 +41,14 @@ public class JobBoard extends BaseEntity {
 
     @Embedded
     private CompanyMetaData companyMetaData;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "bookmark_jobboard",
+            joinColumns = @JoinColumn(name = "job_board_seq"),
+            inverseJoinColumns = @JoinColumn(name = "bookmark_seq")
+    )
+    private List<Bookmark> bookmarklist = new ArrayList<>();
 
     /**
      * 게시물 팩토리 메서드

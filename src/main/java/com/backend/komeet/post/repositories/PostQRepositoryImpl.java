@@ -6,10 +6,7 @@ import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.CommentDto;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
-import com.backend.komeet.post.model.entities.Comment;
-import com.backend.komeet.post.model.entities.Post;
-import com.backend.komeet.post.model.entities.QComment;
-import com.backend.komeet.post.model.entities.QPost;
+import com.backend.komeet.post.model.entities.*;
 import com.backend.komeet.user.enums.Countries;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -22,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
@@ -150,6 +148,7 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         QPost post = QPost.post;
         QComment comment = QComment.comment;
+        QBookmark bookmark = QBookmark.bookmark;
 
         Post postTbl = jpaQueryFactory.selectFrom(post)
                 .leftJoin(post.user).fetchJoin()
@@ -176,6 +175,23 @@ public class PostQRepositoryImpl implements PostQRepository {
         postDto.setComments(commentDtos);
 
         return postDto;
+    }
+
+    @Override
+    public Optional<Post> getPostWithBookmarkList(
+            Long postSeq
+    ) {
+        QPost post = QPost.post;
+        QBookmark bookmark = QBookmark.bookmark;
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
+
+        return Optional.ofNullable(
+                jpaQueryFactory.selectFrom(post)
+                        .leftJoin(post.bookmarklist, bookmark).fetchJoin()
+                        .where(post.seq.eq(postSeq))
+                        .orderBy(orderSpecifier)
+                        .fetchOne()
+        );
     }
 
     private OrderSpecifier<?> getOrderSpecifier(
