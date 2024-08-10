@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.backend.komeet.post.enums.PostType.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +43,7 @@ class BookmarkCreationServiceTest {
 
     @Test
     @DisplayName("북마크 생성 - 성공")
-    void createBookmark_Success() {
+    void createPostBookmark_Success() {
         // given
         User user = TestEntityGenerator.user;
         Post post = TestEntityGenerator.postNormal;
@@ -52,13 +53,18 @@ class BookmarkCreationServiceTest {
         when(postRepository.findById(post.getSeq()))
                 .thenReturn(Optional.of(post));
         // when
-        bookmarkCreationService.createBookmark(user.getSeq(), post.getSeq());
+        bookmarkCreationService.createPostBookmark(
+                user.getSeq(),
+                post.getSeq(),
+                POST
+        );
         // then
         verify(bookmarkRepository, times(1)).save(bookmark);
         assertThat(bookmark.getUserSeq()).isEqualTo(user.getSeq());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     @DisplayName("북마크 조회 - 성공")
     void getBookmark_Success() {
         // given
@@ -71,9 +77,10 @@ class BookmarkCreationServiceTest {
         when(postRepository.findById(post.getSeq()))
                 .thenReturn(Optional.of(post));
         // when
-        List<PostDto> bookmarkList = bookmarkCreationService.getBookmarkList(user.getSeq());
+        List<?> bookmarkList =
+                bookmarkCreationService.getBookmarkList(user.getSeq(), POST);
         // then
-        assertThat(bookmarkList.get(0).getSeq()).isEqualTo(post.getSeq());
+        assertThat(((List<PostDto>) bookmarkList).get(0).getSeq()).isEqualTo(post.getSeq());
     }
 
 }
