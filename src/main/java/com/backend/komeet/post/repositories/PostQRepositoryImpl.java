@@ -6,10 +6,7 @@ import com.backend.komeet.post.enums.SortingMethods;
 import com.backend.komeet.post.model.dtos.CommentDto;
 import com.backend.komeet.post.model.dtos.PostDto;
 import com.backend.komeet.post.model.dtos.SearchResultDto;
-import com.backend.komeet.post.model.entities.Comment;
-import com.backend.komeet.post.model.entities.Post;
-import com.backend.komeet.post.model.entities.QComment;
-import com.backend.komeet.post.model.entities.QPost;
+import com.backend.komeet.post.model.entities.*;
 import com.backend.komeet.user.enums.Countries;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -22,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.komeet.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
@@ -51,10 +49,13 @@ public class PostQRepositoryImpl implements PostQRepository {
             predicateBuilder.and(post.category.eq(category));
         }
         if (!country.equals(Countries.ALL)) {
-            predicateBuilder.and(post.country.eq(country));
+            predicateBuilder.and(post.postMetaData.country.eq(country));
         }
 
-        predicateBuilder.and(post.isPublic.eq(isPublic)).and(post.status.ne(DELETED));
+        predicateBuilder
+                .and(post.isPublic.eq(isPublic))
+                .and(post.postMetaData.status.ne(DELETED));
+
         Predicate predicate = predicateBuilder.getValue();
 
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
@@ -95,9 +96,9 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         QPost post = QPost.post;
 
-        Predicate predicate = post.content.contains(keyword)
-                .or(post.title.contains(keyword))
-                .or(post.tags.any().contains(keyword));
+        Predicate predicate = post.postMetaData.content.contains(keyword)
+                .or(post.postMetaData.title.contains(keyword))
+                .or(post.postMetaData.tags.any().contains(keyword));
 
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
 
@@ -147,6 +148,7 @@ public class PostQRepositoryImpl implements PostQRepository {
     ) {
         QPost post = QPost.post;
         QComment comment = QComment.comment;
+        QBookmark bookmark = QBookmark.bookmark;
 
         Post postTbl = jpaQueryFactory.selectFrom(post)
                 .leftJoin(post.user).fetchJoin()
@@ -175,14 +177,31 @@ public class PostQRepositoryImpl implements PostQRepository {
         return postDto;
     }
 
+    @Override
+    public Optional<Post> getPostWithBookmarkList(
+            Long postSeq
+    ) {
+        QPost post = QPost.post;
+        QBookmark bookmark = QBookmark.bookmark;
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(CREATED_DATE, post);
+
+        return Optional.ofNullable(
+                jpaQueryFactory.selectFrom(post)
+                        .leftJoin(post.bookmarklist, bookmark).fetchJoin()
+                        .where(post.seq.eq(postSeq))
+                        .orderBy(orderSpecifier)
+                        .fetchOne()
+        );
+    }
+
     private OrderSpecifier<?> getOrderSpecifier(
             SortingMethods sortingMethod,
             QPost post
     ) {
         return switch (sortingMethod) {
             case CREATED_DATE -> post.createdAt.desc();
-            case VIEW_COUNT -> post.viewCount.desc();
-            case LIKE_COUNT -> post.likeCount.desc();
+            case VIEW_COUNT -> post.postMetaData.viewCount.desc();
+            case LIKE_COUNT -> post.postMetaData.likeCount.desc();
             case COMMENT_COUNT -> post.comments.size().desc();
             default -> post.createdAt.desc();
         };

@@ -46,7 +46,7 @@ class JobBoardSearchServiceTest {
     @DisplayName("구인구직 게시판 목록 조회 - 성공")
     void getJobBoards_Success() {
         // given
-        String country = jobBoard.getCountry().toString();
+        String country = jobBoard.getPostMetaData().getCountry().toString();
         String sortingMethod = SortingMethods.VIEW_COUNT.name();
         String industry = Industry.ALL.getIndustry();
         String experience = Experience.ALL.getExperience();

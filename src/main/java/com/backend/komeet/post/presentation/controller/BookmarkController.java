@@ -1,8 +1,9 @@
 package com.backend.komeet.post.presentation.controller;
 
-import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.base.presentation.response.ApiResponse;
+import com.backend.komeet.global.security.JwtProvider;
 import com.backend.komeet.post.application.bookmark.BookmarkCreationService;
+import com.backend.komeet.post.enums.PostType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,34 +28,40 @@ public class BookmarkController {
     /**
      * 북마크 등록
      */
-    @PostMapping("/posts/{postSeq}")
+    @PostMapping("/{postType}/{postSeq}")
     @ApiOperation(value = "북마크 등록", notes = "게시물을 북마크에 등록합니다.")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long postSeq,
+            @PathVariable String postType,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
-
-        bookmarkCreationService.createBookmark(userSeq, postSeq);
-
+        bookmarkCreationService.createPostBookmark(
+                userSeq,
+                postSeq,
+                PostType.convertToEnum(postType)
+        );
         return ResponseEntity.status(CREATED).build();
     }
 
     /**
      * 북마크 조회
      */
-    @GetMapping
+    @GetMapping("/{postType}")
     @ApiOperation(value = "북마크 조회", notes = "사용자의 북마크를 조회합니다.")
     public ResponseEntity<ApiResponse> getBookmarks(
+            @PathVariable String postType,
             @RequestHeader(AUTHORIZATION) String token
     ) {
-
         Long userSeq = jwtProvider.getIdFromToken(token);
-
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse(bookmarkCreationService.getBookmarkList(userSeq))
-        );
+                .body(new ApiResponse(
+                                bookmarkCreationService.getBookmarkList(
+                                        userSeq,
+                                        PostType.convertToEnum(postType)
+                                )
+                        )
+                );
     }
 }

@@ -59,7 +59,11 @@ public class PostUploadService {
         Pageable pageable = PageRequest.of(page, 10);
 
         return postRepository.getPosts(
-                country, sortingMethod, isPublic, category, pageable
+                country,
+                sortingMethod,
+                isPublic,
+                category,
+                pageable
         );
     }
 

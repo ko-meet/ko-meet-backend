@@ -1,32 +1,27 @@
 package com.backend.komeet.service.common;
 
 import com.backend.komeet.company.model.entities.Company;
-import com.backend.komeet.notice.enums.NoticeType;
 import com.backend.komeet.notice.model.entities.Notice;
 import com.backend.komeet.post.enums.Experience;
 import com.backend.komeet.post.enums.Industry;
 import com.backend.komeet.post.model.entities.Bookmark;
 import com.backend.komeet.post.model.entities.JobBoard;
 import com.backend.komeet.post.model.entities.Post;
-import com.backend.komeet.user.enums.UserRole;
+import com.backend.komeet.post.model.entities.metadata.CompanyMetaData;
+import com.backend.komeet.post.model.entities.metadata.PostMetaData;
 import com.backend.komeet.user.model.entities.User;
-import com.backend.komeet.post.model.entities.Bookmark;
-import org.mockito.InjectMocks;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.backend.komeet.notice.enums.NoticeType.*;
+import static com.backend.komeet.notice.enums.NoticeType.NOTICE;
 import static com.backend.komeet.post.enums.PostStatus.DELETED;
 import static com.backend.komeet.post.enums.PostStatus.NORMAL;
 import static com.backend.komeet.user.enums.Countries.LAOS;
 import static com.backend.komeet.user.enums.Countries.SOUTH_KOREA;
-import static com.backend.komeet.user.enums.UserRole.*;
+import static com.backend.komeet.user.enums.UserRole.ROLE_ADMIN;
+import static com.backend.komeet.user.enums.UserRole.ROLE_USER;
 
 public class TestEntityGenerator {
 
@@ -48,37 +43,44 @@ public class TestEntityGenerator {
 
     public static Post postNormal = Post.builder()
             .seq(1L)
-            .title("제목")
-            .attachments(List.of("첨부파일1", "첨부파일2"))
-            .tags(List.of("태그1", "태그2"))
+            .postMetaData(
+                    PostMetaData.builder()
+                            .title("제목")
+                            .content("내용")
+                            .attachments(List.of("첨부파일1", "첨부파일2"))
+                            .tags(List.of("태그1", "태그2"))
+                            .country(LAOS)
+                            .region("지역")
+                            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
+                            .status(NORMAL)
+                            .build()
+            )
             .isPublic("Y")
-            .country(LAOS)
-            .region("지역")
-            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
             .user(user)
-            .content("내용")
             .comments(List.of())
-            .status(NORMAL)
             .build();
 
     public static Post postDeleted = Post.builder()
             .seq(1L)
-            .title("제목")
-            .attachments(List.of("첨부파일1", "첨부파일2"))
-            .tags(List.of("태그1", "태그2"))
+            .postMetaData(
+                    PostMetaData.builder()
+                            .title("제목")
+                            .content("내용")
+                            .attachments(List.of("첨부파일1", "첨부파일2"))
+                            .tags(List.of("태그1", "태그2"))
+                            .country(LAOS)
+                            .region("지역")
+                            .bookmarkUsers(new ArrayList<>(List.of(1L)))
+                            .status(DELETED)
+                            .build()
+            )
             .isPublic("Y")
-            .country(LAOS)
-            .region("지역")
-            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
             .user(user)
-            .content("내용")
             .comments(List.of())
-            .status(DELETED)
             .build();
 
     public static Bookmark bookmark = Bookmark.builder()
             .bookmarkSeq(1L)
-            .bookmarkPosts(new ArrayList<>(Arrays.asList(postNormal)))
             .userSeq(1L)
             .build();
 
@@ -94,17 +96,25 @@ public class TestEntityGenerator {
             .build();
     public static JobBoard jobBoard = JobBoard.builder()
             .seq(1L)
-            .title("제목")
-            .content("내용")
-            .attachments(List.of("첨부파일1", "첨부파일2"))
-            .tags(List.of("태그1", "태그2"))
-            .country(LAOS)
-            .region("지역")
-            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
+            .postMetaData(
+                    PostMetaData.builder()
+                            .title("제목")
+                            .content("내용")
+                            .attachments(List.of("첨부파일1", "첨부파일2"))
+                            .tags(List.of("태그1", "태그2"))
+                            .country(LAOS)
+                            .region("지역")
+                            .bookmarkUsers(new ArrayList<>(Arrays.asList(1L)))
+                            .status(NORMAL)
+                            .build()
+            )
+            .companyMetaData(
+                    CompanyMetaData.builder()
+                            .experience(Experience.ALL)
+                            .industry(Industry.ALL)
+                            .build()
+            )
             .user(user)
-            .status(NORMAL)
-            .experience(Experience.ALL)
-            .industry(Industry.ALL)
             .build();
 
     public static Company company = Company.builder()

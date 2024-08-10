@@ -2,15 +2,17 @@ package com.backend.komeet.post.model.entities;
 
 import com.backend.komeet.base.model.entities.BaseEntity;
 import com.backend.komeet.post.enums.PostStatus;
+import com.backend.komeet.post.model.entities.metadata.CommentMetaData;
 import com.backend.komeet.user.model.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 대댓글 엔티티
@@ -27,26 +29,15 @@ public class Reply extends BaseEntity {
     private Long seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User author;
-
-    private String content;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_seq")
     @JsonIgnore
     private Comment comment;
 
-    @Setter
-    private Integer upVotes;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Long> likeUsers;
-
-    private Integer downVotes;
-
-    @Enumerated(EnumType.STRING)
-    private PostStatus status;
+    @Embedded
+    private CommentMetaData commentMetaData;
 
     /**
      * 대댓글 팩토리 메서드
@@ -57,13 +48,17 @@ public class Reply extends BaseEntity {
             String content
     ) {
         return Reply.builder()
-                .author(user)
+                .user(user)
                 .comment(comment)
-                .content(content)
-                .upVotes(0)
-                .downVotes(0)
-                .likeUsers(new ArrayList<>())
-                .status(PostStatus.NORMAL)
+                .commentMetaData(
+                        CommentMetaData.builder()
+                                .content(content)
+                                .upVotes(0)
+                                .downVotes(0)
+                                .likeUsers(new ArrayList<>())
+                                .status(PostStatus.NORMAL)
+                                .build()
+                )
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.backend.komeet.post.model.dtos;
 
+import com.backend.komeet.post.model.entities.metadata.CompanyMetaData;
+import com.backend.komeet.post.model.entities.metadata.PostMetaData;
 import com.backend.komeet.user.model.dtos.UserDto;
 import com.backend.komeet.post.model.entities.JobBoard;
 import com.backend.komeet.user.enums.Countries;
@@ -50,30 +52,32 @@ public class JobBoardDto {
     public static JobBoardDto from(
             JobBoard jobBoard
     ) {
+        PostMetaData postMetaData = jobBoard.getPostMetaData();
+        CompanyMetaData companyMetaData = jobBoard.getCompanyMetaData();
         return JobBoardDto.builder()
                 .seq(jobBoard.getSeq())
-                .title(jobBoard.getTitle())
-                .content(jobBoard.getContent())
+                .title(postMetaData.getTitle())
+                .content(postMetaData.getContent())
                 .user(UserDto.from(jobBoard.getUser()))
-                .viewCount(jobBoard.getViewCount())
-                .likeCount(jobBoard.getLikeCount())
-                .tags(jobBoard.getTags())
-                .attachments(jobBoard.getAttachments())
-                .likeUsers(jobBoard.getLikeUsers())
-                .bookmarkUsers(jobBoard.getBookmarkUsers())
-                .country(jobBoard.getCountry())
-                .region(jobBoard.getRegion())
-                .industry(jobBoard.getIndustry())
-                .deadline(jobBoard.getDeadline())
-                .experience(jobBoard.getExperience())
-                .salary(jobBoard.getSalary())
-                .company(jobBoard.getCompany())
-                .companyEmail(jobBoard.getCompanyEmail())
-                .companyPhone(jobBoard.getCompanyPhone())
-                .companyAddress(jobBoard.getCompanyAddress())
-                .companyHomepage(jobBoard.getCompanyHomepage())
-                .companyLogo(jobBoard.getCompanyLogo())
-                .status(jobBoard.getStatus())
+                .viewCount(postMetaData.getViewCount())
+                .likeCount(postMetaData.getLikeCount())
+                .tags(postMetaData.getTags())
+                .attachments(postMetaData.getAttachments())
+                .likeUsers(postMetaData.getLikeUsers())
+                .bookmarkUsers(postMetaData.getBookmarkUsers())
+                .country(postMetaData.getCountry())
+                .region(postMetaData.getRegion())
+                .industry(companyMetaData.getIndustry())
+                .deadline(companyMetaData.getDeadline())
+                .experience(companyMetaData.getExperience())
+                .salary(companyMetaData.getSalary())
+                .company(companyMetaData.getCompany())
+                .companyEmail(companyMetaData.getCompanyEmail())
+                .companyPhone(companyMetaData.getCompanyPhone())
+                .companyAddress(companyMetaData.getCompanyAddress())
+                .companyHomepage(companyMetaData.getCompanyHomepage())
+                .companyLogo(companyMetaData.getCompanyLogo())
+                .status(postMetaData.getStatus())
                 .createdAt(jobBoard.getCreatedAt())
                 .build();
     }
