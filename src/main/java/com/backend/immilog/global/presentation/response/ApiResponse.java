@@ -1,4 +1,4 @@
-package com.backend.immilog.global.presentation.response.response;
+package com.backend.immilog.global.presentation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
