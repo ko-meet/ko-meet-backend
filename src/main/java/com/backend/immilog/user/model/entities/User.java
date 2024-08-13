@@ -6,6 +6,7 @@ import com.backend.immilog.user.enums.UserRole;
 import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
+import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -50,4 +51,30 @@ public class User extends BaseDateEntity {
 
     @Embedded
     private ReportInfo reportInfo;
+
+    public static User of(
+            UserSignUpRequest userSignUpRequest,
+            String encodedPassword
+    ) {
+        Countries interestCountry =
+                userSignUpRequest.getInterestCountry() != null ?
+                        Countries.getCountry(userSignUpRequest.getInterestCountry()) : null;
+        Countries country = Countries.getCountryByKoreanName(userSignUpRequest.getCountry());
+
+        return User.builder()
+                .nickName(userSignUpRequest.getNickName())
+                .email(userSignUpRequest.getEmail())
+                .password(encodedPassword)
+                .location(
+                        Location.of(
+                                country,
+                                userSignUpRequest.getRegion()
+                        )
+                )
+                .interestCountry(interestCountry)
+                .userRole(UserRole.ROLE_USER)
+                .userStatus(UserStatus.PENDING)
+                .imageUrl(userSignUpRequest.getProfileImage())
+                .build();
+    }
 }
