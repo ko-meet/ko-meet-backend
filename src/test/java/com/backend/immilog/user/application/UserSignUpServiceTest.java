@@ -78,4 +78,29 @@ class UserSignUpServiceTest {
                 .isInstanceOf(CustomException.class)
                 .hasMessage(EXISTING_USER.getMessage());
     }
+
+    @Test
+    @DisplayName("닉네임 중복 확인 - 중복되지 않은 경우")
+    void checkNickname_success() {
+        // given
+        String nickname = "test";
+        when(userRepository.findByNickName(nickname)).thenReturn(Optional.empty());
+        // when
+        Boolean result = userSignUpService.checkNickname(nickname);
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("닉네임 중복 확인 - 중복된 경우")
+    void checkNickname_fail() {
+        // given
+        String nickname = "test";
+        when(userRepository.findByNickName(nickname)).thenReturn(Optional.of(new User()));
+        // when
+        Boolean result = userSignUpService.checkNickname(nickname);
+        // then
+        assertThat(result).isFalse();
+    }
+
 }
