@@ -40,5 +40,12 @@ public class UserSignUpService {
                 });
     }
 
+    @Transactional(readOnly = true)
+    public Boolean checkNickname(
+            String nickname
+    ) {
+        return userRepository.findByNickName(nickname).isEmpty();
+    }
+
 }
 
