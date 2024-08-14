@@ -1,6 +1,7 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.infrastructure.UserRepository;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static com.backend.immilog.global.exception.ErrorCode.EXISTING_USER;
+import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.user.enums.UserStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -101,6 +104,77 @@ class UserSignUpServiceTest {
         Boolean result = userSignUpService.checkNickname(nickname);
         // then
         assertThat(result).isFalse();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 - 성공")
+    void verifyEmail_success() {
+        // given
+        Long userSeq = 1L;
+        User user = mock(User.class);
+        when(user.getUserStatus()).thenReturn(PENDING);
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        // when
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        // then
+        assertThat(result.getSecond()).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 - 실패(사용자 없음)")
+    void verifyEmail_fail_userNotFound() {
+        // given
+        Long userSeq = 1L;
+        when(userRepository.findById(userSeq)).thenReturn(Optional.empty());
+        // when & then
+        assertThatThrownBy(() -> userSignUpService.verifyEmail(userSeq))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("이메일 인증 - 실패(이미 인증된 사용자)")
+    void verifyEmail_fail_already_verified() {
+        // given
+        Long userSeq = 1L;
+        User user = mock(User.class);
+        when(user.getUserStatus()).thenReturn(ACTIVE);
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        // when
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        // then
+        assertThat(result.getFirst()).isEqualTo("이미 인증된 사용자입니다.");
+        assertThat(result.getSecond()).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 - 실패(차단된 사용자)")
+    void verifyEmail_fail_blocked() {
+        // given
+        Long userSeq = 1L;
+        User user = mock(User.class);
+        when(user.getUserStatus()).thenReturn(BLOCKED);
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        // when
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        // then
+        assertThat(result.getFirst()).isEqualTo("차단된 사용자입니다.");
+        assertThat(result.getSecond()).isFalse();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 - 실패(차단된 사용자)")
+    void verifyEmail_fail_other_cases() {
+        // given
+        Long userSeq = 1L;
+        User user = mock(User.class);
+        when(user.getUserStatus()).thenReturn(REPORTED);
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        // when
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        // then
+        assertThat(result.getFirst()).isEqualTo("이메일 인증이 필요한 사용자가 아닙니다.");
+        assertThat(result.getSecond()).isTrue();
     }
 
 }
