@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -65,5 +66,23 @@ class UserControllerTest {
                 )
         );
         assertThat(response.getStatusCode()).isEqualTo(CREATED);
+    }
+
+    @Test
+    @DisplayName("이메일 인증")
+    void verifyEmail() {
+        // given
+        Long userSeq = 1L;
+        String message = "test";
+        Boolean isLoginAvailable = true;
+        when(userSignUpService.verifyEmail(userSeq))
+                .thenReturn(Pair.of(message, isLoginAvailable));
+        Model model = mock(Model.class);
+
+        // when
+        String result = userController.verifyEmail(userSeq, model);
+
+        // then
+        assertThat(result).isEqualTo("verification-result");
     }
 }

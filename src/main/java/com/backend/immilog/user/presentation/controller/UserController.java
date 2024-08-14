@@ -10,10 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -49,4 +47,17 @@ public class UserController {
 
         return ResponseEntity.status(CREATED).build();
     }
+
+    @GetMapping("/{userSeq}/verification")
+    @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
+    public String verifyEmail(
+            @PathVariable Long userSeq,
+            Model model
+    ) {
+        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        model.addAttribute("message", result.getFirst());
+        model.addAttribute("isLoginAvailable", result.getSecond());
+        return "verification-result";
+    }
+
 }
