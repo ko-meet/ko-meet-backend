@@ -102,4 +102,5 @@ class UserSignUpServiceTest {
         // then
         assertThat(result).isFalse();
     }
+
 }
