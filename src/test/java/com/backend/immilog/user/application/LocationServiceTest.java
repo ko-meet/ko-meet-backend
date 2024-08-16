@@ -114,4 +114,18 @@ class LocationServiceTest {
         // then
         assertThat(resultFuture.join().getFirst()).isEqualTo("기타 국가");
     }
+
+    @Test
+    @DisplayName("CompletableFuture 객체 합치기")
+    void joinCompletableFutureLocation() {
+        // given
+        Pair<String, String> location = Pair.of("KR", "South Korea");
+        CompletableFuture<Pair<String, String>> value = CompletableFuture.completedFuture(location);
+
+        // when
+        Pair<String, String> result = locationService.joinCompletableFutureLocation(value);
+
+        // then
+        assertThat(result).isEqualTo(location);
+    }
 }

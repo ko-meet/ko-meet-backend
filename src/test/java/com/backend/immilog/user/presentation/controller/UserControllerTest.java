@@ -2,8 +2,12 @@ package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.application.EmailService;
+import com.backend.immilog.user.application.LocationService;
+import com.backend.immilog.user.application.UserSignInService;
 import com.backend.immilog.user.application.UserSignUpService;
 import com.backend.immilog.user.enums.EmailComponents;
+import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,14 +18,22 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @DisplayName("사용자 컨트롤러 테스트")
 class UserControllerTest {
     @Mock
     private UserSignUpService userSignUpService;
+    @Mock
+    private UserSignInService userSignInService;
+    @Mock
+    private LocationService locationService;
+
     @Mock
     private EmailService emailService;
     private UserController userController;
@@ -29,7 +41,12 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userController = new UserController(userSignUpService, emailService);
+        userController = new UserController(
+                userSignUpService,
+                userSignInService,
+                locationService,
+                emailService
+        );
     }
 
     @Test
@@ -84,5 +101,28 @@ class UserControllerTest {
 
         // then
         assertThat(result).isEqualTo("verification-result");
+    }
+
+    @Test
+    @DisplayName("로그인")
+    void signIn() {
+        // given
+        UserSignInRequest param = UserSignInRequest.builder()
+                .email("email")
+                .password("password")
+                .latitude(37.1234)
+                .longitude(127.1234)
+                .build();
+
+
+        when(locationService.getCountry(param.getLatitude(), param.getLongitude()))
+                .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
+        when(userSignInService.signIn(param, locationService.getCountry(param.getLatitude(), param.getLongitude())))
+                .thenReturn(UserSignInDTO.builder().build());
+        // when
+        ResponseEntity<ApiResponse> response = userController.signIn(param);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
     }
 }
