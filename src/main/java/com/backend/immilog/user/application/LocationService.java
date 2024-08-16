@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Geocoder API를 사용하여 위도와 경도를 기반으로 국가와 도시를 추출하는 서비스
@@ -78,5 +79,14 @@ public class LocationService {
             log.error("JSON 파싱 중 예외 발생", e);
         }
         return null;
+    }
+
+    public Pair<String, String> joinCompletableFutureLocation(
+            CompletableFuture<Pair<String, String>> countryFuture
+    ) {
+        return countryFuture
+                .orTimeout(5, TimeUnit.SECONDS) // 5초 이내에 완료되지 않으면 타임아웃
+                .exceptionally(throwable -> Pair.of("Error", "Timeout"))
+                .join();
     }
 }
