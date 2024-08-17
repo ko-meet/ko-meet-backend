@@ -19,6 +19,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.Countries.INDONESIA;
@@ -185,5 +186,21 @@ class UserControllerTest {
         verify(userInformationService, times(1))
                 .changePassword(1L, param);
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("닉네임 중복여부 체크")
+    void checkNickname() {
+        // given
+        String nickname = "test";
+        when(userSignUpService.checkNickname(nickname)).thenReturn(true);
+
+        // when
+        ResponseEntity<ApiResponse> response =
+                userController.checkForNicknameDuplication(nickname);
+
+        // then
+        ApiResponse body = Objects.requireNonNull(response.getBody());
+        assertThat(body.getData()).isEqualTo(true);
     }
 }
