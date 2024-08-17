@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +108,14 @@ public class UserController {
         userInformationService.changePassword(userSeq, userPasswordChangeRequest);
 
         return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse> checkForNicknameDuplication(
+            String nickname
+    ) {
+        Boolean isNickNameAvailable = userSignUpService.checkNickname(nickname);
+        return ResponseEntity.status(OK).body(new ApiResponse(isNickNameAvailable));
     }
 
 }
