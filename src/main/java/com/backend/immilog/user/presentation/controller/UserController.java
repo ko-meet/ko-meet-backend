@@ -1,12 +1,10 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.user.application.EmailService;
-import com.backend.immilog.user.application.LocationService;
-import com.backend.immilog.user.application.UserSignInService;
-import com.backend.immilog.user.application.UserSignUpService;
-import com.backend.immilog.user.enums.EmailComponents;
+import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.user.application.*;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import io.swagger.annotations.Api;
@@ -20,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.user.enums.EmailComponents.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -30,29 +30,25 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
+    private final UserInformationService userInformationService;
+
     private final LocationService locationService;
     private final EmailService emailService;
+
+    private final JwtProvider jwtProvider;
 
     @PostMapping
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
     public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest request
     ) {
-        Pair<Long, String> userSeqAndName = userSignUpService.signUp(request);
-
-        emailService.sendHtmlEmail(
-                request.getEmail(),
-                EmailComponents.EMAIL_SIGN_UP_SUBJECT,
-                String.format(
-                        EmailComponents.HTML_SIGN_UP_CONTENT,
-                        userSeqAndName.getSecond(),
-                        String.format(
-                                EmailComponents.API_LINK,
-                                userSeqAndName.getFirst()
-                        )
-                )
-        );
-
+        final Pair<Long, String> userSeqAndName = userSignUpService.signUp(request);
+        final String email = request.getEmail();
+        final String userName = userSeqAndName.getSecond();
+        final Long userSeq = userSeqAndName.getFirst();
+        final String url = String.format(API_LINK, userSeq);
+        final String mailForm = String.format(HTML_SIGN_UP_CONTENT, userName, url);
+        emailService.sendHtmlEmail(email, EMAIL_SIGN_UP_SUBJECT, mailForm);
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -62,7 +58,7 @@ public class UserController {
             @PathVariable Long userSeq,
             Model model
     ) {
-        Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
+        final Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
         model.addAttribute("message", result.getFirst());
         model.addAttribute("isLoginAvailable", result.getSecond());
         return "verification-result";
@@ -78,7 +74,26 @@ public class UserController {
                         request.getLatitude(),
                         request.getLongitude()
                 );
-        UserSignInDTO userSignInDto = userSignInService.signIn(request, country);
+        final UserSignInDTO userSignInDto = userSignInService.signIn(request, country);
         return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
     }
+
+    @PatchMapping("/information")
+    @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
+    public ResponseEntity<ApiResponse> updateInformation(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
+    ) {
+        final Long userSeq = jwtProvider.getIdFromToken(token);
+        CompletableFuture<Pair<String, String>> country =
+                locationService.getCountry(
+                        userInfoUpdateRequest.getLatitude(),
+                        userInfoUpdateRequest.getLongitude()
+                );
+        userInformationService.updateInformation(
+                userSeq, country, userInfoUpdateRequest
+        );
+        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+    }
+
 }
