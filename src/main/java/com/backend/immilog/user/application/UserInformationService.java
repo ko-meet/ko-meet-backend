@@ -11,15 +11,18 @@ import com.backend.immilog.user.infrastructure.UserRepository;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
+import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static com.backend.immilog.global.exception.ErrorCode.PASSWORD_NOT_MATCH;
 import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
 
 @Slf4j
@@ -29,6 +32,8 @@ public class UserInformationService {
     private final UserRepository userRepository;
 
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+
     private final RedisService redisService;
     private final ImageService imageService;
 
@@ -72,6 +77,28 @@ public class UserInformationService {
         setUserInterestCountryIfItsChanged(userInfoUpdateRequest.getInterestCountry(), user);
         setUserStatusIfItsChanged(userInfoUpdateRequest.getStatus(), user);
         setUserImageProfileIfItsChanged(userInfoUpdateRequest.getProfileImage(), user);
+    }
+
+    @Transactional
+    public void changePassword(
+            Long userSeq,
+            UserPasswordChangeRequest userPasswordChangeRequest
+    ) {
+        User user = getUser(userSeq);
+        String existingPassword = userPasswordChangeRequest.getExistingPassword();
+        String newPassword = userPasswordChangeRequest.getNewPassword();
+        String currentPassword = user.getPassword();
+        throwExceptionIfPasswordNotMatch(existingPassword, currentPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    private void throwExceptionIfPasswordNotMatch(
+            String existingPassword,
+            String currentPassword
+    ) {
+        if (!passwordEncoder.matches(existingPassword, currentPassword)) {
+            throw new CustomException(PASSWORD_NOT_MATCH);
+        }
     }
 
     private static void setUserCountryIfItsChanged(
