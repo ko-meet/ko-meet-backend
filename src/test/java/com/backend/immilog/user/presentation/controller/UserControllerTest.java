@@ -1,12 +1,12 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.user.application.EmailService;
-import com.backend.immilog.user.application.LocationService;
-import com.backend.immilog.user.application.UserSignInService;
-import com.backend.immilog.user.application.UserSignUpService;
+import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.user.application.*;
 import com.backend.immilog.user.enums.EmailComponents;
+import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,8 @@ import org.springframework.ui.Model;
 
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.user.enums.Countries.INDONESIA;
+import static com.backend.immilog.user.enums.Countries.JAPAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -33,6 +35,10 @@ class UserControllerTest {
     private UserSignInService userSignInService;
     @Mock
     private LocationService locationService;
+    @Mock
+    private UserInformationService userInformationService;
+    @Mock
+    private JwtProvider jwtProvider;
 
     @Mock
     private EmailService emailService;
@@ -44,8 +50,10 @@ class UserControllerTest {
         userController = new UserController(
                 userSignUpService,
                 userSignInService,
+                userInformationService,
                 locationService,
-                emailService
+                emailService,
+                jwtProvider
         );
     }
 
@@ -124,5 +132,37 @@ class UserControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정")
+    void updateInformation() {
+        // given
+        String token = "token";
+        UserInfoUpdateRequest param =
+                UserInfoUpdateRequest.builder()
+                        .nickName("newNickName")
+                        .profileImage("newImage")
+                        .country(JAPAN)
+                        .interestCountry(INDONESIA)
+                        .latitude(37.123456)
+                        .longitude(126.123456)
+                        .status(UserStatus.ACTIVE)
+                        .build();
+
+        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+        when(locationService.getCountry(param.getLatitude(), param.getLongitude()))
+                .thenReturn(CompletableFuture.completedFuture(Pair.of("Japan", "Tokyo")));
+        // when
+        ResponseEntity<ApiResponse> response =
+                userController.updateInformation(token, param);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        verify(userInformationService, times(1)).updateInformation(
+                1L,
+                locationService.getCountry(param.getLatitude(), param.getLongitude()),
+                param
+        );
     }
 }
