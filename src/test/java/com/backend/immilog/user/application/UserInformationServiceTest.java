@@ -22,8 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.global.exception.ErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.immilog.global.exception.ErrorCode.PASSWORD_NOT_MATCH;
 import static com.backend.immilog.user.enums.Countries.*;
+import static com.backend.immilog.user.enums.UserRole.ROLE_ADMIN;
 import static com.backend.immilog.user.enums.UserRole.ROLE_USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -232,4 +234,73 @@ class UserInformationServiceTest {
                 .hasMessage(PASSWORD_NOT_MATCH.getMessage());
     }
 
+    @Test
+    @DisplayName("사용자 차단/해제 - 성공")
+    void blockOrUnblockUser() {
+        // given
+        Long userSeq = 1L;
+        Long adminSeq = 2L;
+        UserStatus userStatus = UserStatus.BLOCKED;
+        User user = User.builder()
+                .seq(userSeq)
+                .email("test@email.com")
+                .nickName("test")
+                .imageUrl("image")
+                .userStatus(UserStatus.PENDING)
+                .userRole(ROLE_USER)
+                .interestCountry(SOUTH_KOREA)
+                .location(Location.of(MALAYSIA, "KL"))
+                .reportInfo(null)
+                .userStatus(UserStatus.ACTIVE)
+                .build();
+        User admin = User.builder()
+                .seq(userSeq)
+                .email("test@email.com")
+                .nickName("test")
+                .imageUrl("image")
+                .userStatus(UserStatus.PENDING)
+                .userRole(ROLE_ADMIN)
+                .interestCountry(SOUTH_KOREA)
+                .location(Location.of(MALAYSIA, "KL"))
+                .reportInfo(null)
+                .build();
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.findById(adminSeq)).thenReturn(Optional.of(admin));
+
+        // when
+        userInformationService.blockOrUnblockUser(userSeq, adminSeq, userStatus);
+
+        // then
+        assertThat(user.getUserStatus()).isEqualTo(userStatus);
+    }
+
+    @Test
+    @DisplayName("사용자 차단/해제 - 실패:관리자 아님")
+    void blockOrUnblockUser_fail() {
+        // given
+        Long userSeq = 1L;
+        Long adminSeq = 2L;
+        UserStatus userStatus = UserStatus.BLOCKED;
+        User admin = User.builder()
+                .seq(userSeq)
+                .email("test@email.com")
+                .nickName("test")
+                .imageUrl("image")
+                .userStatus(UserStatus.PENDING)
+                .userRole(ROLE_USER)
+                .interestCountry(SOUTH_KOREA)
+                .location(Location.of(MALAYSIA, "KL"))
+                .reportInfo(null)
+                .build();
+        when(userRepository.findById(adminSeq)).thenReturn(Optional.of(admin));
+
+        // when & then
+        assertThatThrownBy(() -> userInformationService.blockOrUnblockUser(
+                userSeq,
+                adminSeq,
+                userStatus
+        ))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(NOT_AN_ADMIN_USER.getMessage());
+    }
 }
