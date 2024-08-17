@@ -3,6 +3,7 @@ package com.backend.immilog.user.presentation.controller;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.*;
+import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
@@ -13,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.EmailComponents.*;
+import static com.backend.immilog.user.enums.UserStatus.BLOCKED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
@@ -110,12 +111,26 @@ public class UserController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse> checkForNicknameDuplication(
-            String nickname
+    @GetMapping("/nicknames")
+    @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
+    public ResponseEntity<ApiResponse> checkNickname(
+            @RequestParam String nickname
     ) {
         Boolean isNickNameAvailable = userSignUpService.checkNickname(nickname);
         return ResponseEntity.status(OK).body(new ApiResponse(isNickNameAvailable));
+    }
+
+    @PatchMapping("/{userSeq}/{status}")
+    @ApiOperation(value = "사용자 차단/해제", notes = "사용자 차단/해제 진행")
+    public ResponseEntity<Void> blockUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq,
+            @PathVariable String status
+    ) {
+        Long adminSeq = jwtProvider.getIdFromToken(token);
+        UserStatus userStatus = UserStatus.valueOf(status);
+        userInformationService.blockOrUnblockUser(userSeq, adminSeq, userStatus);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }
