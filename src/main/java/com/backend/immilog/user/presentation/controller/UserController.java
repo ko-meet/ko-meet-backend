@@ -5,6 +5,7 @@ import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.*;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
+import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import io.swagger.annotations.Api;
@@ -20,8 +21,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.EmailComponents.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Api(tags = "User API", description = "사용자 관련 API")
 @RequestMapping("/api/v1/users")
@@ -94,6 +94,19 @@ public class UserController {
                 userSeq, country, userInfoUpdateRequest
         );
         return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+    }
+
+    @PatchMapping("/password/change")
+    @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
+    public ResponseEntity<ApiResponse> changePassword(
+            @RequestHeader(AUTHORIZATION) String token,
+            @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
+    ) {
+        Long userSeq = jwtProvider.getIdFromToken(token);
+
+        userInformationService.changePassword(userSeq, userPasswordChangeRequest);
+
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }

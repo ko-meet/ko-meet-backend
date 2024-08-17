@@ -7,6 +7,7 @@ import com.backend.immilog.user.enums.EmailComponents;
 import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
+import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +25,7 @@ import static com.backend.immilog.user.enums.Countries.INDONESIA;
 import static com.backend.immilog.user.enums.Countries.JAPAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @DisplayName("사용자 컨트롤러 테스트")
 class UserControllerTest {
@@ -164,5 +164,26 @@ class UserControllerTest {
                 locationService.getCountry(param.getLatitude(), param.getLongitude()),
                 param
         );
+    }
+
+    @Test
+    @DisplayName("사용자 비밀번호 변경")
+    void resetPassword() {
+        // given
+        String token = "token";
+        UserPasswordChangeRequest param = UserPasswordChangeRequest.builder()
+                .existingPassword("existingPassword")
+                .newPassword("newPassword")
+                .build();
+        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+
+        // when
+        ResponseEntity<ApiResponse> response =
+                userController.changePassword(token,param);
+
+        // then
+        verify(userInformationService, times(1))
+                .changePassword(1L, param);
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 }
