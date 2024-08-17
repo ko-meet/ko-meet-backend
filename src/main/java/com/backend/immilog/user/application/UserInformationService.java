@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.backend.immilog.global.exception.ErrorCode.PASSWORD_NOT_MATCH;
-import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.global.exception.ErrorCode.*;
+import static com.backend.immilog.user.enums.UserRole.ROLE_ADMIN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -90,6 +90,25 @@ public class UserInformationService {
         String currentPassword = user.getPassword();
         throwExceptionIfPasswordNotMatch(existingPassword, currentPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Transactional
+    public void blockOrUnblockUser(
+            Long userSeq,
+            Long adminSeq,
+            UserStatus userStatus
+    ) {
+        validateAdminUser(adminSeq);
+        User user = getUser(userSeq);
+        user.setUserStatus(userStatus);
+    }
+
+    private void validateAdminUser(
+            Long userSeq
+    ){
+        if(!getUser(userSeq).getUserRole().equals(ROLE_ADMIN)){
+            throw new CustomException(NOT_AN_ADMIN_USER);
+        };
     }
 
     private void throwExceptionIfPasswordNotMatch(
@@ -170,4 +189,5 @@ public class UserInformationService {
         return country.getCountryKoreanName().equals(countryPair.getFirst()) &&
                 region.equals(countryPair.getSecond());
     }
+
 }

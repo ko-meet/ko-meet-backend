@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.Countries.INDONESIA;
 import static com.backend.immilog.user.enums.Countries.JAPAN;
+import static com.backend.immilog.user.enums.UserStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
@@ -148,7 +149,7 @@ class UserControllerTest {
                         .interestCountry(INDONESIA)
                         .latitude(37.123456)
                         .longitude(126.123456)
-                        .status(UserStatus.ACTIVE)
+                        .status(ACTIVE)
                         .build();
 
         when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
@@ -197,10 +198,28 @@ class UserControllerTest {
 
         // when
         ResponseEntity<ApiResponse> response =
-                userController.checkForNicknameDuplication(nickname);
+                userController.checkNickname(nickname);
 
         // then
         ApiResponse body = Objects.requireNonNull(response.getBody());
         assertThat(body.getData()).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("사용자 차단")
+    void blockUser() {
+        // given
+        Long userSeq = 1L;
+        Long adminSeq = 2L;
+        String token = "token";
+        String status = "BLOCKED";
+        when(jwtProvider.getIdFromToken(token)).thenReturn(adminSeq);
+
+        // when
+        ResponseEntity<Void> response =
+                userController.blockUser(token,userSeq, status);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 }
