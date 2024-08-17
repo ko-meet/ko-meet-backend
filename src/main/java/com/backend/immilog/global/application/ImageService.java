@@ -35,6 +35,12 @@ public class ImageService {
         return ImageDTO.from(imageUrls);
     }
 
+    public void deleteFile(
+            String imagePath
+    ) {
+        amazonS3.deleteObject(bucket, imagePath);
+    }
+
     private String saveFileAndGetUrl(
             MultipartFile multipartFile,
             String imagePath
