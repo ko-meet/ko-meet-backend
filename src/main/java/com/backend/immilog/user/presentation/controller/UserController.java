@@ -5,10 +5,7 @@ import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.*;
 import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
-import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
-import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
-import com.backend.immilog.user.presentation.request.UserSignInRequest;
-import com.backend.immilog.user.presentation.request.UserSignUpRequest;
+import com.backend.immilog.user.presentation.request.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +30,7 @@ public class UserController {
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
     private final UserInformationService userInformationService;
+    private final UserReportService userReportService;
 
     private final LocationService locationService;
     private final EmailService emailService;
@@ -130,6 +128,18 @@ public class UserController {
         Long adminSeq = jwtProvider.getIdFromToken(token);
         UserStatus userStatus = UserStatus.valueOf(status);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, userStatus);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{userSeq}/report")
+    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
+    public ResponseEntity<Void> reportUser(
+            @RequestHeader(AUTHORIZATION) String token,
+            @PathVariable Long userSeq,
+            @Valid @RequestBody UserReportRequest userReportRequest
+    ) {
+        Long reporterSeq = jwtProvider.getIdFromToken(token);
+        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
