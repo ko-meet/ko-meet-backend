@@ -1,15 +1,12 @@
 package com.backend.immilog.user.presentation.controller;
 
+import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.*;
 import com.backend.immilog.user.enums.EmailComponents;
-import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
-import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
-import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
-import com.backend.immilog.user.presentation.request.UserSignInRequest;
-import com.backend.immilog.user.presentation.request.UserSignUpRequest;
+import com.backend.immilog.user.presentation.request.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,10 +19,13 @@ import org.springframework.ui.Model;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.global.exception.ErrorCode.CANNOT_REPORT_MYSELF;
 import static com.backend.immilog.user.enums.Countries.INDONESIA;
 import static com.backend.immilog.user.enums.Countries.JAPAN;
-import static com.backend.immilog.user.enums.UserStatus.*;
+import static com.backend.immilog.user.enums.ReportReason.FRAUD;
+import static com.backend.immilog.user.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -40,6 +40,8 @@ class UserControllerTest {
     @Mock
     private UserInformationService userInformationService;
     @Mock
+    private UserReportService userReportService;
+    @Mock
     private JwtProvider jwtProvider;
 
     @Mock
@@ -53,6 +55,7 @@ class UserControllerTest {
                 userSignUpService,
                 userSignInService,
                 userInformationService,
+                userReportService,
                 locationService,
                 emailService,
                 jwtProvider
@@ -181,7 +184,7 @@ class UserControllerTest {
 
         // when
         ResponseEntity<ApiResponse> response =
-                userController.changePassword(token,param);
+                userController.changePassword(token, param);
 
         // then
         verify(userInformationService, times(1))
@@ -217,9 +220,29 @@ class UserControllerTest {
 
         // when
         ResponseEntity<Void> response =
-                userController.blockUser(token,userSeq, status);
+                userController.blockUser(token, userSeq, status);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("사용자 신고")
+    void reportUser() {
+        // given
+        Long targetUserSeq = 1L;
+        Long userSeq = 2L;
+        String token = "token";
+        UserReportRequest param = UserReportRequest.builder()
+                .reason(FRAUD)
+                .build();
+        when(jwtProvider.getIdFromToken(token)).thenReturn(userSeq);
+        // when
+        ResponseEntity<Void> response =
+                userController.reportUser(token, targetUserSeq, param);
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+        verify(userReportService, times(1))
+                .reportUser(targetUserSeq, userSeq, param);
     }
 }
