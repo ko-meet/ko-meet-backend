@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +82,7 @@ public class PostUploadService {
                         ps.setString(2, postResource.getPostType().name());
                         ps.setString(3, postResource.getResourceType().name());
                         ps.setString(4, postResource.getContent());
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         log.error("Failed to save post resource: {}", e.getMessage());
                         throw new CustomException(FAILED_TO_SAVE_POST);
                     }
