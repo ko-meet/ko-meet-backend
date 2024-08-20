@@ -1,0 +1,45 @@
+package com.backend.immilog.post.infrastructure;
+
+import com.backend.immilog.post.enums.ResourceType;
+import com.backend.immilog.post.model.entities.QPostResource;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@Repository
+public class PostResourceQRepositoryImpl implements PostResourceQRepository {
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public void deleteAllEntities(
+            Long postSeq,
+            ResourceType resourceType,
+            List<String> deleteAttachments
+    ) {
+        QPostResource postResource = QPostResource.postResource;
+        BooleanExpression criteria = getCriteria(
+                postSeq,
+                deleteAttachments,
+                resourceType,
+                postResource
+        );
+        queryFactory.delete(postResource)
+                .where(criteria)
+                .execute();
+    }
+
+    private static BooleanExpression getCriteria(
+            Long postSeq,
+            List<String> deleteAttachments,
+            ResourceType resourceType,
+            QPostResource postResource
+    ) {
+        return postResource.content.in(deleteAttachments)
+                .and(postResource.postSeq.eq(postSeq)
+                        .and(postResource.resourceType.eq(resourceType)));
+    }
+}
