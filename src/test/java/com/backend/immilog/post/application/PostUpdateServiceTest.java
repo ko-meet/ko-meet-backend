@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.backend.immilog.global.exception.ErrorCode.FAILED_TO_SAVE_POST;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -141,6 +142,23 @@ class PostUpdateServiceTest {
 
         verify(bulkInsertRepository).saveAll(anyList(), anyString(), any(BiConsumer.class));
 
+    }
+
+    @Test
+    @DisplayName("게시물 조회수 증가")
+    void increaseViewCount() {
+        // given
+        Long postSeq = 1L;
+        Post post = Post.builder()
+                .postMetaData(PostMetaData.builder().viewCount(0L).build())
+                .build();
+        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+
+        // when
+        postUpdateService.increaseViewCount(postSeq);
+
+        // then
+        assertThat(post.getPostMetaData().getViewCount()).isEqualTo(1L);
     }
 
 

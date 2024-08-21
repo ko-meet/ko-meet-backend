@@ -129,4 +129,19 @@ class PostControllerTest {
         verify(postDeleteService).deletePost(1L, postSeq);
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
+
+    @Test
+    @DisplayName("게시물 조회수 증가")
+    void increaseViewCount() {
+        // given
+        Long postSeq = 1L;
+
+        // when
+        ResponseEntity<ApiResponse> response =
+                postController.increaseViewCount(postSeq);
+
+        // then
+        verify(postUpdateService).increaseViewCount(postSeq);
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+    }
 }
