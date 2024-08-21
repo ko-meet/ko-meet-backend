@@ -41,6 +41,15 @@ public class PostUpdateService {
         updateResources(postSeq, postUpdateRequest);
     }
 
+    @Transactional
+    public void increaseViewCount(
+            Long postSeq
+    ) {
+        Post post = getPost(postSeq);
+        Long currentViewCount = post.getPostMetaData().getViewCount();
+        post.getPostMetaData().setViewCount(currentViewCount + 1);
+    }
+
     private void updateResources(
             Long postSeq,
             PostUpdateRequest postUpdateRequest

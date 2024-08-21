@@ -63,4 +63,13 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
+    @PatchMapping("/{postSeq}/view")
+    @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
+    public ResponseEntity<ApiResponse> increaseViewCount(
+            @PathVariable Long postSeq
+    ) {
+        postUpdateService.increaseViewCount(postSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
 }
