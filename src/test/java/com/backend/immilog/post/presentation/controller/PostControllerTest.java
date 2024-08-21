@@ -144,4 +144,23 @@ class PostControllerTest {
         verify(postUpdateService).increaseViewCount(postSeq);
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
+
+    @Test
+    @DisplayName("게시물 좋아요")
+    void likePost() {
+        // given
+        Long postSeq = 1L;
+        String token = "token";
+        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+
+        // when
+        ResponseEntity<ApiResponse> response = postController.likePost(
+                postSeq,
+                token
+        );
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+        verify(postUpdateService).likePost(1L, postSeq);
+    }
 }

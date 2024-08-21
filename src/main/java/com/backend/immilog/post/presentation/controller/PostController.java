@@ -72,4 +72,15 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
+    @PatchMapping("/{postSeq}/like")
+    @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
+    public ResponseEntity<ApiResponse> likePost(
+            @PathVariable Long postSeq,
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
+        Long userId = jwtProvider.getIdFromToken(token);
+        postUpdateService.likePost(userId, postSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
 }
