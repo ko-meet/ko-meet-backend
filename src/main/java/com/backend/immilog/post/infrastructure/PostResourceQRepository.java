@@ -10,4 +10,8 @@ public interface PostResourceQRepository {
             ResourceType resourceType,
             List<String> deleteAttachments
     );
+
+    void deleteAllByPostSeq(
+            Long seq
+    );
 }
