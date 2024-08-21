@@ -3,16 +3,20 @@ package com.backend.immilog.post.infrastructure;
 import com.backend.immilog.post.enums.ResourceType;
 import com.backend.immilog.post.model.entities.QPostResource;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
 public class PostResourceQRepositoryImpl implements PostResourceQRepository {
     private final JPAQueryFactory queryFactory;
+    private final EntityManager entityManager;
+
 
     @Override
     public void deleteAllEntities(
@@ -29,6 +33,17 @@ public class PostResourceQRepositoryImpl implements PostResourceQRepository {
         );
         queryFactory.delete(postResource)
                 .where(criteria)
+                .execute();
+    }
+
+    @Override
+    public void deleteAllByPostSeq(
+            Long seq
+    ) {
+        QPostResource postResource = QPostResource.postResource;
+        JPADeleteClause deleteClause = new JPADeleteClause(entityManager, postResource);
+        deleteClause
+                .where(postResource.postSeq.eq(seq))
                 .execute();
     }
 

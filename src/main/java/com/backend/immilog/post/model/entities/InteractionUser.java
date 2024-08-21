@@ -27,4 +27,18 @@ public class InteractionUser {
     private InteractionType interactionType;
 
     private Long userSeq;
+
+    public static InteractionUser of(
+            Long postSeq,
+            PostType postType,
+            InteractionType interactionType,
+            Long userSeq
+    ) {
+        return InteractionUser.builder()
+                .postSeq(postSeq)
+                .postType(postType)
+                .interactionType(interactionType)
+                .userSeq(userSeq)
+                .build();
+    }
 }

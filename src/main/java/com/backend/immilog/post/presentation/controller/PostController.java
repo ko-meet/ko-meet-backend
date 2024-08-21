@@ -2,6 +2,7 @@ package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.post.application.PostDeleteService;
 import com.backend.immilog.post.application.PostUpdateService;
 import com.backend.immilog.post.application.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class PostController {
     private final PostUploadService postUploadService;
     private final PostUpdateService postUpdateService;
+    private final PostDeleteService postDeleteService;
     private final JwtProvider jwtProvider;
 
     @PostMapping
@@ -49,4 +51,36 @@ public class PostController {
         postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
         return ResponseEntity.status(NO_CONTENT).build();
     }
+
+    @PatchMapping("/{postSeq}/delete")
+    @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postSeq,
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
+        Long userId = jwtProvider.getIdFromToken(token);
+        postDeleteService.deletePost(userId, postSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{postSeq}/view")
+    @ApiOperation(value = "게시물 조회수 증가", notes = "게시물 조회수를 증가시킵니다.")
+    public ResponseEntity<ApiResponse> increaseViewCount(
+            @PathVariable Long postSeq
+    ) {
+        postUpdateService.increaseViewCount(postSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{postSeq}/like")
+    @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
+    public ResponseEntity<ApiResponse> likePost(
+            @PathVariable Long postSeq,
+            @RequestHeader(AUTHORIZATION) String token
+    ) {
+        Long userId = jwtProvider.getIdFromToken(token);
+        postUpdateService.likePost(userId, postSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
 }
