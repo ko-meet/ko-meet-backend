@@ -3,8 +3,9 @@ package com.backend.immilog.post.model.entities;
 import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
+import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.enums.Countries;
+import com.backend.immilog.user.model.entities.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -22,7 +23,8 @@ public class Post extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    private Long userSeq;
+    @Embedded
+    private PostUserData postUserData;
 
     @Embedded
     private PostMetaData postMetaData;
@@ -38,17 +40,22 @@ public class Post extends BaseDateEntity {
 
     public static Post of(
             PostUploadRequest postUploadRequest,
-            Long userSeq,
-            Countries country,
-            String region
+            User user
     ) {
         PostMetaData postMetaData = PostMetaData.of(
                 postUploadRequest,
-                country,
-                region
+                user.getLocation().getCountry(),
+                user.getLocation().getRegion()
         );
+
+        PostUserData postUserData = PostUserData.builder()
+                .userSeq(user.getSeq())
+                .profileImage(user.getImageUrl())
+                .nickname(user.getNickName())
+                .build();
+
         return Post.builder()
-                .userSeq(userSeq)
+                .postUserData(postUserData)
                 .postMetaData(postMetaData)
                 .category(postUploadRequest.getCategory())
                 .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")

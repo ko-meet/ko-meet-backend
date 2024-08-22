@@ -52,9 +52,7 @@ public class PostUploadService {
     ) {
         return Post.of(
                 postUploadRequest,
-                userSeq,
-                user.getLocation().getCountry(),
-                user.getLocation().getRegion()
+                user
         );
     }
 
