@@ -4,6 +4,7 @@ import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.post.infrastructure.PostRepository;
 import com.backend.immilog.post.infrastructure.PostResourceRepository;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
+import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,9 @@ class PostDeleteServiceTest {
                 .postMetaData(
                         PostMetaData.builder().build()
                 )
-                .userSeq(userId)
+                .postUserData(
+                        PostUserData.builder().userSeq(userId).build()
+                )
                 .build();
         when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
 
@@ -66,10 +69,8 @@ class PostDeleteServiceTest {
         Long postSeq = 1L;
         Post post = Post.builder()
                 .seq(postSeq)
-                .postMetaData(
-                        PostMetaData.builder().build()
-                )
-                .userSeq(2L)
+                .postMetaData(PostMetaData.builder().build())
+                .postUserData(PostUserData.builder().userSeq(2L).build())
                 .build();
         when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
 

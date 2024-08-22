@@ -201,7 +201,7 @@ public class PostUpdateService {
             Long userId,
             Post post
     ) {
-        if (!Objects.equals(post.getUserSeq(), userId)) {
+        if (!Objects.equals(post.getPostUserData().getUserSeq(), userId)) {
             throw new CustomException(NO_AUTHORITY);
         }
     }
