@@ -3,9 +3,12 @@ package com.backend.immilog.post.presentation.controller;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.post.application.PostDeleteService;
+import com.backend.immilog.post.application.PostInquiryService;
 import com.backend.immilog.post.application.PostUpdateService;
 import com.backend.immilog.post.application.PostUploadService;
 import com.backend.immilog.post.enums.Categories;
+import com.backend.immilog.post.enums.SortingMethods;
+import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.enums.Countries;
@@ -15,16 +18,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @DisplayName("PostController 테스트")
 class PostControllerTest {
@@ -36,6 +43,8 @@ class PostControllerTest {
     private PostUpdateService postUpdateService;
     @Mock
     private PostDeleteService postDeleteService;
+    @Mock
+    private PostInquiryService postInquiryService;
     private PostController postController;
 
     @BeforeEach
@@ -45,6 +54,7 @@ class PostControllerTest {
                 postUploadService,
                 postUpdateService,
                 postDeleteService,
+                postInquiryService,
                 jwtProvider
         );
     }
@@ -162,5 +172,40 @@ class PostControllerTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
         verify(postUpdateService).likePost(1L, postSeq);
+    }
+
+    @Test
+    @DisplayName("게시물 목록 조회")
+    void getPosts() {
+        // given
+        Countries country = Countries.SOUTH_KOREA;
+        SortingMethods sortingMethod = SortingMethods.CREATED_DATE;
+        String isPublic = "Y";
+        Categories category = Categories.ALL;
+        Integer page = 0;
+        PostDTO postDTO = mock(PostDTO.class);
+        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        when(postInquiryService.getPosts(
+                country,
+                sortingMethod,
+                isPublic,
+                category,
+                page
+        )).thenReturn(posts);
+
+        // when
+        ResponseEntity<ApiResponse> response = postController.getPosts(
+                country,
+                sortingMethod,
+                isPublic,
+                category,
+                page
+        );
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).getData()).getTotalPages())
+                .isEqualTo(1);
+
     }
 }

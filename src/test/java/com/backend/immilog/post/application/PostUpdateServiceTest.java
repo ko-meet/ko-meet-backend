@@ -8,6 +8,7 @@ import com.backend.immilog.post.infrastructure.InteractionUserRepository;
 import com.backend.immilog.post.infrastructure.PostRepository;
 import com.backend.immilog.post.infrastructure.PostResourceRepository;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
+import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.sql.DataSource;
@@ -86,7 +86,7 @@ class PostUpdateServiceTest {
                 .isPublic(true)
                 .build();
         Post post = Post.builder()
-                .userSeq(1L)
+                .postUserData(PostUserData.builder().userSeq(1L).build())
                 .postMetaData(PostMetaData.builder().build())
                 .build();
         when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
@@ -128,7 +128,7 @@ class PostUpdateServiceTest {
                 .isPublic(true)
                 .build();
         Post post = Post.builder()
-                .userSeq(1L)
+                .postUserData(PostUserData.builder().userSeq(1L).build())
                 .postMetaData(PostMetaData.builder().build())
                 .build();
         when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
@@ -194,7 +194,7 @@ class PostUpdateServiceTest {
 
     @Test
     @DisplayName("게시물 좋아요 - 성공:이미 좋아요 한 유저")
-    void likePost_success_exits(){
+    void likePost_success_exits() {
         // given
         Long postSeq = 1L;
         Long userSeq = 2L;
@@ -215,7 +215,7 @@ class PostUpdateServiceTest {
 
     @Test
     @DisplayName("게시물 좋아요 - 성공:새로 좋아요 추가")
-    void likePost_success_new(){
+    void likePost_success_new() {
         // given
         Long postSeq = 1L;
         Long userSeq = 2L;
@@ -233,7 +233,6 @@ class PostUpdateServiceTest {
         verify(interactionUserRepository, times(1))
                 .save(any(InteractionUser.class));
     }
-
 
 
 }
