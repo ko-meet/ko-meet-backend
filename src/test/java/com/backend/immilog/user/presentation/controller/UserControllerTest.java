@@ -84,7 +84,7 @@ class UserControllerTest {
 
         // then
         verify(emailService, times(1)).sendHtmlEmail(
-                param.getEmail(),
+                param.email(),
                 EmailComponents.EMAIL_SIGN_UP_SUBJECT,
                 String.format(
                         EmailComponents.HTML_SIGN_UP_CONTENT,
@@ -128,9 +128,9 @@ class UserControllerTest {
                 .build();
 
 
-        when(locationService.getCountry(param.getLatitude(), param.getLongitude()))
+        when(locationService.getCountry(param.latitude(), param.longitude()))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
-        when(userSignInService.signIn(param, locationService.getCountry(param.getLatitude(), param.getLongitude())))
+        when(userSignInService.signIn(param, locationService.getCountry(param.latitude(), param.longitude())))
                 .thenReturn(UserSignInDTO.builder().build());
         // when
         ResponseEntity<ApiResponse> response = userController.signIn(param);
@@ -156,7 +156,7 @@ class UserControllerTest {
                         .build();
 
         when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
-        when(locationService.getCountry(param.getLatitude(), param.getLongitude()))
+        when(locationService.getCountry(param.latitude(), param.longitude()))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("Japan", "Tokyo")));
         // when
         ResponseEntity<ApiResponse> response =
@@ -166,7 +166,7 @@ class UserControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(OK);
         verify(userInformationService, times(1)).updateInformation(
                 1L,
-                locationService.getCountry(param.getLatitude(), param.getLongitude()),
+                locationService.getCountry(param.latitude(), param.longitude()),
                 param
         );
     }
@@ -205,7 +205,7 @@ class UserControllerTest {
 
         // then
         ApiResponse body = Objects.requireNonNull(response.getBody());
-        assertThat(body.getData()).isEqualTo(true);
+        assertThat(body.data()).isEqualTo(true);
     }
 
     @Test

@@ -86,7 +86,7 @@ class UserInformationServiceTest {
         verify(redisService, times(1)).saveKeyAndValue(
                 "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
         );
-        assertThat(result.getUserSeq()).isEqualTo(userSeq);
+        assertThat(result.userSeq()).isEqualTo(userSeq);
     }
 
     @Test
@@ -117,7 +117,7 @@ class UserInformationServiceTest {
         verify(redisService, times(1)).saveKeyAndValue(
                 "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
         );
-        assertThat(result.getUserSeq()).isEqualTo(userSeq);
+        assertThat(result.userSeq()).isEqualTo(userSeq);
     }
 
     @Test

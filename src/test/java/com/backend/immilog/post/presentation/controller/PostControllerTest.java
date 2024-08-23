@@ -204,7 +204,7 @@ class PostControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).getData()).getTotalPages())
+        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
                 .isEqualTo(1);
 
     }

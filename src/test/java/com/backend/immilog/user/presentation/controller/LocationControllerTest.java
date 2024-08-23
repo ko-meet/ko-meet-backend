@@ -52,10 +52,10 @@ class LocationControllerTest {
         // then
         assertThat(response).isNotNull();
         assertThat(OK).isEqualTo(response.getStatusCode());
-        LocationResponse locationResponse = (LocationResponse) response.getBody().getData();
+        LocationResponse locationResponse = (LocationResponse) response.getBody().data();
         assertThat(locationResponse).isNotNull();
         assertThat(Countries.getCountryByKoreanName(country).getCountryName())
-                .isEqualTo(locationResponse.getCountry());
-        assertThat(SOUTH_KOREA.toString()).isEqualTo(locationResponse.getCountry());
+                .isEqualTo(locationResponse.country());
+        assertThat(SOUTH_KOREA.toString()).isEqualTo(locationResponse.country());
     }
 }

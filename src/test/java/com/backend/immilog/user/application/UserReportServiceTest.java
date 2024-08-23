@@ -99,7 +99,7 @@ class UserReportServiceTest {
         // given
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 1L;
-        UserReportRequest reportUserRequest = new UserReportRequest();
+        UserReportRequest reportUserRequest = UserReportRequest.builder().build();
         when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(false);
@@ -119,7 +119,7 @@ class UserReportServiceTest {
         // given
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 2L;
-        UserReportRequest reportUserRequest = new UserReportRequest();
+        UserReportRequest reportUserRequest = UserReportRequest.builder().build();
         when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(true);

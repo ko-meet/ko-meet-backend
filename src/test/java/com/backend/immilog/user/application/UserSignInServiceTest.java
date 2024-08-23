@@ -69,16 +69,16 @@ class UserSignInServiceTest {
 
         User user = User.builder()
                 .seq(1L)
-                .email(userSignInRequest.getEmail())
+                .email(userSignInRequest.email())
                 .userStatus(UserStatus.ACTIVE)
                 .userRole(UserRole.ROLE_USER)
-                .password(passwordEncoder.encode(userSignInRequest.getPassword()))
+                .password(passwordEncoder.encode(userSignInRequest.password()))
                 .location(location)
                 .build();
 
-        when(userRepository.findByEmail(userSignInRequest.getEmail()))
+        when(userRepository.findByEmail(userSignInRequest.email()))
                 .thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(userSignInRequest.getPassword(), user.getPassword()))
+        when(passwordEncoder.matches(userSignInRequest.password(), user.getPassword()))
                 .thenReturn(true);
         when(jwtProvider.issueAccessToken(any(TokenIssuanceDTO.class)))
                 .thenReturn("accessToken");
@@ -91,8 +91,8 @@ class UserSignInServiceTest {
         UserSignInDTO userSignInDTO = userSignInService.signIn(userSignInRequest, country);
 
         // then
-        assertThat(userSignInDTO.getUserSeq()).isEqualTo(user.getSeq());
-        assertThat(userSignInDTO.getAccessToken()).isEqualTo("accessToken");
+        assertThat(userSignInDTO.userSeq()).isEqualTo(user.getSeq());
+        assertThat(userSignInDTO.accessToken()).isEqualTo("accessToken");
         verify(jwtProvider, times(1)).issueAccessToken(any(TokenIssuanceDTO.class));
         verify(jwtProvider, times(1)).issueRefreshToken();
     }
@@ -115,10 +115,10 @@ class UserSignInServiceTest {
 
         User user = User.builder()
                 .seq(1L)
-                .email(userSignInRequest.getEmail())
+                .email(userSignInRequest.email())
                 .userStatus(UserStatus.ACTIVE)
                 .userRole(UserRole.ROLE_USER)
-                .password(passwordEncoder.encode(userSignInRequest.getPassword()))
+                .password(passwordEncoder.encode(userSignInRequest.password()))
                 .location(location)
                 .build();
 
