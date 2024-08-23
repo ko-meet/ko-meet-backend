@@ -48,7 +48,7 @@ class ImageControllerTest {
                 imageController.uploadImage(files, imagePath);
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        ImageDTO data = (ImageDTO) Objects.requireNonNull(response.getBody()).getData();
+        ImageDTO data = (ImageDTO) Objects.requireNonNull(response.getBody()).data();
         assertThat(data.getImageUrl().get(0)).isEqualTo("imageUrl");
     }
 
