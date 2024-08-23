@@ -34,7 +34,7 @@ public class ImageController {
 
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse(data));
+                .body(ApiResponse.of(data));
     }
 
     @DeleteMapping
@@ -42,7 +42,7 @@ public class ImageController {
     public ResponseEntity<ApiResponse> deleteImage(
             ImageRequest imageRequest
     ) {
-        imageService.deleteFile(imageRequest.getImagePath());
+        imageService.deleteFile(imageRequest.imagePath());
         return ResponseEntity.status(NO_CONTENT).build();
     }
 }
