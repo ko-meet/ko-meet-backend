@@ -2,7 +2,7 @@ package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;

@@ -7,7 +7,7 @@ import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
