@@ -125,10 +125,10 @@ public class PostUpdateService {
 
     private void updateResources(
             Long postSeq,
-            PostUpdateRequest postUpdateRequest
+            PostUpdateRequest request
     ) {
-        updateResource(postSeq, postUpdateRequest.getDeleteTags(), postUpdateRequest.getAddTags(), TAG);
-        updateResource(postSeq, postUpdateRequest.getDeleteAttachments(), postUpdateRequest.getAddAttachments(), ATTACHMENT);
+        updateResource(postSeq, request.deleteTags(), request.addTags(), TAG);
+        updateResource(postSeq, request.deleteAttachments(), request.addAttachments(), ATTACHMENT);
     }
 
     private void updateResource(
@@ -184,16 +184,16 @@ public class PostUpdateService {
 
     private void updatePostMetaData(
             Post post,
-            PostUpdateRequest postUpdateRequest
+            PostUpdateRequest request
     ) {
-        if (postUpdateRequest.getTitle() != null) {
-            post.getPostMetaData().setTitle(postUpdateRequest.getTitle());
+        if (request.title() != null) {
+            post.getPostMetaData().setTitle(request.title());
         }
-        if (postUpdateRequest.getContent() != null) {
-            post.getPostMetaData().setContent(postUpdateRequest.getContent());
+        if (request.content() != null) {
+            post.getPostMetaData().setContent(request.content());
         }
-        if (postUpdateRequest.getIsPublic() != null) {
-            post.setIsPublic(postUpdateRequest.getIsPublic() ? "Y" : "N");
+        if (request.isPublic() != null) {
+            post.setIsPublic(request.isPublic() ? "Y" : "N");
         }
     }
 

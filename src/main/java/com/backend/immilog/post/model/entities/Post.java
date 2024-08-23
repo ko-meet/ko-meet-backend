@@ -57,8 +57,8 @@ public class Post extends BaseDateEntity {
         return Post.builder()
                 .postUserData(postUserData)
                 .postMetaData(postMetaData)
-                .category(postUploadRequest.getCategory())
-                .isPublic(postUploadRequest.getIsPublic() ? "Y" : "N")
+                .category(postUploadRequest.category())
+                .isPublic(postUploadRequest.isPublic() ? "Y" : "N")
                 .commentCount(0L)
                 .build();
     }

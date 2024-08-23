@@ -102,11 +102,11 @@ public class PostUploadService {
             PostUploadRequest postUploadRequest,
             Long postSeq
     ) {
-        if (postUploadRequest.getTags() == null) {
+        if (postUploadRequest.tags() == null) {
             return List.of();
         }
         return postUploadRequest
-                .getTags()
+                .tags()
                 .stream()
                 .map(tag -> PostResource.of(POST, TAG, tag, postSeq))
                 .toList();
@@ -116,11 +116,11 @@ public class PostUploadService {
             PostUploadRequest postUploadRequest,
             Long postSeq
     ) {
-        if (postUploadRequest.getAttachments() == null) {
+        if (postUploadRequest.attachments() == null) {
             return List.of();
         }
         return postUploadRequest
-                .getAttachments()
+                .attachments()
                 .stream()
                 .map(url -> PostResource.of(POST, ATTACHMENT, url, postSeq))
                 .toList();

@@ -105,7 +105,7 @@ public class PostController {
                 category,
                 page == null ? 0 : page
         );
-        return ResponseEntity.status(OK).body(new ApiResponse(posts));
+        return ResponseEntity.status(OK).body(ApiResponse.of(posts));
     }
 
 }
