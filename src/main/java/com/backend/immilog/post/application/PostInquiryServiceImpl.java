@@ -2,7 +2,8 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.enums.SortingMethods;
-import com.backend.immilog.post.infrastructure.PostRepository;
+import com.backend.immilog.post.model.services.PostInquiryService;
+import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.user.enums.Countries;
 import lombok.RequiredArgsConstructor;
@@ -11,15 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostInquiryService {
+public class PostInquiryServiceImpl implements PostInquiryService {
     private final PostRepository postRepository;
 
-    @Transactional(readOnly = true)
+    @Override
     public Page<PostDTO> getPosts(
             Countries country,
             SortingMethods sortingMethod,

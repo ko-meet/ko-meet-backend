@@ -2,16 +2,16 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.infrastructure.BulkInsertRepository;
-import com.backend.immilog.post.infrastructure.PostRepository;
+import com.backend.immilog.post.model.services.PostUploadService;
+import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,12 +27,12 @@ import static com.backend.immilog.post.enums.ResourceType.TAG;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PostUploadService {
+public class PostUploadServiceImpl implements PostUploadService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final BulkInsertRepository bulkInsertRepository;
 
-    @Transactional
+    @Override
     public void uploadPost(
             Long userSeq,
             PostUploadRequest postUploadRequest

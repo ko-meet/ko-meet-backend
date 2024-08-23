@@ -1,10 +1,10 @@
-package com.backend.immilog.post.infrastructure;
+package com.backend.immilog.post.model.repositories;
 
 import com.backend.immilog.post.enums.ResourceType;
 
 import java.util.List;
 
-public interface PostResourceQRepository {
+public interface PostResourceRepositoryCustom {
     void deleteAllEntities(
             Long postSeq,
             ResourceType resourceType,

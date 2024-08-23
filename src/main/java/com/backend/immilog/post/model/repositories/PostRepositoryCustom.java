@@ -1,4 +1,4 @@
-package com.backend.immilog.post.infrastructure;
+package com.backend.immilog.post.model.repositories;
 
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.model.dtos.PostDTO;
@@ -7,7 +7,7 @@ import com.backend.immilog.user.enums.Countries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface PostQRepository {
+public interface PostRepositoryCustom {
 
     Page<PostDTO> getPosts(
             Countries country,
