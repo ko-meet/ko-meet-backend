@@ -1,11 +1,12 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.post.infrastructure.PostRepository;
-import com.backend.immilog.post.infrastructure.PostResourceRepository;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.Post;
+import com.backend.immilog.post.model.services.PostDeleteService;
+import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.repositories.PostResourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,10 @@ class PostDeleteServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        postDeleteService = new PostDeleteService(postRepository, postResourceRepository);
+        postDeleteService = new PostDeleteServiceImpl(
+                postRepository,
+                postResourceRepository
+        );
     }
 
     @Test
