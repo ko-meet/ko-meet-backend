@@ -67,7 +67,7 @@ public class UserReportService {
                         targetUserSeq,
                         reporterUserSeq,
                         userReportRequest,
-                        userReportRequest.getReason().equals(OTHER)
+                        userReportRequest.reason().equals(OTHER)
                 )
         );
         log.info("User {} reported by {}", targetUserSeq, reporterUserSeq);

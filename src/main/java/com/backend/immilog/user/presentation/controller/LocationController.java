@@ -37,7 +37,7 @@ public class LocationController {
 
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse(
+                .body(ApiResponse.of(
                                 LocationResponse.from(
                                         Countries.getCountryByKoreanName(country.getFirst()),
                                         country.getSecond()

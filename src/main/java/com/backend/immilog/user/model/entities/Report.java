@@ -38,12 +38,12 @@ public class Report extends BaseDateEntity {
             boolean isOther
     ) {
         String description = isOther ?
-                reportUserRequest.getDescription() :
-                reportUserRequest.getReason().getReason();
+                reportUserRequest.description() :
+                reportUserRequest.reason().getReason();
         return Report.builder()
                 .reportedUserSeq(targetUserSeq)
                 .reporterUserSeq(reporterUserSeq)
-                .reason(reportUserRequest.getReason())
+                .reason(reportUserRequest.reason())
                 .description(description)
                 .build();
     }

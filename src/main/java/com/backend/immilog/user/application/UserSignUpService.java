@@ -27,8 +27,8 @@ public class UserSignUpService {
     public Pair<Long, String> signUp(
             UserSignUpRequest userSignUpRequest
     ) {
-        validateUserNotExists(userSignUpRequest.getEmail());
-        String password = passwordEncoder.encode(userSignUpRequest.getPassword());
+        validateUserNotExists(userSignUpRequest.email());
+        String password = passwordEncoder.encode(userSignUpRequest.password());
         User user = userRepository.save(User.of(userSignUpRequest, password));
         return Pair.of(user.getSeq(), user.getNickName());
     }

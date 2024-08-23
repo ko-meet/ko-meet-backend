@@ -37,7 +37,7 @@ public class UserSignInService {
             UserSignInRequest userSignInRequest,
             CompletableFuture<Pair<String, String>> country
     ) {
-        User user = getUserByEmail(userSignInRequest.getEmail());
+        User user = getUserByEmail(userSignInRequest.email());
         validateIfPasswordsMatches(userSignInRequest, user);
         validateIfUserStateIsActive(user);
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDTO.of(user));
@@ -90,7 +90,7 @@ public class UserSignInService {
             UserSignInRequest userSignInRequest,
             User user
     ) {
-        if (!passwordEncoder.matches(userSignInRequest.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userSignInRequest.password(), user.getPassword())) {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
     }

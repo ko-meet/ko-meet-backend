@@ -43,7 +43,7 @@ public class UserController {
             @Valid @RequestBody UserSignUpRequest request
     ) {
         final Pair<Long, String> userSeqAndName = userSignUpService.signUp(request);
-        final String email = request.getEmail();
+        final String email = request.email();
         final String userName = userSeqAndName.getSecond();
         final Long userSeq = userSeqAndName.getFirst();
         final String url = String.format(API_LINK, userSeq);
@@ -71,11 +71,11 @@ public class UserController {
     ) {
         CompletableFuture<Pair<String, String>> country =
                 locationService.getCountry(
-                        request.getLatitude(),
-                        request.getLongitude()
+                        request.latitude(),
+                        request.longitude()
                 );
         final UserSignInDTO userSignInDto = userSignInService.signIn(request, country);
-        return ResponseEntity.status(OK).body(new ApiResponse(userSignInDto));
+        return ResponseEntity.status(OK).body(ApiResponse.of(userSignInDto));
     }
 
     @PatchMapping("/information")
@@ -87,13 +87,13 @@ public class UserController {
         final Long userSeq = jwtProvider.getIdFromToken(token);
         CompletableFuture<Pair<String, String>> country =
                 locationService.getCountry(
-                        userInfoUpdateRequest.getLatitude(),
-                        userInfoUpdateRequest.getLongitude()
+                        userInfoUpdateRequest.latitude(),
+                        userInfoUpdateRequest.longitude()
                 );
         userInformationService.updateInformation(
                 userSeq, country, userInfoUpdateRequest
         );
-        return ResponseEntity.status(OK).body(new ApiResponse(OK.value()));
+        return ResponseEntity.status(OK).body(ApiResponse.of(OK.value()));
     }
 
     @PatchMapping("/password/change")
@@ -115,7 +115,7 @@ public class UserController {
             @RequestParam String nickname
     ) {
         Boolean isNickNameAvailable = userSignUpService.checkNickname(nickname);
-        return ResponseEntity.status(OK).body(new ApiResponse(isNickNameAvailable));
+        return ResponseEntity.status(OK).body(ApiResponse.of(isNickNameAvailable));
     }
 
     @PatchMapping("/{userSeq}/{status}")
