@@ -1,47 +1,25 @@
 package com.backend.immilog.global.presentation.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class ApiResponse {
-    private Integer status;
-    private String message = "success";
-    private Object data;
-    private List<Object> list;
-
-    public ApiResponse(
-            Integer status
-    ) {
-        this.status = status;
-    }
-
-    public ApiResponse(
-            Integer status,
-            String message
-    ) {
-        this.status = status;
-        this.message = message;
-    }
-
-    public ApiResponse(
+public record ApiResponse(
+        Integer status,
+        String message,
+        Object data,
+        List<Object> list
+) {
+    public static ApiResponse of(
             Object data
     ) {
-        this.status = 200;
-        this.data = data;
-    }
-
-    public ApiResponse(
-            List<Object> list
-    ) {
-        this.status = 200;
-        this.list = list;
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(null)
+                .data(data)
+                .list(null)
+                .build();
     }
 }

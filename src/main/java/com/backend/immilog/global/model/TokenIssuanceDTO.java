@@ -19,10 +19,10 @@ public class TokenIssuanceDTO {
             UserDTO userDto
     ) {
         return TokenIssuanceDTO.builder()
-                .id(userDto.getSeq())
-                .email(userDto.getEmail())
-                .userRole(userDto.getUserRole())
-                .country(userDto.getCountry())
+                .id(userDto.seq())
+                .email(userDto.email())
+                .userRole(userDto.userRole())
+                .country(userDto.country())
                 .build();
     }
 
