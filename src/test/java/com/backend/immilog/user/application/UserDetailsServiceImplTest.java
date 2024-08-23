@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application;
 
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
