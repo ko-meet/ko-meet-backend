@@ -5,24 +5,22 @@ import com.backend.immilog.user.enums.UserRole;
 import com.backend.immilog.user.model.dtos.UserDTO;
 import com.backend.immilog.user.model.entities.User;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
-public class TokenIssuanceDTO {
-    private Long id;
-    private String email;
-    private UserRole userRole;
-    private Countries country;
-
+public record TokenIssuanceDTO(
+        Long id,
+        String email,
+        UserRole userRole,
+        Countries country
+) {
     public static TokenIssuanceDTO of(
             UserDTO userDto
     ) {
         return TokenIssuanceDTO.builder()
-                .id(userDto.getSeq())
-                .email(userDto.getEmail())
-                .userRole(userDto.getUserRole())
-                .country(userDto.getCountry())
+                .id(userDto.seq())
+                .email(userDto.email())
+                .userRole(userDto.userRole())
+                .country(userDto.country())
                 .build();
     }
 

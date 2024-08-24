@@ -4,21 +4,18 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @ApiModel(value = "PostUpdateRequest", description = "게시물 수정 요청 DTO")
-public class PostUpdateRequest {
-    private String title;
-    private String content;
-    private List<String> deleteTags;
-    private List<String> addTags;
-    private List<String> deleteAttachments;
-    private List<String> addAttachments;
-    private Boolean isPublic;
+public record PostUpdateRequest(
+        String title,
+        String content,
+        List<String> deleteTags,
+        List<String> addTags,
+        List<String> deleteAttachments,
+        List<String> addAttachments,
+        Boolean isPublic
+) {
 }

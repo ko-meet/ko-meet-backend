@@ -6,6 +6,7 @@ import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.entities.QInteractionUser;
 import com.backend.immilog.post.model.entities.QPost;
 import com.backend.immilog.post.model.entities.QPostResource;
+import com.backend.immilog.post.model.repositories.PostRepositoryCustom;
 import com.backend.immilog.user.enums.Countries;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -27,7 +28,7 @@ import static com.querydsl.core.types.Projections.list;
 
 @RequiredArgsConstructor
 @Repository
-public class PostQRepositoryImpl implements PostQRepository {
+public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override

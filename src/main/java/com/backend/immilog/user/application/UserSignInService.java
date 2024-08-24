@@ -5,7 +5,7 @@ import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
@@ -37,7 +37,7 @@ public class UserSignInService {
             UserSignInRequest userSignInRequest,
             CompletableFuture<Pair<String, String>> country
     ) {
-        User user = getUserByEmail(userSignInRequest.getEmail());
+        User user = getUserByEmail(userSignInRequest.email());
         validateIfPasswordsMatches(userSignInRequest, user);
         validateIfUserStateIsActive(user);
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDTO.of(user));
@@ -90,7 +90,7 @@ public class UserSignInService {
             UserSignInRequest userSignInRequest,
             User user
     ) {
-        if (!passwordEncoder.matches(userSignInRequest.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userSignInRequest.password(), user.getPassword())) {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
     }

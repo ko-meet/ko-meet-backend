@@ -9,7 +9,9 @@ import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ import java.util.Objects;
 
 import static com.backend.immilog.post.enums.InteractionType.BOOKMARK;
 import static com.backend.immilog.post.enums.InteractionType.LIKE;
-import static com.backend.immilog.post.enums.PostType.POST;
 import static com.backend.immilog.post.enums.ResourceType.ATTACHMENT;
 import static com.backend.immilog.post.enums.ResourceType.TAG;
 

@@ -75,7 +75,7 @@ class AuthControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        Object data = Objects.requireNonNull(response.getBody()).getData();
-        assertThat(((UserSignInDTO) data).getEmail()).isEqualTo(userSignInDTO.getEmail());
+        Object data = Objects.requireNonNull(response.getBody()).data();
+        assertThat(((UserSignInDTO) data).email()).isEqualTo(userSignInDTO.email());
     }
 }

@@ -3,14 +3,15 @@ package com.backend.immilog.post.application;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.infrastructure.BulkInsertRepository;
 import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.infrastructure.PostRepository;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
+import com.backend.immilog.post.model.services.PostUploadService;
+import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.infrastructure.UserRepository;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class PostUploadServiceTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        postUploadService = new PostUploadService(
+        postUploadService = new PostUploadServiceImpl(
                 postRepository,
                 userRepository,
                 bulkInsertRepository

@@ -57,24 +57,24 @@ public class User extends BaseDateEntity {
             String encodedPassword
     ) {
         Countries interestCountry =
-                userSignUpRequest.getInterestCountry() != null ?
-                        Countries.getCountry(userSignUpRequest.getInterestCountry()) : null;
-        Countries country = Countries.getCountryByKoreanName(userSignUpRequest.getCountry());
+                userSignUpRequest.interestCountry() != null ?
+                        Countries.getCountry(userSignUpRequest.interestCountry()) : null;
+        Countries country = Countries.getCountryByKoreanName(userSignUpRequest.country());
 
         return User.builder()
-                .nickName(userSignUpRequest.getNickName())
-                .email(userSignUpRequest.getEmail())
+                .nickName(userSignUpRequest.nickName())
+                .email(userSignUpRequest.email())
                 .password(encodedPassword)
                 .location(
                         Location.of(
                                 country,
-                                userSignUpRequest.getRegion()
+                                userSignUpRequest.region()
                         )
                 )
                 .interestCountry(interestCountry)
                 .userRole(UserRole.ROLE_USER)
                 .userStatus(UserStatus.PENDING)
-                .imageUrl(userSignUpRequest.getProfileImage())
+                .imageUrl(userSignUpRequest.profileImage())
                 .build();
     }
 }

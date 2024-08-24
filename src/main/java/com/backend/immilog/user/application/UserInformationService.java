@@ -7,7 +7,7 @@ import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
@@ -73,10 +73,10 @@ public class UserInformationService {
     ) {
         User user = getUser(userSeq);
         setUserCountryIfItsChanged(country, userInfoUpdateRequest, user);
-        setUserNickNameIfItsChanged(userInfoUpdateRequest.getNickName(), user);
-        setUserInterestCountryIfItsChanged(userInfoUpdateRequest.getInterestCountry(), user);
-        setUserStatusIfItsChanged(userInfoUpdateRequest.getStatus(), user);
-        setUserImageProfileIfItsChanged(userInfoUpdateRequest.getProfileImage(), user);
+        setUserNickNameIfItsChanged(userInfoUpdateRequest.nickName(), user);
+        setUserInterestCountryIfItsChanged(userInfoUpdateRequest.interestCountry(), user);
+        setUserStatusIfItsChanged(userInfoUpdateRequest.status(), user);
+        setUserImageProfileIfItsChanged(userInfoUpdateRequest.profileImage(), user);
     }
 
     @Transactional
@@ -85,8 +85,8 @@ public class UserInformationService {
             UserPasswordChangeRequest userPasswordChangeRequest
     ) {
         User user = getUser(userSeq);
-        String existingPassword = userPasswordChangeRequest.getExistingPassword();
-        String newPassword = userPasswordChangeRequest.getNewPassword();
+        String existingPassword = userPasswordChangeRequest.existingPassword();
+        String newPassword = userPasswordChangeRequest.newPassword();
         String currentPassword = user.getPassword();
         throwExceptionIfPasswordNotMatch(existingPassword, currentPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -126,10 +126,10 @@ public class UserInformationService {
             User user
     ) {
         try {
-            if (userInfoUpdateRequest.getCountry() != null && country.get() != null) {
+            if (userInfoUpdateRequest.country() != null && country.get() != null) {
                 Pair<String, String> countryPair = country.join();
                 user.getLocation().setRegion(countryPair.getSecond());
-                user.getLocation().setCountry(userInfoUpdateRequest.getCountry());
+                user.getLocation().setCountry(userInfoUpdateRequest.country());
             }
         } catch (InterruptedException | ExecutionException e) {
             log.info(e.getMessage());
