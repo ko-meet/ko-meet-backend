@@ -42,19 +42,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             Pageable pageable
     ) {
         QPost post = QPost.post;
-        QPostResource postResource = QPostResource.postResource;
-        QInteractionUser interactionUser = QInteractionUser.interactionUser;
+        QPostResource resource = QPostResource.postResource;
+        QInteractionUser interUser = QInteractionUser.interactionUser;
 
         Predicate predicate = generateCriteria(country, isPublic, category, post);
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
 
         List<PostDTO> postDTOs = queryFactory
-                .select(post, list(interactionUser), list(postResource))
+                .select(post, list(interUser), list(resource))
                 .from(post)
-                .leftJoin(postResource)
-                .on(postResource.postSeq.eq(post.seq).and(postResource.postType.eq(POST)))
-                .leftJoin(interactionUser)
-                .on(interactionUser.postSeq.eq(post.seq).and(interactionUser.postType.eq(POST)))
+                .leftJoin(resource)
+                .on(resource.postSeq.eq(post.seq).and(resource.postType.eq(POST)))
+                .leftJoin(interUser)
+                .on(interUser.postSeq.eq(post.seq).and(interUser.postType.eq(POST)))
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
@@ -64,8 +64,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                                 Projections.constructor(
                                         PostDTO.class,
                                         post,
-                                        list(interactionUser),
-                                        list(postResource)
+                                        list(interUser),
+                                        list(resource)
                                 )
                         )
                 );
@@ -79,15 +79,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             Long postSeq
     ) {
         QPost post = QPost.post;
-        QPostResource postResource = QPostResource.postResource;
-        QInteractionUser interactionUser = QInteractionUser.interactionUser;
+        QPostResource resource = QPostResource.postResource;
+        QInteractionUser interUser = QInteractionUser.interactionUser;
         BooleanExpression criteria = post.seq.eq(postSeq);
 
-        return queryFactory.select(post, list(interactionUser), list(postResource))
+        return queryFactory
+                .select(post, list(interUser), list(resource))
                 .from(post)
-                .on(postResource.postSeq.eq(post.seq).and(postResource.postType.eq(POST)))
-                .leftJoin(interactionUser)
-                .on(interactionUser.postSeq.eq(post.seq).and(interactionUser.postType.eq(POST)))
+                .leftJoin(resource)
+                .on(resource.postSeq.eq(post.seq).and(resource.postType.eq(POST)))
+                .leftJoin(interUser)
+                .on(interUser.postSeq.eq(post.seq).and(interUser.postType.eq(POST)))
                 .where(criteria)
                 .transform(
                         groupBy(post.seq)
@@ -95,13 +97,59 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                                         Projections.constructor(
                                                 PostDTO.class,
                                                 post,
-                                                list(interactionUser),
-                                                list(postResource)
+                                                list(interUser),
+                                                list(resource)
                                         )
                                 )
                 )
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public Page<PostDTO> getPostsByKeyword(
+            String keyword,
+            Pageable pageable
+    ) {
+        QPost post = QPost.post;
+        QPostResource resource = QPostResource.postResource;
+        QInteractionUser interUser = QInteractionUser.interactionUser;
+        BooleanExpression predicate = generateKeywordCriteria(keyword, post, resource);
+
+        List<PostDTO> postDTOs = queryFactory
+                .select(post, list(interUser), list(resource))
+                .from(post)
+                .leftJoin(resource)
+                .on(resource.postSeq.eq(post.seq).and(resource.postType.eq(POST)))
+                .leftJoin(interUser)
+                .on(interUser.postSeq.eq(post.seq).and(interUser.postType.eq(POST)))
+                .where(predicate)
+                .transform(
+                        groupBy(post.seq)
+                                .list(
+                                        Projections.constructor(
+                                                PostDTO.class,
+                                                post,
+                                                list(interUser),
+                                                list(resource)
+                                        )
+                                )
+                );
+        long total = getSize(post, resource, interUser, predicate);
+        return new PageImpl<>(postDTOs, pageable, total);
+    }
+
+    private static BooleanExpression generateKeywordCriteria(
+            String keyword,
+            QPost post,
+            QPostResource resource
+    ) {
+        BooleanExpression postCondition = post.postMetaData.content.contains(keyword)
+                .or(post.postMetaData.title.contains(keyword));
+
+        BooleanExpression resourceCondition = resource.content.contains(keyword);
+
+        return postCondition.or(resourceCondition);
     }
 
     private static Predicate generateCriteria(
@@ -140,6 +188,22 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             Predicate predicate
     ) {
         return queryFactory.selectFrom(post)
+                .where(predicate)
+                .fetch()
+                .size();
+    }
+
+    private int getSize(
+            QPost post,
+            QPostResource postResource,
+            QInteractionUser interactionUser,
+            Predicate predicate
+    ) {
+        return queryFactory.selectFrom(post)
+                .leftJoin(postResource)
+                .on(postResource.postSeq.eq(post.seq).and(postResource.postType.eq(POST)))
+                .leftJoin(interactionUser)
+                .on(interactionUser.postSeq.eq(post.seq).and(interactionUser.postType.eq(POST)))
                 .where(predicate)
                 .fetch()
                 .size();

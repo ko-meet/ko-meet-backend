@@ -49,4 +49,14 @@ public class PostInquiryServiceImpl implements PostInquiryService {
                 .getPost(postSeq)
                 .orElseThrow(()-> new CustomException(POST_NOT_FOUND));
     }
+
+    @Override
+    public Page<PostDTO> searchKeyword(
+            String keyword,
+            Integer page
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return postRepository
+                .getPostsByKeyword(keyword, pageRequest);
+    }
 }

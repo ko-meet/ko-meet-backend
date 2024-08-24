@@ -19,4 +19,10 @@ public interface PostInquiryService {
 
     @Transactional(readOnly = true)
     PostDTO getPost(Long postSeq);
+
+    @Transactional(readOnly = true)
+    Page<PostDTO> searchKeyword(
+            String keyword,
+            Integer page
+    );
 }

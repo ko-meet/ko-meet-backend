@@ -5,6 +5,7 @@ import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.user.enums.Countries;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
@@ -19,5 +20,12 @@ public interface PostRepositoryCustom {
             Pageable pageable
     );
 
-    Optional<PostDTO> getPost(Long postSeq);
+    Optional<PostDTO> getPost(
+            Long postSeq
+    );
+
+    Page<PostDTO> getPostsByKeyword(
+            String keyword,
+            Pageable pageable
+    );
 }
