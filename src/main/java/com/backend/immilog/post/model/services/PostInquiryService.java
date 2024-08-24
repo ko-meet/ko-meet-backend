@@ -16,4 +16,7 @@ public interface PostInquiryService {
             Categories category,
             Integer page
     );
+
+    @Transactional(readOnly = true)
+    PostDTO getPost(Long postSeq);
 }

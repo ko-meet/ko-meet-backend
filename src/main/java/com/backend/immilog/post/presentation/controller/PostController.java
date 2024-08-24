@@ -108,4 +108,15 @@ public class PostController {
         return ResponseEntity.status(OK).body(ApiResponse.of(posts));
     }
 
+    @GetMapping("/{postSeq}")
+    @ApiOperation(value = "게시물 상세 조회", notes = "게시물 상세 정보를 조회합니다.")
+    public ResponseEntity<ApiResponse> getPost(
+            @PathVariable Long postSeq
+    ) {
+        PostDTO post = postInquiryService.getPost(postSeq);
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.of(post));
+    }
+
 }
