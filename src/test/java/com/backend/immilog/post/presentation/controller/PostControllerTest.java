@@ -205,4 +205,22 @@ class PostControllerTest {
                 .isEqualTo(1);
 
     }
+
+    @Test
+    @DisplayName("게시물 상세 조회")
+    void getPost() {
+        // given
+        Long postSeq = 1L;
+        PostDTO postDTO = mock(PostDTO.class);
+        when(postInquiryService.getPost(postSeq)).thenReturn(postDTO);
+        when(postDTO.getSeq()).thenReturn(postSeq);
+
+        // when
+        ResponseEntity<ApiResponse> response = postController.getPost(postSeq);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postDTO);
+        assertThat(((PostDTO)(response.getBody()).data()).getSeq()).isEqualTo(postSeq);
+    }
 }
