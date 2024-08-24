@@ -119,4 +119,14 @@ public class PostController {
                 .body(ApiResponse.of(post));
     }
 
+    @GetMapping("/search")
+    @ApiOperation(value = "게시물 검색", notes = "게시물을 검색합니다.")
+    public ResponseEntity<ApiResponse> searchPosts(
+            @RequestParam(required = true) String keyword,
+            @RequestParam(required = true) Integer page
+    ) {
+        Page<PostDTO> posts = postInquiryService.searchKeyword(keyword, page);
+        return ResponseEntity.status(OK).body(ApiResponse.of(posts));
+    }
+
 }
