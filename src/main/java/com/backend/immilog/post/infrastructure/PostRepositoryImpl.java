@@ -12,6 +12,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.immilog.post.enums.PostStatus.DELETED;
 import static com.backend.immilog.post.enums.PostType.POST;
@@ -47,35 +49,59 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sortingMethod, post);
 
         List<PostDTO> postDTOs = queryFactory
-                .select(
-                        post,
-                        list(interactionUser),
-                        list(postResource)
-                )
+                .select(post, list(interactionUser), list(postResource))
                 .from(post)
-                .leftJoin(postResource).on(
-                        postResource.postSeq.eq(post.seq)
-                                .and(postResource.postType.eq(POST))
-                )
-                .leftJoin(interactionUser).on(
-                        interactionUser.postSeq.eq(post.seq)
-                                .and(interactionUser.postType.eq(POST))
-                )
+                .leftJoin(postResource)
+                .on(postResource.postSeq.eq(post.seq).and(postResource.postType.eq(POST)))
+                .leftJoin(interactionUser)
+                .on(interactionUser.postSeq.eq(post.seq).and(interactionUser.postType.eq(POST)))
                 .where(predicate)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .transform(groupBy(post.seq).list(
-                        Projections.constructor(
-                                PostDTO.class,
-                                post,
-                                list(interactionUser),
-                                list(postResource)
+                .transform(
+                        groupBy(post.seq).list(
+                                Projections.constructor(
+                                        PostDTO.class,
+                                        post,
+                                        list(interactionUser),
+                                        list(postResource)
+                                )
                         )
-                ));
+                );
 
         long total = getSize(post, predicate);
         return new PageImpl<>(postDTOs, pageable, total);
+    }
+
+    @Override
+    public Optional<PostDTO> getPost(
+            Long postSeq
+    ) {
+        QPost post = QPost.post;
+        QPostResource postResource = QPostResource.postResource;
+        QInteractionUser interactionUser = QInteractionUser.interactionUser;
+        BooleanExpression criteria = post.seq.eq(postSeq);
+
+        return queryFactory.select(post, list(interactionUser), list(postResource))
+                .from(post)
+                .on(postResource.postSeq.eq(post.seq).and(postResource.postType.eq(POST)))
+                .leftJoin(interactionUser)
+                .on(interactionUser.postSeq.eq(post.seq).and(interactionUser.postType.eq(POST)))
+                .where(criteria)
+                .transform(
+                        groupBy(post.seq)
+                                .list(
+                                        Projections.constructor(
+                                                PostDTO.class,
+                                                post,
+                                                list(interactionUser),
+                                                list(postResource)
+                                        )
+                                )
+                )
+                .stream()
+                .findFirst();
     }
 
     private static Predicate generateCriteria(

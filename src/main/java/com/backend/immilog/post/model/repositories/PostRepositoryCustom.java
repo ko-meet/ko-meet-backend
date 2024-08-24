@@ -7,6 +7,8 @@ import com.backend.immilog.user.enums.Countries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface PostRepositoryCustom {
 
     Page<PostDTO> getPosts(
@@ -16,4 +18,6 @@ public interface PostRepositoryCustom {
             Categories category,
             Pageable pageable
     );
+
+    Optional<PostDTO> getPost(Long postSeq);
 }

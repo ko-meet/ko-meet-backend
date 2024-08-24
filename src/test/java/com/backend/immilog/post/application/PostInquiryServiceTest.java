@@ -65,4 +65,17 @@ class PostInquiryServiceTest {
         // then
         Assertions.assertThat(result.getTotalPages()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("게시물 조회(단일 게시물)")
+    void getPost() {
+        // given
+        Long postSeq = 1L;
+        PostDTO postDTO = mock(PostDTO.class);
+        when(postRepository.getPost(postSeq)).thenReturn(java.util.Optional.of(postDTO));
+        // when
+        PostDTO result = postInquiryService.getPost(postSeq);
+        // then
+        Assertions.assertThat(result).isEqualTo(postDTO);
+    }
 }
