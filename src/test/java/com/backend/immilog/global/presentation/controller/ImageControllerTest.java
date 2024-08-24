@@ -49,7 +49,7 @@ class ImageControllerTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         ImageDTO data = (ImageDTO) Objects.requireNonNull(response.getBody()).data();
-        assertThat(data.getImageUrl().get(0)).isEqualTo("imageUrl");
+        assertThat(data.imageUrl().get(0)).isEqualTo("imageUrl");
     }
 
     @Test

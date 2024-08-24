@@ -2,11 +2,10 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.enums.SortingMethods;
-import com.backend.immilog.post.model.services.PostInquiryService;
-import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.services.PostInquiryService;
 import com.backend.immilog.user.enums.Countries;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +63,7 @@ class PostInquiryServiceTest {
                 page
         );
         // then
-        Assertions.assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getTotalPages()).isEqualTo(1);
     }
 
     @Test
@@ -76,6 +76,23 @@ class PostInquiryServiceTest {
         // when
         PostDTO result = postInquiryService.getPost(postSeq);
         // then
-        Assertions.assertThat(result).isEqualTo(postDTO);
+        assertThat(result).isEqualTo(postDTO);
     }
+
+    @Test
+    @DisplayName("게시물 검색 - 성공")
+    void searchKeyword() {
+        // given
+        String keyword = "keyword";
+        int page = 0;
+        Pageable pageable = PageRequest.of(page, 10);
+        PostDTO postDTO = mock(PostDTO.class);
+        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        when(postRepository.getPostsByKeyword(keyword, pageable)).thenReturn(posts);
+        // when
+        Page<PostDTO> result = postInquiryService.searchKeyword(keyword, page);
+        // then
+        assertThat(result.getTotalPages()).isEqualTo(1);
+    }
+
 }
