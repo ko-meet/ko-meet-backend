@@ -47,10 +47,11 @@ public class JwtProvider {
     public String issueAccessToken(
             TokenIssuanceDTO tokenTokenIssuanceDto
     ) {
-        Claims claims = Jwts.claims().setSubject(tokenTokenIssuanceDto.getId().toString());
-        claims.put("email", tokenTokenIssuanceDto.getEmail());
-        claims.put("userRole", tokenTokenIssuanceDto.getUserRole());
-        claims.put("country", tokenTokenIssuanceDto.getCountry().getCountryCode());
+        Claims claims =
+                Jwts.claims().setSubject(tokenTokenIssuanceDto.id().toString());
+        claims.put("email", tokenTokenIssuanceDto.email());
+        claims.put("userRole", tokenTokenIssuanceDto.userRole());
+        claims.put("country", tokenTokenIssuanceDto.country().getCountryCode());
 
         return buildJwt(claims);
     }

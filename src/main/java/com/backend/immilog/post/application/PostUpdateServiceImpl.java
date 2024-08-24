@@ -4,17 +4,16 @@ import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.infrastructure.BulkInsertRepository;
 import com.backend.immilog.post.enums.ResourceType;
-import com.backend.immilog.post.infrastructure.InteractionUserRepository;
-import com.backend.immilog.post.infrastructure.PostRepository;
-import com.backend.immilog.post.infrastructure.PostResourceRepository;
+import com.backend.immilog.post.model.repositories.InteractionUserRepository;
+import com.backend.immilog.post.model.services.PostUpdateService;
+import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.repositories.PostResourceRepository;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import static com.backend.immilog.post.enums.ResourceType.TAG;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostUpdateService {
+public class PostUpdateServiceImpl implements PostUpdateService {
     private static final String POST_TYPE = POST.toString();
     private final PostRepository postRepository;
     private final PostResourceRepository postResourceRepository;
@@ -39,7 +38,7 @@ public class PostUpdateService {
     final String LIKE_LOCK_KEY = "likePost : ";
     final String VIEW_LOCK_KEY = "viewPost : ";
 
-    @Transactional
+    @Override
     public void updatePost(
             Long userId,
             Long postSeq,
@@ -51,8 +50,7 @@ public class PostUpdateService {
         updateResources(postSeq, postUpdateRequest);
     }
 
-    @Async
-    @Transactional
+    @Override
     public void increaseViewCount(Long postSeq) {
         executeWithLock(
                 VIEW_LOCK_KEY,
@@ -65,8 +63,7 @@ public class PostUpdateService {
         );
     }
 
-    @Async
-    @Transactional
+    @Override
     public void likePost(
             Long userSeq,
             Long postSeq
@@ -125,10 +122,10 @@ public class PostUpdateService {
 
     private void updateResources(
             Long postSeq,
-            PostUpdateRequest postUpdateRequest
+            PostUpdateRequest request
     ) {
-        updateResource(postSeq, postUpdateRequest.getDeleteTags(), postUpdateRequest.getAddTags(), TAG);
-        updateResource(postSeq, postUpdateRequest.getDeleteAttachments(), postUpdateRequest.getAddAttachments(), ATTACHMENT);
+        updateResource(postSeq, request.deleteTags(), request.addTags(), TAG);
+        updateResource(postSeq, request.deleteAttachments(), request.addAttachments(), ATTACHMENT);
     }
 
     private void updateResource(
@@ -184,16 +181,16 @@ public class PostUpdateService {
 
     private void updatePostMetaData(
             Post post,
-            PostUpdateRequest postUpdateRequest
+            PostUpdateRequest request
     ) {
-        if (postUpdateRequest.getTitle() != null) {
-            post.getPostMetaData().setTitle(postUpdateRequest.getTitle());
+        if (request.title() != null) {
+            post.getPostMetaData().setTitle(request.title());
         }
-        if (postUpdateRequest.getContent() != null) {
-            post.getPostMetaData().setContent(postUpdateRequest.getContent());
+        if (request.content() != null) {
+            post.getPostMetaData().setContent(request.content());
         }
-        if (postUpdateRequest.getIsPublic() != null) {
-            post.setIsPublic(postUpdateRequest.getIsPublic() ? "Y" : "N");
+        if (request.isPublic() != null) {
+            post.setIsPublic(request.isPublic() ? "Y" : "N");
         }
     }
 

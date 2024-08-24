@@ -2,7 +2,8 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.enums.SortingMethods;
-import com.backend.immilog.post.infrastructure.PostRepository;
+import com.backend.immilog.post.model.services.PostInquiryService;
+import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.user.enums.Countries;
 import org.assertj.core.api.Assertions;
@@ -31,7 +32,7 @@ class PostInquiryServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        postInquiryService = new PostInquiryService(postRepository);
+        postInquiryService = new PostInquiryServiceImpl(postRepository);
     }
 
     @Test
@@ -63,5 +64,18 @@ class PostInquiryServiceTest {
         );
         // then
         Assertions.assertThat(result.getTotalPages()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게시물 조회(단일 게시물)")
+    void getPost() {
+        // given
+        Long postSeq = 1L;
+        PostDTO postDTO = mock(PostDTO.class);
+        when(postRepository.getPost(postSeq)).thenReturn(java.util.Optional.of(postDTO));
+        // when
+        PostDTO result = postInquiryService.getPost(postSeq);
+        // then
+        Assertions.assertThat(result).isEqualTo(postDTO);
     }
 }

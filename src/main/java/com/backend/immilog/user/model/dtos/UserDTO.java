@@ -4,28 +4,25 @@ import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.enums.UserRole;
 import com.backend.immilog.user.enums.UserStatus;
 import com.backend.immilog.user.model.entities.User;
-import lombok.*;
+import lombok.Builder;
 
 import java.sql.Date;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserDTO {
-    private Long seq;
-    private String nickName;
-    private String email;
-    private String profileImage;
-    private Long reportedCount;
-    private Date reportedDate;
-    private Countries country;
-    private Countries interestCountry;
-    private String region;
-    private UserRole userRole;
-    private UserStatus userStatus;
-
-    public static UserDTO toDTO(
+public record UserDTO(
+        Long seq,
+        String nickName,
+        String email,
+        String profileImage,
+        Long reportedCount,
+        Date reportedDate,
+        Countries country,
+        Countries interestCountry,
+        String region,
+        UserRole userRole,
+        UserStatus userStatus
+) {
+    public static UserDTO from(
             User user
     ) {
         return UserDTO.builder()
@@ -43,7 +40,7 @@ public class UserDTO {
                 .build();
     }
 
-    public static UserDTO toDTO(
+    public static UserDTO from(
             Long seq,
             String nickName,
             String profileImage

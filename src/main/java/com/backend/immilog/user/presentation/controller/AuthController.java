@@ -46,7 +46,7 @@ public class AuthController {
 
         return ResponseEntity
                 .status(OK)
-                .body(new ApiResponse(userSignInDTO));
+                .body(ApiResponse.of(userSignInDTO));
     }
 
 }

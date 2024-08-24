@@ -4,24 +4,20 @@ import com.backend.immilog.user.model.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserSignInDTO {
-    private Long userSeq;
-    private String email;
-    private String nickname;
-    private String accessToken;
-    private String refreshToken;
-    private String country;
-    private String interestCountry;
-    private String region;
-    private String userProfileUrl;
-    private Boolean isLocationMatch;
-
+public record UserSignInDTO(
+        Long userSeq,
+        String email,
+        String nickname,
+        String accessToken,
+        String refreshToken,
+        String country,
+        String interestCountry,
+        String region,
+        String userProfileUrl,
+        Boolean isLocationMatch
+) {
     public static UserSignInDTO of(
             User user,
             String accessToken,

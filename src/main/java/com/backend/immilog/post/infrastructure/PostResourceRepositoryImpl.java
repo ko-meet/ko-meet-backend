@@ -2,6 +2,7 @@ package com.backend.immilog.post.infrastructure;
 
 import com.backend.immilog.post.enums.ResourceType;
 import com.backend.immilog.post.model.entities.QPostResource;
+import com.backend.immilog.post.model.repositories.PostResourceRepositoryCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class PostResourceQRepositoryImpl implements PostResourceQRepository {
+public class PostResourceRepositoryImpl implements PostResourceRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final EntityManager entityManager;
 

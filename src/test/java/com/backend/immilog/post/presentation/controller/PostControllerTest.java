@@ -2,13 +2,13 @@ package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.post.application.PostDeleteService;
-import com.backend.immilog.post.application.PostInquiryService;
-import com.backend.immilog.post.application.PostUpdateService;
-import com.backend.immilog.post.application.PostUploadService;
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.model.services.PostDeleteService;
+import com.backend.immilog.post.model.services.PostInquiryService;
+import com.backend.immilog.post.model.services.PostUpdateService;
+import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.enums.Countries;
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,8 +28,6 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
 
 @DisplayName("PostController 테스트")
@@ -204,8 +201,26 @@ class PostControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).getData()).getTotalPages())
+        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
                 .isEqualTo(1);
 
+    }
+
+    @Test
+    @DisplayName("게시물 상세 조회")
+    void getPost() {
+        // given
+        Long postSeq = 1L;
+        PostDTO postDTO = mock(PostDTO.class);
+        when(postInquiryService.getPost(postSeq)).thenReturn(postDTO);
+        when(postDTO.getSeq()).thenReturn(postSeq);
+
+        // when
+        ResponseEntity<ApiResponse> response = postController.getPost(postSeq);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postDTO);
+        assertThat(((PostDTO)(response.getBody()).data()).getSeq()).isEqualTo(postSeq);
     }
 }

@@ -4,16 +4,12 @@ import com.backend.immilog.user.enums.Countries;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class LocationResponse {
-    private String country;
-    private String region;
-
+public record LocationResponse(
+        String country,
+        String region
+) {
     public static LocationResponse from(
             Countries country,
             String region

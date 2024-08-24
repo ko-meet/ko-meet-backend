@@ -44,8 +44,8 @@ public class PostMetaData {
             String region
     ) {
         return PostMetaData.builder()
-                .title(postUploadRequest.getTitle())
-                .content(postUploadRequest.getContent())
+                .title(postUploadRequest.title())
+                .content(postUploadRequest.content())
                 .viewCount(0L)
                 .likeCount(0L)
                 .status(PostStatus.NORMAL)

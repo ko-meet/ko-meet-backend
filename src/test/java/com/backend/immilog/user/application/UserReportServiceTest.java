@@ -4,8 +4,8 @@ import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.enums.ReportReason;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.infrastructure.ReportRepository;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
 import com.backend.immilog.user.model.entities.Report;
@@ -99,7 +99,7 @@ class UserReportServiceTest {
         // given
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 1L;
-        UserReportRequest reportUserRequest = new UserReportRequest();
+        UserReportRequest reportUserRequest = UserReportRequest.builder().build();
         when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(false);
@@ -119,7 +119,7 @@ class UserReportServiceTest {
         // given
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 2L;
-        UserReportRequest reportUserRequest = new UserReportRequest();
+        UserReportRequest reportUserRequest = UserReportRequest.builder().build();
         when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(true);

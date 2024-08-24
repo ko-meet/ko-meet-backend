@@ -1,4 +1,4 @@
-package com.backend.immilog.user.infrastructure;
+package com.backend.immilog.user.model.interfaces.repositories;
 
 import com.backend.immilog.user.model.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,7 +1,7 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.user.infrastructure.UserRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
