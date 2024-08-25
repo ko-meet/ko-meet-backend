@@ -28,4 +28,9 @@ public interface PostRepositoryCustom {
             String keyword,
             Pageable pageable
     );
+
+    Page<PostDTO> getPostsByUserSeq(
+            Long userSeq,
+            Pageable pageable
+    );
 }
