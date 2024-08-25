@@ -95,4 +95,20 @@ class PostInquiryServiceTest {
         assertThat(result.getTotalPages()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("사용자 게시물 조회 - 성공")
+    void getUserPosts() {
+        // given
+        Long userSeq = 1L;
+        int page = 0;
+        Pageable pageable = PageRequest.of(page, 10);
+        PostDTO postDTO = mock(PostDTO.class);
+        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        when(postRepository.getPostsByUserSeq(userSeq, pageable)).thenReturn(posts);
+        // when
+        Page<PostDTO> result = postInquiryService.getUserPosts(userSeq, page);
+        // then
+        assertThat(result.getTotalPages()).isEqualTo(1);
+    }
+
 }
