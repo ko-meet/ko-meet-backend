@@ -25,4 +25,10 @@ public interface PostInquiryService {
             String keyword,
             Integer page
     );
+
+    @Transactional(readOnly = true)
+    Page<PostDTO> getUserPosts(
+            Long userSeq,
+            Integer page
+    );
 }

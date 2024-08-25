@@ -59,4 +59,14 @@ public class PostInquiryServiceImpl implements PostInquiryService {
         return postRepository
                 .getPostsByKeyword(keyword, pageRequest);
     }
+
+    @Override
+    public Page<PostDTO> getUserPosts(
+            Long userSeq,
+            Integer page
+    ) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return postRepository
+                .getPostsByUserSeq(userSeq, pageable);
+    }
 }

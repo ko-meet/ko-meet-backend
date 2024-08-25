@@ -221,12 +221,12 @@ class PostControllerTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postDTO);
-        assertThat(((PostDTO)(response.getBody()).data()).getSeq()).isEqualTo(postSeq);
+        assertThat(((PostDTO) (response.getBody()).data()).getSeq()).isEqualTo(postSeq);
     }
 
     @Test
     @DisplayName("게시물 검색")
-    void searchPost(){
+    void searchPost() {
         // given
         String keyword = "keyword";
         Integer page = 0;
@@ -249,5 +249,30 @@ class PostControllerTest {
                 .isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("사용자 시퀀스로 게시물 목록 조회")
+    void getUserPosts() {
+        // given
+        Long userSeq = 1L;
+        Integer page = 0;
+        PostDTO postDTO = mock(PostDTO.class);
+        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        when(postInquiryService.getUserPosts(
+                userSeq,
+                page
+        )).thenReturn(posts);
+
+        // when
+        ResponseEntity<ApiResponse> response = postController.getUserPosts(
+                userSeq,
+                page
+        );
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(OK);
+        assertThat(((Page<PostDTO>) Objects.requireNonNull(
+                response.getBody()).data()).getTotalPages())
+                .isEqualTo(1);
+    }
 
 }
