@@ -129,4 +129,14 @@ public class PostController {
         return ResponseEntity.status(OK).body(ApiResponse.of(posts));
     }
 
+    @GetMapping("/users/{userSeq}/page/{page}")
+    @ApiOperation(value = "사용자 본인의 게시물 목록 조회", notes = "사용자 게시물 목록을 조회합니다.")
+    public ResponseEntity<ApiResponse> getUserPosts(
+            @PathVariable Long userSeq,
+            @PathVariable Integer page
+    ) {
+        Page<PostDTO> posts = postInquiryService.getUserPosts(userSeq, page);
+        return ResponseEntity.status(OK).body(ApiResponse.of(posts));
+    }
+
 }

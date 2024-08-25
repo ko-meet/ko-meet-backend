@@ -139,6 +139,47 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return new PageImpl<>(postDTOs, pageable, total);
     }
 
+    @Override
+    public Page<PostDTO> getPostsByUserSeq(
+            Long userSeq,
+            Pageable pageable
+    ) {
+        QPost post = QPost.post;
+        QPostResource resource = QPostResource.postResource;
+        QInteractionUser interUser = QInteractionUser.interactionUser;
+        BooleanExpression predicate = generateUserPostCriteria(userSeq, post);
+
+        List<PostDTO> postDTOs = queryFactory
+                .select(post, list(interUser), list(resource))
+                .from(post)
+                .leftJoin(resource)
+                .on(resource.postSeq.eq(post.seq).and(resource.postType.eq(POST)))
+                .leftJoin(interUser)
+                .on(interUser.postSeq.eq(post.seq).and(interUser.postType.eq(POST)))
+                .where(predicate)
+                .transform(
+                        groupBy(post.seq)
+                                .list(
+                                        Projections.constructor(
+                                                PostDTO.class,
+                                                post,
+                                                list(interUser),
+                                                list(resource)
+                                        )
+                                )
+                );
+        long total = getSize(post, resource, interUser, predicate);
+        return new PageImpl<>(postDTOs, pageable, total);
+    }
+
+    private BooleanExpression generateUserPostCriteria(
+            Long userSeq,
+            QPost post
+    ) {
+        return post.postUserData.userSeq.eq(userSeq)
+                .and(post.postMetaData.status.ne(DELETED));
+    }
+
     private static BooleanExpression generateKeywordCriteria(
             String keyword,
             QPost post,
