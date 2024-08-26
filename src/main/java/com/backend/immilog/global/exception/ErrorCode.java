@@ -46,7 +46,9 @@ public enum ErrorCode {
     JOB_BOARD_NOT_FOUND(NOT_FOUND, "존재하지 않는 구인 게시판입니다."),
     COMPANY_NOT_FOUND(NOT_FOUND, "존재하지 않는 회사입니다."),
 
-    FAILED_TO_SAVE_POST(BAD_REQUEST, "게시물을 저장하는데 실패하였습니다.");
+    FAILED_TO_SAVE_POST(BAD_REQUEST, "게시물을 저장하는데 실패하였습니다."),
+
+    INVALID_REFERENCE_TYPE(BAD_REQUEST, "유효하지 않은 참조 타입입니다.");
 
     private final HttpStatus status;
     private final String message;
