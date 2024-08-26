@@ -3,6 +3,7 @@ package com.backend.immilog.post.application;
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.services.PostInquiryService;
 import com.backend.immilog.user.enums.Countries;
@@ -27,12 +28,18 @@ class PostInquiryServiceTest {
     @Mock
     private PostRepository postRepository;
 
+    @Mock
+    private CommentRepository commentRepository;
+
     private PostInquiryService postInquiryService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        postInquiryService = new PostInquiryServiceImpl(postRepository);
+        postInquiryService = new PostInquiryServiceImpl(
+                postRepository,
+                commentRepository
+        );
     }
 
     @Test
@@ -73,6 +80,7 @@ class PostInquiryServiceTest {
         Long postSeq = 1L;
         PostDTO postDTO = mock(PostDTO.class);
         when(postRepository.getPost(postSeq)).thenReturn(java.util.Optional.of(postDTO));
+        when(commentRepository.getComments(postSeq)).thenReturn(List.of());
         // when
         PostDTO result = postInquiryService.getPost(postSeq);
         // then
