@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backend.immilog.global.exception.CommonErrorCode.UNDEFINED_EXCEPTION;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -53,7 +55,7 @@ public class GlobalExceptionHandler {
                 ErrorResponse
                         .builder()
                         .message(exception.getMessage())
-                        .errorCode(ErrorCode.UNDEFINED_EXCEPTION)
+                        .errorCode(UNDEFINED_EXCEPTION)
                         .build();
 
         log.error(exception.getMessage(), exception);
