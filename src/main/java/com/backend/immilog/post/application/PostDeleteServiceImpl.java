@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static com.backend.immilog.global.exception.ErrorCode.NO_AUTHORITY;
-import static com.backend.immilog.global.exception.ErrorCode.POST_NOT_FOUND;
 import static com.backend.immilog.post.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
+import static com.backend.immilog.post.exception.PostErrorCode.POST_NOT_FOUND;
 
 @Slf4j
 @Service

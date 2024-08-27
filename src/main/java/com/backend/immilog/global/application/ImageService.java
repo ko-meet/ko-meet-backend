@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.backend.immilog.global.exception.ErrorCode.IMAGE_UPLOAD_FAILED;
+import static com.backend.immilog.global.exception.CommonErrorCode.IMAGE_UPLOAD_FAILED;
 
 @RequiredArgsConstructor
 @Service

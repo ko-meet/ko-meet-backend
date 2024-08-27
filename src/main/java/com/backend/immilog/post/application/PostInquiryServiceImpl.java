@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.backend.immilog.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.backend.immilog.post.exception.PostErrorCode.POST_NOT_FOUND;
 
 @Slf4j
 @Service

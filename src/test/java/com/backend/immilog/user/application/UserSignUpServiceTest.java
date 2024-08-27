@@ -1,8 +1,8 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.backend.immilog.global.exception.ErrorCode.EXISTING_USER;
-import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
 import static com.backend.immilog.user.enums.UserStatus.*;
+import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
+import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
