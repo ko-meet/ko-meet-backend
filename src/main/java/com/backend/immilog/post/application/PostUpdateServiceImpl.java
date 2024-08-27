@@ -4,12 +4,12 @@ import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.infrastructure.BulkInsertRepository;
 import com.backend.immilog.post.enums.ResourceType;
-import com.backend.immilog.post.model.repositories.InteractionUserRepository;
-import com.backend.immilog.post.model.services.PostUpdateService;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.repositories.PostResourceRepository;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
+import com.backend.immilog.post.model.repositories.InteractionUserRepository;
+import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.repositories.PostResourceRepository;
+import com.backend.immilog.post.model.services.PostUpdateService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static com.backend.immilog.global.exception.ErrorCode.*;
 import static com.backend.immilog.post.enums.InteractionType.LIKE;
 import static com.backend.immilog.post.enums.PostType.POST;
 import static com.backend.immilog.post.enums.ResourceType.ATTACHMENT;
 import static com.backend.immilog.post.enums.ResourceType.TAG;
+import static com.backend.immilog.post.exception.PostErrorCode.*;
 
 @Slf4j
 @Service
@@ -157,13 +157,13 @@ public class PostUpdateServiceImpl implements PostUpdateService {
             bulkInsertRepository.saveAll(
                     addResources,
                     """
-                            INSERT INTO post_resource (
-                                post_seq,
-                                post_type,
-                                resource_type,
-                                content
-                            ) VALUES (?, ?, ?, ?)
-                            """,
+                    INSERT INTO post_resource (
+                        post_seq,
+                        post_type,
+                        resource_type,
+                        content
+                    ) VALUES (?, ?, ?, ?)
+                    """,
                     (ps, resource) -> {
                         try {
                             ps.setLong(1, postSeq);
