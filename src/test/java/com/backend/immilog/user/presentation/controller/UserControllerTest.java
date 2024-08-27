@@ -1,6 +1,5 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.*;
@@ -19,13 +18,11 @@ import org.springframework.ui.Model;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.global.exception.ErrorCode.CANNOT_REPORT_MYSELF;
 import static com.backend.immilog.user.enums.Countries.INDONESIA;
 import static com.backend.immilog.user.enums.Countries.JAPAN;
 import static com.backend.immilog.user.enums.ReportReason.FRAUD;
 import static com.backend.immilog.user.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
 
