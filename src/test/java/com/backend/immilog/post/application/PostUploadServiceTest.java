@@ -5,8 +5,8 @@ import com.backend.immilog.global.infrastructure.BulkInsertRepository;
 import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
-import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.model.embeddables.Location;
@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static com.backend.immilog.global.exception.ErrorCode.FAILED_TO_SAVE_POST;
 import static com.backend.immilog.post.enums.PostType.POST;
 import static com.backend.immilog.post.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 

@@ -14,8 +14,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.immilog.global.exception.ErrorCode.INVALID_REFERENCE_TYPE;
-import static com.backend.immilog.global.exception.ErrorCode.POST_NOT_FOUND;
+import static com.backend.immilog.post.exception.PostErrorCode.INVALID_REFERENCE_TYPE;
+import static com.backend.immilog.post.exception.PostErrorCode.POST_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
