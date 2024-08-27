@@ -2,10 +2,10 @@ package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserReportRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.backend.immilog.global.exception.ErrorCode.*;
 import static com.backend.immilog.user.enums.ReportReason.OTHER;
+import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
