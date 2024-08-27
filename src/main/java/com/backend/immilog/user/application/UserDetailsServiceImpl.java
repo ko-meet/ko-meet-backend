@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service

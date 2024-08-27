@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import static com.backend.immilog.global.exception.ErrorCode.EMAIL_SEND_FAILED;
+import static com.backend.immilog.post.exception.PostErrorCode.EMAIL_SEND_FAILED;
 
 @Slf4j
 @RequiredArgsConstructor

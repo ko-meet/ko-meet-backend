@@ -7,9 +7,9 @@ import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.backend.immilog.global.exception.ErrorCode.*;
 import static com.backend.immilog.user.enums.UserRole.ROLE_ADMIN;
+import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -105,10 +105,11 @@ public class UserInformationService {
 
     private void validateAdminUser(
             Long userSeq
-    ){
-        if(!getUser(userSeq).getUserRole().equals(ROLE_ADMIN)){
+    ) {
+        if (!getUser(userSeq).getUserRole().equals(ROLE_ADMIN)) {
             throw new CustomException(NOT_AN_ADMIN_USER);
-        };
+        }
+        ;
     }
 
     private void throwExceptionIfPasswordNotMatch(

@@ -4,12 +4,12 @@ import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.enums.ReportReason;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserReportRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,11 +21,11 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.backend.immilog.global.exception.ErrorCode.ALREADY_REPORTED;
-import static com.backend.immilog.global.exception.ErrorCode.CANNOT_REPORT_MYSELF;
 import static com.backend.immilog.user.enums.Countries.MALAYSIA;
 import static com.backend.immilog.user.enums.Countries.SOUTH_KOREA;
 import static com.backend.immilog.user.enums.UserRole.ROLE_USER;
+import static com.backend.immilog.user.exception.UserErrorCode.ALREADY_REPORTED;
+import static com.backend.immilog.user.exception.UserErrorCode.CANNOT_REPORT_MYSELF;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 

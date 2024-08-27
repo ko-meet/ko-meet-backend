@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static com.backend.immilog.global.exception.ErrorCode.*;
+import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @RequiredArgsConstructor
 @Service

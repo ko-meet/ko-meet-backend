@@ -2,8 +2,8 @@ package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.immilog.global.exception.ErrorCode.EXISTING_USER;
-import static com.backend.immilog.global.exception.ErrorCode.USER_NOT_FOUND;
 import static com.backend.immilog.user.enums.UserStatus.ACTIVE;
+import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
+import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor

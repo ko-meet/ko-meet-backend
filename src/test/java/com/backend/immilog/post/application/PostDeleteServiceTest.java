@@ -4,9 +4,9 @@ import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.services.PostDeleteService;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
+import com.backend.immilog.post.model.services.PostDeleteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.immilog.global.exception.ErrorCode.NO_AUTHORITY;
 import static com.backend.immilog.post.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
