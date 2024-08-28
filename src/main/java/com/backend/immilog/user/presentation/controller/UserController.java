@@ -1,11 +1,12 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.application.*;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.model.enums.UserStatus;
+import com.backend.immilog.user.model.services.*;
 import com.backend.immilog.user.presentation.request.*;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.EmailComponents.*;
-import static com.backend.immilog.user.enums.UserStatus.BLOCKED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
@@ -30,7 +30,7 @@ public class UserController {
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
     private final UserInformationService userInformationService;
-    private final UserReportService userReportService;
+    private final UserReportServiceImpl userReportService;
 
     private final LocationService locationService;
     private final EmailService emailService;
@@ -39,10 +39,10 @@ public class UserController {
 
     @PostMapping
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
-    public ResponseEntity<ApiResponse> signUp(
+    public ResponseEntity<UserApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest request
     ) {
-        final Pair<Long, String> userSeqAndName = userSignUpService.signUp(request);
+        final Pair<Long, String> userSeqAndName = userSignUpService.signUp(request.toCommand());
         final String email = request.email();
         final String userName = userSeqAndName.getSecond();
         final Long userSeq = userSeqAndName.getFirst();
@@ -66,7 +66,7 @@ public class UserController {
 
     @PostMapping("/sign-in")
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
-    public ResponseEntity<ApiResponse> signIn(
+    public ResponseEntity<UserApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest request
     ) {
         CompletableFuture<Pair<String, String>> country =
@@ -74,13 +74,13 @@ public class UserController {
                         request.latitude(),
                         request.longitude()
                 );
-        final UserSignInDTO userSignInDto = userSignInService.signIn(request, country);
-        return ResponseEntity.status(OK).body(ApiResponse.of(userSignInDto));
+        final UserSignInDTO userSignInDTO = userSignInService.signIn(request.toCommand(), country);
+        return ResponseEntity.status(OK).body(UserApiResponse.of(userSignInDTO));
     }
 
     @PatchMapping("/information")
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
-    public ResponseEntity<ApiResponse> updateInformation(
+    public ResponseEntity<UserApiResponse> updateInformation(
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
     ) {
@@ -91,31 +91,34 @@ public class UserController {
                         userInfoUpdateRequest.longitude()
                 );
         userInformationService.updateInformation(
-                userSeq, country, userInfoUpdateRequest
+                userSeq, country, userInfoUpdateRequest.toCommand()
         );
-        return ResponseEntity.status(OK).body(ApiResponse.of(OK.value()));
+        return ResponseEntity.status(OK).body(UserApiResponse.of(OK.value()));
     }
 
     @PatchMapping("/password/change")
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
-    public ResponseEntity<ApiResponse> changePassword(
+    public ResponseEntity<UserApiResponse> changePassword(
             @RequestHeader(AUTHORIZATION) String token,
             @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
     ) {
         Long userSeq = jwtProvider.getIdFromToken(token);
 
-        userInformationService.changePassword(userSeq, userPasswordChangeRequest);
+        userInformationService.changePassword(
+                userSeq,
+                userPasswordChangeRequest.toCommand()
+        );
 
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @GetMapping("/nicknames")
     @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
-    public ResponseEntity<ApiResponse> checkNickname(
+    public ResponseEntity<UserApiResponse> checkNickname(
             @RequestParam String nickname
     ) {
         Boolean isNickNameAvailable = userSignUpService.checkNickname(nickname);
-        return ResponseEntity.status(OK).body(ApiResponse.of(isNickNameAvailable));
+        return ResponseEntity.status(OK).body(UserApiResponse.of(isNickNameAvailable));
     }
 
     @PatchMapping("/{userSeq}/{status}")
@@ -139,7 +142,11 @@ public class UserController {
             @Valid @RequestBody UserReportRequest userReportRequest
     ) {
         Long reporterSeq = jwtProvider.getIdFromToken(token);
-        userReportService.reportUser(userSeq, reporterSeq, userReportRequest);
+        userReportService.reportUser(
+                userSeq,
+                reporterSeq,
+                userReportRequest.toCommand()
+        );
         return ResponseEntity.status(NO_CONTENT).build();
     }
 

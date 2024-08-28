@@ -1,9 +1,7 @@
 package com.backend.immilog.user.presentation.response;
 
-import com.backend.immilog.user.enums.Countries;
-import lombok.AllArgsConstructor;
+import com.backend.immilog.user.model.enums.Countries;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record LocationResponse(

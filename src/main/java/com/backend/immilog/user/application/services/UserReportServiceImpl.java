@@ -1,17 +1,16 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.application.command.UserReportCommand;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
-import com.backend.immilog.user.presentation.request.UserReportRequest;
+import com.backend.immilog.user.model.repositories.ReportRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -23,25 +22,24 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserReportService {
+public class UserReportServiceImpl implements UserReportService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final RedisDistributedLock redisDistributedLock;
     final String LOCK_KEY = "reportUser : ";
 
-    @Async
-    @Transactional
+    @Override
     public void reportUser(
             Long targetUserSeq,
             Long reporterUserSeq,
-            UserReportRequest reportUserRequest
+            UserReportCommand userReportCommand
     ) {
         reportValidation(targetUserSeq, reporterUserSeq);
         boolean lockAcquired = false;
         try {
             lockAcquired = redisDistributedLock.tryAcquireLock(LOCK_KEY, targetUserSeq.toString());
             if (lockAcquired) {
-                processReport(targetUserSeq, reporterUserSeq, reportUserRequest);
+                processReport(targetUserSeq, reporterUserSeq, userReportCommand);
             } else {
                 log.error("사용자 신고 실패 - 원인: 락 획득 실패  targetUserSeq: {}, time: {}",
                         targetUserSeq, LocalDateTime.now());
@@ -56,7 +54,7 @@ public class UserReportService {
     private void processReport(
             Long targetUserSeq,
             Long reporterUserSeq,
-            UserReportRequest userReportRequest
+            UserReportCommand userReportCommand
     ) {
         User targetUser = getUser(targetUserSeq);
         long reportCount = getReportCount(targetUser);
@@ -66,8 +64,8 @@ public class UserReportService {
                 Report.of(
                         targetUserSeq,
                         reporterUserSeq,
-                        userReportRequest,
-                        userReportRequest.reason().equals(OTHER)
+                        userReportCommand,
+                        userReportCommand.reason().equals(OTHER)
                 )
         );
         log.info("User {} reported by {}", targetUserSeq, reporterUserSeq);

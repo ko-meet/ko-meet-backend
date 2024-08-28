@@ -1,8 +1,8 @@
 package com.backend.immilog.user.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
+import com.backend.immilog.user.application.command.UserReportCommand;
 import com.backend.immilog.user.enums.ReportReason;
-import com.backend.immilog.user.presentation.request.UserReportRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,16 +34,16 @@ public class Report extends BaseDateEntity {
     public static Report of(
             Long targetUserSeq,
             Long reporterUserSeq,
-            UserReportRequest reportUserRequest,
+            UserReportCommand reportUserCommand,
             boolean isOther
     ) {
         String description = isOther ?
-                reportUserRequest.description() :
-                reportUserRequest.reason().getReason();
+                reportUserCommand.description() :
+                reportUserCommand.reason().getReason();
         return Report.builder()
                 .reportedUserSeq(targetUserSeq)
                 .reporterUserSeq(reporterUserSeq)
-                .reason(reportUserRequest.reason())
+                .reason(reportUserCommand.reason())
                 .description(description)
                 .build();
     }

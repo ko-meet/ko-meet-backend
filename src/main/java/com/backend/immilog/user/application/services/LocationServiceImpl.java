@@ -1,13 +1,13 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.user.enums.Countries;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.services.LocationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LocationService {
+public class LocationServiceImpl implements LocationService {
     private final RestTemplate restTemplate;
 
     @Value("${geocode.url}")
@@ -31,7 +31,7 @@ public class LocationService {
     @Value("${geocode.key}")
     private String geocoderKey;
 
-    @Async
+    @Override
     public CompletableFuture<Pair<String, String>> getCountry(
             Double latitude,
             Double longitude
@@ -81,6 +81,7 @@ public class LocationService {
         return null;
     }
 
+    @Override
     public Pair<String, String> joinCompletableFutureLocation(
             CompletableFuture<Pair<String, String>> countryFuture
     ) {

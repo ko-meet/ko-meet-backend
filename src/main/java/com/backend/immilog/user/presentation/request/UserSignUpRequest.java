@@ -1,5 +1,6 @@
 package com.backend.immilog.user.presentation.request;
 
+import com.backend.immilog.user.application.command.UserSignUpCommand;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 
@@ -31,4 +32,15 @@ public record UserSignUpRequest(
 
         String profileImage
 ) {
+    public UserSignUpCommand toCommand() {
+        return UserSignUpCommand.builder()
+                .nickName(nickName)
+                .password(password)
+                .email(email)
+                .country(country)
+                .interestCountry(interestCountry)
+                .region(region)
+                .profileImage(profileImage)
+                .build();
+    }
 }
