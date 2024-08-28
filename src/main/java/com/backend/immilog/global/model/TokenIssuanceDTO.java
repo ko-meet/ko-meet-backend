@@ -1,7 +1,7 @@
 package com.backend.immilog.global.model;
 
-import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.enums.UserRole;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.enums.UserRole;
 import com.backend.immilog.user.model.dtos.UserDTO;
 import com.backend.immilog.user.model.entities.User;
 import lombok.Builder;
@@ -14,13 +14,13 @@ public record TokenIssuanceDTO(
         Countries country
 ) {
     public static TokenIssuanceDTO of(
-            UserDTO userDto
+            UserDTO userDTO
     ) {
         return TokenIssuanceDTO.builder()
-                .id(userDto.seq())
-                .email(userDto.email())
-                .userRole(userDto.userRole())
-                .country(userDto.country())
+                .id(userDTO.seq())
+                .email(userDTO.email())
+                .userRole(userDTO.userRole())
+                .country(userDTO.country())
                 .build();
     }
 
