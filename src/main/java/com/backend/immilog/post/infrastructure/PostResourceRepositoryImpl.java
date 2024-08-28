@@ -1,7 +1,7 @@
 package com.backend.immilog.post.infrastructure;
 
-import com.backend.immilog.post.enums.ResourceType;
 import com.backend.immilog.post.model.entities.QPostResource;
+import com.backend.immilog.post.model.enums.ResourceType;
 import com.backend.immilog.post.model.repositories.PostResourceRepositoryCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPADeleteClause;

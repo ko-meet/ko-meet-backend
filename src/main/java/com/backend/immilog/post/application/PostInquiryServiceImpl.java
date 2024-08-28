@@ -1,14 +1,14 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.CommentDTO;
-import com.backend.immilog.post.model.repositories.CommentRepository;
-import com.backend.immilog.post.model.services.PostInquiryService;
-import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.dtos.PostDTO;
-import com.backend.immilog.user.enums.Countries;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.Countries;
+import com.backend.immilog.post.model.enums.SortingMethods;
+import com.backend.immilog.post.model.repositories.CommentRepository;
+import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.model.services.PostInquiryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

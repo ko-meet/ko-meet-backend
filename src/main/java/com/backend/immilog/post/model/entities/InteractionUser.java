@@ -1,7 +1,7 @@
 package com.backend.immilog.post.model.entities;
 
-import com.backend.immilog.post.enums.InteractionType;
-import com.backend.immilog.post.enums.PostType;
+import com.backend.immilog.post.model.enums.InteractionType;
+import com.backend.immilog.post.model.enums.PostType;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 

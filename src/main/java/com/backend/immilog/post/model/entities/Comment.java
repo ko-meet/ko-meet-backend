@@ -1,11 +1,8 @@
 package com.backend.immilog.post.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.post.enums.PostStatus;
-import com.backend.immilog.post.enums.ReferenceType;
-import com.backend.immilog.post.model.dtos.CommentDTO;
-import com.backend.immilog.user.model.dtos.UserDTO;
-import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.post.model.enums.PostStatus;
+import com.backend.immilog.post.model.enums.ReferenceType;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
