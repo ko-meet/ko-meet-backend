@@ -1,7 +1,7 @@
 package com.backend.immilog.post.model.dtos;
 
-import com.backend.immilog.post.enums.PostStatus;
 import com.backend.immilog.post.model.entities.Comment;
+import com.backend.immilog.post.model.enums.PostStatus;
 import com.backend.immilog.user.model.dtos.UserDTO;
 import com.backend.immilog.user.model.entities.User;
 import lombok.AllArgsConstructor;

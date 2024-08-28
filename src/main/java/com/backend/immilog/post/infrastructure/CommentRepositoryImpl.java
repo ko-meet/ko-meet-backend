@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.backend.immilog.post.enums.ReferenceType.COMMENT;
-import static com.backend.immilog.post.enums.ReferenceType.POST;
+import static com.backend.immilog.post.model.enums.ReferenceType.COMMENT;
+import static com.backend.immilog.post.model.enums.ReferenceType.POST;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 

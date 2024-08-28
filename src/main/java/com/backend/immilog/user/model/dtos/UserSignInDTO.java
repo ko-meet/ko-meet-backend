@@ -1,9 +1,7 @@
 package com.backend.immilog.user.model.dtos;
 
 import com.backend.immilog.user.model.entities.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record UserSignInDTO(

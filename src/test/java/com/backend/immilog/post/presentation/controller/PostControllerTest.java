@@ -1,19 +1,18 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.model.services.PostDeleteService;
 import com.backend.immilog.post.model.services.PostInquiryService;
 import com.backend.immilog.post.model.services.PostUpdateService;
 import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.enums.Countries;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.Countries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,8 +34,6 @@ import static org.springframework.http.HttpStatus.*;
 class PostControllerTest {
     @Mock
     private PostUploadService postUploadService;
-    @Mock
-    private JwtProvider jwtProvider;
     @Mock
     private PostUpdateService postUpdateService;
     @Mock
@@ -51,8 +49,7 @@ class PostControllerTest {
                 postUploadService,
                 postUpdateService,
                 postDeleteService,
-                postInquiryService,
-                jwtProvider
+                postInquiryService
         );
     }
 
@@ -60,7 +57,6 @@ class PostControllerTest {
     @DisplayName("게시물 작성")
     void createPost() {
         // given
-        String token = "token";
         PostUploadRequest postUploadRequest = PostUploadRequest.builder()
                 .category(Categories.COMMUNICATION)
                 .title("title")
@@ -75,12 +71,12 @@ class PostControllerTest {
                 .seq(1L)
                 .location(location)
                 .build();
-
-        when(jwtProvider.getIdFromToken(token)).thenReturn(user.getSeq());
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
         ResponseEntity<ApiResponse> response = postController.createPost(
-                token,
+                request,
                 postUploadRequest
         );
 
@@ -94,7 +90,8 @@ class PostControllerTest {
     void updatePost() {
         // given
         Long postSeq = 1L;
-        String token = "token";
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
         PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
                 .addAttachments(List.of("attachment"))
                 .deleteAttachments(List.of("delete-attachment"))
@@ -104,12 +101,11 @@ class PostControllerTest {
                 .content("content")
                 .isPublic(true)
                 .build();
-        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
 
         // when
         ResponseEntity<ApiResponse> response = postController.updatePost(
                 postSeq,
-                token,
+                request,
                 postUpdateRequest
         );
 
@@ -123,13 +119,13 @@ class PostControllerTest {
     void deletePost() {
         // given
         Long postSeq = 1L;
-        String token = "token";
-        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
         ResponseEntity<Void> response = postController.deletePost(
                 postSeq,
-                token
+                request
         );
 
         //then
@@ -157,13 +153,13 @@ class PostControllerTest {
     void likePost() {
         // given
         Long postSeq = 1L;
-        String token = "token";
-        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
         ResponseEntity<ApiResponse> response = postController.likePost(
                 postSeq,
-                token
+                request
         );
 
         // then
@@ -175,7 +171,6 @@ class PostControllerTest {
     @DisplayName("게시물 목록 조회")
     void getPosts() {
         // given
-        Countries country = Countries.SOUTH_KOREA;
         SortingMethods sortingMethod = SortingMethods.CREATED_DATE;
         String isPublic = "Y";
         Categories category = Categories.ALL;
@@ -183,7 +178,7 @@ class PostControllerTest {
         PostDTO postDTO = mock(PostDTO.class);
         Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
         when(postInquiryService.getPosts(
-                country,
+                com.backend.immilog.post.model.enums.Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,
@@ -192,7 +187,7 @@ class PostControllerTest {
 
         // when
         ResponseEntity<ApiResponse> response = postController.getPosts(
-                country,
+                com.backend.immilog.post.model.enums.Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,

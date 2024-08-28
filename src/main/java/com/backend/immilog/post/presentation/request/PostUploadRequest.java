@@ -1,10 +1,8 @@
 package com.backend.immilog.post.presentation.request;
 
-import com.backend.immilog.post.enums.Categories;
+import com.backend.immilog.post.model.enums.Categories;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,6 +16,6 @@ public record PostUploadRequest(
         List<String> tags,
         List<String> attachments,
         @NotNull(message = "전체공개 여부를 입력해주세요.") Boolean isPublic,
-        @NotNull(message = "카테고리를 입력해주세요.")Categories category
+        @NotNull(message = "카테고리를 입력해주세요.") Categories category
 ) {
 }

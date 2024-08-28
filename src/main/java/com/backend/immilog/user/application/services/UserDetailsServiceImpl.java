@@ -1,7 +1,7 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(
             String email

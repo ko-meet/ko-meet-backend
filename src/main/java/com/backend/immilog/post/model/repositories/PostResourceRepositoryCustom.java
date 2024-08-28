@@ -1,6 +1,6 @@
 package com.backend.immilog.post.model.repositories;
 
-import com.backend.immilog.post.enums.ResourceType;
+import com.backend.immilog.post.model.enums.ResourceType;
 
 import java.util.List;
 

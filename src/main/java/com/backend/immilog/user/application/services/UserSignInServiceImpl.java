@@ -1,30 +1,29 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.enums.UserStatus;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.application.command.UserSignInCommand;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.presentation.request.UserSignInRequest;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserSignInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.backend.immilog.global.exception.ErrorCode.*;
 import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
-public class UserSignInService {
+public class UserSignInServiceImpl implements UserSignInService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -33,13 +32,13 @@ public class UserSignInService {
     final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
     final String TOKEN_PREFIX = "Refresh: ";
 
-    @Transactional
+    @Override
     public UserSignInDTO signIn(
-            UserSignInRequest userSignInRequest,
+            UserSignInCommand userSignInCommand,
             CompletableFuture<Pair<String, String>> country
     ) {
-        User user = getUserByEmail(userSignInRequest.email());
-        validateIfPasswordsMatches(userSignInRequest, user);
+        User user = getUserByEmail(userSignInCommand.email());
+        validateIfPasswordsMatches(userSignInCommand, user);
         validateIfUserStateIsActive(user);
         String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDTO.of(user));
         String refreshToken = jwtProvider.issueRefreshToken();
@@ -88,10 +87,10 @@ public class UserSignInService {
     }
 
     private void validateIfPasswordsMatches(
-            UserSignInRequest userSignInRequest,
+            UserSignInCommand userSignInCommand,
             User user
     ) {
-        if (!passwordEncoder.matches(userSignInRequest.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(userSignInCommand.password(), user.getPassword())) {
             throw new CustomException(PASSWORD_NOT_MATCH);
         }
     }

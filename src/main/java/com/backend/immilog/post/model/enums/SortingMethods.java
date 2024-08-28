@@ -1,4 +1,4 @@
-package com.backend.immilog.post.enums;
+package com.backend.immilog.post.model.enums;
 
 public enum SortingMethods {
     CREATED_DATE,
