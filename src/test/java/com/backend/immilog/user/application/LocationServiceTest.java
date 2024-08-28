@@ -1,5 +1,7 @@
 package com.backend.immilog.user.application;
 
+import com.backend.immilog.user.application.services.LocationServiceImpl;
+import com.backend.immilog.user.model.services.LocationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.user.model.enums.Countries.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -25,7 +27,7 @@ class LocationServiceTest {
     @BeforeEach
     void setUp() {
         RestTemplate restTemplate = new RestTemplate();
-        locationService = new LocationService(restTemplate);
+        locationService = new LocationServiceImpl(restTemplate);
         mockServer = MockRestServiceServer.bindTo(restTemplate).build();
         ReflectionTestUtils.setField(locationService, "geocoderUrl", "https://example.com/geocode?lat=%f&lng=%f&key=%s");
         ReflectionTestUtils.setField(locationService, "geocoderKey", "fake-key");

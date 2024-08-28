@@ -1,46 +1,46 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.command.UserSignUpCommand;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
-import com.backend.immilog.user.presentation.request.UserSignUpRequest;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserSignUpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import static com.backend.immilog.user.enums.UserStatus.ACTIVE;
+import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserSignUpService {
+public class UserSignUpServiceImpl implements UserSignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Override
     public Pair<Long, String> signUp(
-            UserSignUpRequest userSignUpRequest
+            UserSignUpCommand userSignUpCommand
     ) {
-        validateUserNotExists(userSignUpRequest.email());
-        String password = passwordEncoder.encode(userSignUpRequest.password());
-        User user = userRepository.save(User.of(userSignUpRequest, password));
+        validateUserNotExists(userSignUpCommand.email());
+        String password = passwordEncoder.encode(userSignUpCommand.password());
+        User user = userRepository.save(User.of(userSignUpCommand, password));
         return Pair.of(user.getSeq(), user.getNickName());
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public Boolean checkNickname(
             String nickname
     ) {
         return userRepository.findByNickName(nickname).isEmpty();
     }
 
-    @Transactional
+    @Override
     public Pair<String, Boolean> verifyEmail(
             Long userSeq
     ) {

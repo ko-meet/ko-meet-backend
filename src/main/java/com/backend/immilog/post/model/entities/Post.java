@@ -1,9 +1,10 @@
 package com.backend.immilog.post.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.post.enums.Categories;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.Countries;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.entities.User;
 import lombok.*;
@@ -44,7 +45,7 @@ public class Post extends BaseDateEntity {
     ) {
         PostMetaData postMetaData = PostMetaData.of(
                 postUploadRequest,
-                user.getLocation().getCountry(),
+                Countries.valueOf(user.getLocation().getCountry().toString()),
                 user.getLocation().getRegion()
         );
 

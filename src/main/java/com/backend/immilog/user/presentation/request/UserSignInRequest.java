@@ -1,5 +1,6 @@
 package com.backend.immilog.user.presentation.request;
 
+import com.backend.immilog.user.application.command.UserSignInCommand;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 
@@ -22,4 +23,12 @@ public record UserSignInRequest(
 
         Double longitude
 ) {
+    public UserSignInCommand toCommand() {
+        return UserSignInCommand.builder()
+                .email(email)
+                .password(password)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
 }

@@ -4,11 +4,14 @@ import com.backend.immilog.global.application.ImageService;
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.services.UserInformationServiceImpl;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserInformationService;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,9 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.enums.Countries.*;
-import static com.backend.immilog.user.enums.UserRole.ROLE_ADMIN;
-import static com.backend.immilog.user.enums.UserRole.ROLE_USER;
+import static com.backend.immilog.user.model.enums.Countries.*;
+import static com.backend.immilog.user.model.enums.UserRole.ROLE_ADMIN;
+import static com.backend.immilog.user.model.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.PASSWORD_NOT_MATCH;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +51,7 @@ class UserInformationServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userInformationService = new UserInformationService(
+        userInformationService = new UserInformationServiceImpl(
                 userRepository,
                 jwtProvider,
                 passwordEncoder,
@@ -137,7 +140,7 @@ class UserInformationServiceTest {
                 .reportInfo(null)
                 .build();
 
-        UserInfoUpdateRequest userInfoUpdateRequest =
+        UserInfoUpdateRequest param =
                 UserInfoUpdateRequest.builder()
                         .nickName("newNickName")
                         .profileImage("newImage")
@@ -155,7 +158,7 @@ class UserInformationServiceTest {
         userInformationService.updateInformation(
                 userSeq,
                 country,
-                userInfoUpdateRequest
+                param.toCommand()
         );
 
         //then
@@ -181,7 +184,7 @@ class UserInformationServiceTest {
                 .location(Location.of(MALAYSIA, "KL"))
                 .reportInfo(null)
                 .build();
-        UserPasswordChangeRequest param = UserPasswordChangeRequest.builder()
+        UserPasswordChangeCommand param = UserPasswordChangeCommand.builder()
                 .existingPassword("existingPassword")
                 .newPassword("newPassword")
                 .build();
@@ -229,7 +232,7 @@ class UserInformationServiceTest {
         )).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> userInformationService.changePassword(userSeq, param))
+        assertThatThrownBy(() -> userInformationService.changePassword(userSeq, param.toCommand()))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(PASSWORD_NOT_MATCH.getMessage());
     }

@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.immilog.post.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
 import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

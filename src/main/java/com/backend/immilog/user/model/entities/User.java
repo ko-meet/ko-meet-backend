@@ -1,12 +1,12 @@
 package com.backend.immilog.user.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.enums.UserRole;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.command.UserSignUpCommand;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.enums.UserRole;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
-import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -53,28 +53,28 @@ public class User extends BaseDateEntity {
     private ReportInfo reportInfo;
 
     public static User of(
-            UserSignUpRequest userSignUpRequest,
+            UserSignUpCommand userSignUpCommand,
             String encodedPassword
     ) {
         Countries interestCountry =
-                userSignUpRequest.interestCountry() != null ?
-                        Countries.getCountry(userSignUpRequest.interestCountry()) : null;
-        Countries country = Countries.getCountryByKoreanName(userSignUpRequest.country());
+                userSignUpCommand.interestCountry() != null ?
+                        Countries.getCountry(userSignUpCommand.interestCountry()) : null;
+        Countries country = Countries.getCountryByKoreanName(userSignUpCommand.country());
 
         return User.builder()
-                .nickName(userSignUpRequest.nickName())
-                .email(userSignUpRequest.email())
+                .nickName(userSignUpCommand.nickName())
+                .email(userSignUpCommand.email())
                 .password(encodedPassword)
                 .location(
                         Location.of(
                                 country,
-                                userSignUpRequest.region()
+                                userSignUpCommand.region()
                         )
                 )
                 .interestCountry(interestCountry)
                 .userRole(UserRole.ROLE_USER)
                 .userStatus(UserStatus.PENDING)
-                .imageUrl(userSignUpRequest.profileImage())
+                .imageUrl(userSignUpCommand.profileImage())
                 .build();
     }
 }

@@ -1,34 +1,34 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.ImageService;
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
+import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
-import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
-import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserInformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.backend.immilog.user.enums.UserRole.ROLE_ADMIN;
+import static com.backend.immilog.user.model.enums.UserRole.ROLE_ADMIN;
 import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserInformationService {
+public class UserInformationServiceImpl implements UserInformationService {
     private final UserRepository userRepository;
 
     private final JwtProvider jwtProvider;
@@ -40,7 +40,7 @@ public class UserInformationService {
     final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
     final String TOKEN_PREFIX = "Refresh: ";
 
-    @Transactional(readOnly = true)
+    @Override
     public UserSignInDTO getUserSignInDTO(
             Long userSeq,
             Pair<String, String> country
@@ -65,24 +65,24 @@ public class UserInformationService {
         );
     }
 
-    @Transactional
+    @Override
     public void updateInformation(
             Long userSeq,
             CompletableFuture<Pair<String, String>> country,
-            UserInfoUpdateRequest userInfoUpdateRequest
+            UserInfoUpdateCommand userInfoUpdateCommand
     ) {
         User user = getUser(userSeq);
-        setUserCountryIfItsChanged(country, userInfoUpdateRequest, user);
-        setUserNickNameIfItsChanged(userInfoUpdateRequest.nickName(), user);
-        setUserInterestCountryIfItsChanged(userInfoUpdateRequest.interestCountry(), user);
-        setUserStatusIfItsChanged(userInfoUpdateRequest.status(), user);
-        setUserImageProfileIfItsChanged(userInfoUpdateRequest.profileImage(), user);
+        setUserCountryIfItsChanged(country, userInfoUpdateCommand, user);
+        setUserNickNameIfItsChanged(userInfoUpdateCommand.nickName(), user);
+        setUserInterestCountryIfItsChanged(userInfoUpdateCommand.interestCountry(), user);
+        setUserStatusIfItsChanged(userInfoUpdateCommand.status(), user);
+        setUserImageProfileIfItsChanged(userInfoUpdateCommand.profileImage(), user);
     }
 
-    @Transactional
+    @Override
     public void changePassword(
             Long userSeq,
-            UserPasswordChangeRequest userPasswordChangeRequest
+            UserPasswordChangeCommand userPasswordChangeRequest
     ) {
         User user = getUser(userSeq);
         String existingPassword = userPasswordChangeRequest.existingPassword();
@@ -92,7 +92,7 @@ public class UserInformationService {
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
-    @Transactional
+    @Override
     public void blockOrUnblockUser(
             Long userSeq,
             Long adminSeq,
@@ -123,14 +123,14 @@ public class UserInformationService {
 
     private static void setUserCountryIfItsChanged(
             CompletableFuture<Pair<String, String>> country,
-            UserInfoUpdateRequest userInfoUpdateRequest,
+            UserInfoUpdateCommand userInfoUpdateCommand,
             User user
     ) {
         try {
-            if (userInfoUpdateRequest.country() != null && country.get() != null) {
+            if (userInfoUpdateCommand.country() != null && country.get() != null) {
                 Pair<String, String> countryPair = country.join();
                 user.getLocation().setRegion(countryPair.getSecond());
-                user.getLocation().setCountry(userInfoUpdateRequest.country());
+                user.getLocation().setCountry(userInfoUpdateCommand.country());
             }
         } catch (InterruptedException | ExecutionException e) {
             log.info(e.getMessage());

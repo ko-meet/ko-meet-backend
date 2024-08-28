@@ -1,14 +1,14 @@
 package com.backend.immilog.post.model.dtos;
 
-import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.enums.InteractionType;
-import com.backend.immilog.post.enums.PostStatus;
-import com.backend.immilog.post.enums.ResourceType;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.InteractionType;
+import com.backend.immilog.post.model.enums.PostStatus;
+import com.backend.immilog.post.model.enums.ResourceType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.backend.immilog.post.enums.InteractionType.BOOKMARK;
-import static com.backend.immilog.post.enums.InteractionType.LIKE;
-import static com.backend.immilog.post.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.enums.ResourceType.TAG;
+import static com.backend.immilog.post.model.enums.InteractionType.BOOKMARK;
+import static com.backend.immilog.post.model.enums.InteractionType.LIKE;
+import static com.backend.immilog.post.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.model.enums.ResourceType.TAG;
 
 @Getter
 @Setter

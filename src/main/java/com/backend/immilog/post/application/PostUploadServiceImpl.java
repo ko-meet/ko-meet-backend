@@ -8,7 +8,7 @@ import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.backend.immilog.post.enums.PostType.POST;
-import static com.backend.immilog.post.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.enums.ResourceType.TAG;
 import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
+import static com.backend.immilog.post.model.enums.PostType.POST;
+import static com.backend.immilog.post.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.model.enums.ResourceType.TAG;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j

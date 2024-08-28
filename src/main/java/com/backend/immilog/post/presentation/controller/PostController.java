@@ -1,17 +1,17 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.enums.SortingMethods;
+import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.Countries;
+import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.model.services.PostDeleteService;
 import com.backend.immilog.post.model.services.PostInquiryService;
 import com.backend.immilog.post.model.services.PostUpdateService;
 import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.enums.Countries;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
 @Api(tags = "Post API", description = "게시물 관련 API")
@@ -33,39 +33,41 @@ public class PostController {
     private final PostUpdateService postUpdateService;
     private final PostDeleteService postDeleteService;
     private final PostInquiryService postInquiryService;
-    private final JwtProvider jwtProvider;
 
     @PostMapping
+    @ExtractUserId
     @ApiOperation(value = "게시물 작성", notes = "게시물을 작성합니다.")
     public ResponseEntity<ApiResponse> createPost(
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @Valid @RequestBody PostUploadRequest postUploadRequest
     ) {
-        Long userId = jwtProvider.getIdFromToken(token);
-        postUploadService.uploadPost(userId, postUploadRequest);
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        postUploadService.uploadPost(userSeq, postUploadRequest);
         return ResponseEntity.status(CREATED).build();
     }
 
     @PatchMapping("/{postSeq}")
+    @ExtractUserId
     @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
     public ResponseEntity<ApiResponse> updatePost(
             @PathVariable Long postSeq,
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @Valid @RequestBody PostUpdateRequest postUpdateRequest
     ) {
-        Long userId = jwtProvider.getIdFromToken(token);
-        postUpdateService.updatePost(userId, postSeq, postUpdateRequest);
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        postUpdateService.updatePost(userSeq, postSeq, postUpdateRequest);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @PatchMapping("/{postSeq}/delete")
+    @ExtractUserId
     @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postSeq,
-            @RequestHeader(AUTHORIZATION) String token
+            HttpServletRequest request
     ) {
-        Long userId = jwtProvider.getIdFromToken(token);
-        postDeleteService.deletePost(userId, postSeq);
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        postDeleteService.deletePost(userSeq, postSeq);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
@@ -79,13 +81,14 @@ public class PostController {
     }
 
     @PatchMapping("/{postSeq}/like")
+    @ExtractUserId
     @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
     public ResponseEntity<ApiResponse> likePost(
             @PathVariable Long postSeq,
-            @RequestHeader(AUTHORIZATION) String token
+            HttpServletRequest request
     ) {
-        Long userId = jwtProvider.getIdFromToken(token);
-        postUpdateService.likePost(userId, postSeq);
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        postUpdateService.likePost(userSeq, postSeq);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 

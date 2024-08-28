@@ -4,13 +4,15 @@ import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.model.TokenIssuanceDTO;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.enums.UserRole;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.application.services.UserSignInServiceImpl;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.enums.UserRole;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserSignInService;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +50,12 @@ class UserSignInServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userSignInService = new UserSignInService(userRepository, passwordEncoder, jwtProvider, redisService);
+        userSignInService = new UserSignInServiceImpl(
+                userRepository,
+                passwordEncoder,
+                jwtProvider,
+                redisService
+        );
     }
 
     @Test
@@ -88,7 +95,8 @@ class UserSignInServiceTest {
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
 
         // when
-        UserSignInDTO userSignInDTO = userSignInService.signIn(userSignInRequest, country);
+        UserSignInDTO userSignInDTO =
+                userSignInService.signIn(userSignInRequest.toCommand(), country);
 
         // then
         assertThat(userSignInDTO.userSeq()).isEqualTo(user.getSeq());
@@ -124,7 +132,7 @@ class UserSignInServiceTest {
 
         // when & then
         assertThatThrownBy(() -> {
-            userSignInService.signIn(userSignInRequest, country);
+            userSignInService.signIn(userSignInRequest.toCommand(), country);
         })
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());

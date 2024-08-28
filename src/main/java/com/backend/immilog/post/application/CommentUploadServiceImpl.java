@@ -1,9 +1,9 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.post.enums.ReferenceType;
 import com.backend.immilog.post.model.entities.Comment;
 import com.backend.immilog.post.model.entities.Post;
+import com.backend.immilog.post.model.enums.ReferenceType;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.services.CommentUploadService;

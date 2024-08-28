@@ -1,13 +1,13 @@
 package com.backend.immilog.post.infrastructure;
 
-import com.backend.immilog.post.enums.Categories;
-import com.backend.immilog.post.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.entities.QInteractionUser;
 import com.backend.immilog.post.model.entities.QPost;
 import com.backend.immilog.post.model.entities.QPostResource;
+import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.model.enums.Countries;
+import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.model.repositories.PostRepositoryCustom;
-import com.backend.immilog.user.enums.Countries;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -23,8 +23,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.backend.immilog.post.enums.PostStatus.DELETED;
-import static com.backend.immilog.post.enums.PostType.POST;
+import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.model.enums.PostType.POST;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.types.Projections.list;
 
