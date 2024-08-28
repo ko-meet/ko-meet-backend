@@ -1,9 +1,9 @@
 package com.backend.immilog.global.security;
 
 import com.backend.immilog.global.model.TokenIssuanceDTO;
-import com.backend.immilog.user.application.UserDetailsServiceImpl;
-import com.backend.immilog.user.enums.Countries;
-import com.backend.immilog.user.enums.UserRole;
+import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

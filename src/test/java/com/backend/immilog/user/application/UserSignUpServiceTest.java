@@ -1,8 +1,10 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.application.services.UserSignUpServiceImpl;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserSignUpService;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.backend.immilog.user.enums.UserStatus.*;
+import static com.backend.immilog.user.model.enums.UserStatus.*;
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +35,10 @@ class UserSignUpServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userSignUpService = new UserSignUpService(userRepository, passwordEncoder);
+        userSignUpService = new UserSignUpServiceImpl(
+                userRepository,
+                passwordEncoder
+        );
     }
 
     @Test
@@ -55,7 +60,7 @@ class UserSignUpServiceTest {
         when(userEntity.getNickName()).thenReturn("test");
         when(userRepository.save(any(User.class))).thenReturn(userEntity);
         when(passwordEncoder.encode(anyString())).thenReturn("test1234");
-        Pair<Long, String> seqAndNickName = userSignUpService.signUp(param);
+        Pair<Long, String> seqAndNickName = userSignUpService.signUp(param.toCommand());
         // then
         assertThat(seqAndNickName.getSecond()).isEqualTo("test");
     }
@@ -76,7 +81,7 @@ class UserSignUpServiceTest {
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.of(new User()));
 
-        assertThatThrownBy(() -> userSignUpService.signUp(param))
+        assertThatThrownBy(() -> userSignUpService.signUp(param.toCommand()))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(EXISTING_USER.getMessage());
     }

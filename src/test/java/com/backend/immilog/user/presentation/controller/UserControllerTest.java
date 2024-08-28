@@ -1,27 +1,30 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.JwtProvider;
-import com.backend.immilog.user.application.*;
+import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.enums.EmailComponents;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.model.services.*;
 import com.backend.immilog.user.presentation.request.*;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.enums.Countries.INDONESIA;
-import static com.backend.immilog.user.enums.Countries.JAPAN;
 import static com.backend.immilog.user.enums.ReportReason.FRAUD;
-import static com.backend.immilog.user.enums.UserStatus.ACTIVE;
+import static com.backend.immilog.user.model.enums.Countries.INDONESIA;
+import static com.backend.immilog.user.model.enums.Countries.JAPAN;
+import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
@@ -37,7 +40,7 @@ class UserControllerTest {
     @Mock
     private UserInformationService userInformationService;
     @Mock
-    private UserReportService userReportService;
+    private UserReportServiceImpl userReportService;
     @Mock
     private JwtProvider jwtProvider;
 
@@ -73,11 +76,11 @@ class UserControllerTest {
                 .profileImage("image")
                 .build();
 
-        when(userSignUpService.signUp(param))
+        when(userSignUpService.signUp(param.toCommand()))
                 .thenReturn(Pair.of(1L, "test"));
 
         // when
-        ResponseEntity<ApiResponse> response = userController.signUp(param);
+        ResponseEntity<UserApiResponse> response = userController.signUp(param);
 
         // then
         verify(emailService, times(1)).sendHtmlEmail(
@@ -127,10 +130,12 @@ class UserControllerTest {
 
         when(locationService.getCountry(param.latitude(), param.longitude()))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
-        when(userSignInService.signIn(param, locationService.getCountry(param.latitude(), param.longitude())))
-                .thenReturn(UserSignInDTO.builder().build());
+        when(userSignInService.signIn(
+                param.toCommand(),
+                locationService.getCountry(param.latitude(), param.longitude()))
+        ).thenReturn(UserSignInDTO.builder().build());
         // when
-        ResponseEntity<ApiResponse> response = userController.signIn(param);
+        ResponseEntity<UserApiResponse> response = userController.signIn(param);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
@@ -140,7 +145,7 @@ class UserControllerTest {
     @DisplayName("사용자 정보 수정")
     void updateInformation() {
         // given
-        String token = "token";
+        HttpServletRequest request = mock(HttpServletRequest.class);
         UserInfoUpdateRequest param =
                 UserInfoUpdateRequest.builder()
                         .nickName("newNickName")
@@ -152,19 +157,19 @@ class UserControllerTest {
                         .status(ACTIVE)
                         .build();
 
-        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
         when(locationService.getCountry(param.latitude(), param.longitude()))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("Japan", "Tokyo")));
         // when
-        ResponseEntity<ApiResponse> response =
-                userController.updateInformation(token, param);
+        ResponseEntity<UserApiResponse> response =
+                userController.updateInformation(request, param);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         verify(userInformationService, times(1)).updateInformation(
                 1L,
                 locationService.getCountry(param.latitude(), param.longitude()),
-                param
+                param.toCommand()
         );
     }
 
@@ -172,20 +177,19 @@ class UserControllerTest {
     @DisplayName("사용자 비밀번호 변경")
     void resetPassword() {
         // given
-        String token = "token";
+        HttpServletRequest request = mock(HttpServletRequest.class);
         UserPasswordChangeRequest param = UserPasswordChangeRequest.builder()
                 .existingPassword("existingPassword")
                 .newPassword("newPassword")
                 .build();
-        when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
-
+        when(request.getAttribute("userSeq")).thenReturn(1L);
         // when
-        ResponseEntity<ApiResponse> response =
-                userController.changePassword(token, param);
+        ResponseEntity<UserApiResponse> response =
+                userController.changePassword(request, param);
 
         // then
         verify(userInformationService, times(1))
-                .changePassword(1L, param);
+                .changePassword(1L, param.toCommand());
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 
@@ -197,11 +201,11 @@ class UserControllerTest {
         when(userSignUpService.checkNickname(nickname)).thenReturn(true);
 
         // when
-        ResponseEntity<ApiResponse> response =
+        ResponseEntity<UserApiResponse> response =
                 userController.checkNickname(nickname);
 
         // then
-        ApiResponse body = Objects.requireNonNull(response.getBody());
+        UserApiResponse body = Objects.requireNonNull(response.getBody());
         assertThat(body.data()).isEqualTo(true);
     }
 
@@ -213,11 +217,12 @@ class UserControllerTest {
         Long adminSeq = 2L;
         String token = "token";
         String status = "BLOCKED";
-        when(jwtProvider.getIdFromToken(token)).thenReturn(adminSeq);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
         ResponseEntity<Void> response =
-                userController.blockUser(token, userSeq, status);
+                userController.blockUser(request, userSeq, status);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
@@ -227,19 +232,19 @@ class UserControllerTest {
     @DisplayName("사용자 신고")
     void reportUser() {
         // given
-        Long targetUserSeq = 1L;
-        Long userSeq = 2L;
-        String token = "token";
+        Long targetUserSeq = 2L;
+        Long userSeq = 1L;
+        HttpServletRequest request = mock(HttpServletRequest.class);
         UserReportRequest param = UserReportRequest.builder()
                 .reason(FRAUD)
                 .build();
-        when(jwtProvider.getIdFromToken(token)).thenReturn(userSeq);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
         // when
         ResponseEntity<Void> response =
-                userController.reportUser(token, targetUserSeq, param);
+                userController.reportUser(request, targetUserSeq, param);
         // then
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
         verify(userReportService, times(1))
-                .reportUser(targetUserSeq, userSeq, param);
+                .reportUser(targetUserSeq, userSeq, param.toCommand());
     }
 }

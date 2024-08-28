@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.user.application.LocationService;
-import com.backend.immilog.user.enums.Countries;
+import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.user.model.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.user.model.enums.Countries.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
@@ -47,12 +48,14 @@ class LocationControllerTest {
                 .thenReturn(CompletableFuture.completedFuture(countryPair));
 
         // when
-        ResponseEntity<ApiResponse> response = locationController.getLocation(latitude, longitude);
+        ResponseEntity<?> response = locationController.getLocation(latitude,
+                longitude);
 
         // then
         assertThat(response).isNotNull();
         assertThat(OK).isEqualTo(response.getStatusCode());
-        LocationResponse locationResponse = (LocationResponse) response.getBody().data();
+        LocationResponse locationResponse =
+                (LocationResponse) ((UserApiResponse) Objects.requireNonNull(response.getBody())).data();
         assertThat(locationResponse).isNotNull();
         assertThat(Countries.getCountryByKoreanName(country).getCountryName())
                 .isEqualTo(locationResponse.country());

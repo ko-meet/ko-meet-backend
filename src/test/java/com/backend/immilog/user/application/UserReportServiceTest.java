@@ -2,14 +2,16 @@ package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.enums.ReportReason;
-import com.backend.immilog.user.enums.UserStatus;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.interfaces.repositories.ReportRepository;
-import com.backend.immilog.user.model.interfaces.repositories.UserRepository;
+import com.backend.immilog.user.model.repositories.ReportRepository;
+import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.model.services.UserReportService;
 import com.backend.immilog.user.presentation.request.UserReportRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,9 +23,9 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.backend.immilog.user.enums.Countries.MALAYSIA;
-import static com.backend.immilog.user.enums.Countries.SOUTH_KOREA;
-import static com.backend.immilog.user.enums.UserRole.ROLE_USER;
+import static com.backend.immilog.user.model.enums.Countries.MALAYSIA;
+import static com.backend.immilog.user.model.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.user.model.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.ALREADY_REPORTED;
 import static com.backend.immilog.user.exception.UserErrorCode.CANNOT_REPORT_MYSELF;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,7 +44,7 @@ class UserReportServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userReportService = new UserReportService(
+        userReportService = new UserReportServiceImpl(
                 userRepository,
                 reportRepository,
                 redisDistributedLock
@@ -82,7 +84,11 @@ class UserReportServiceTest {
         when(userRepository.findById(targetUserSeq))
                 .thenReturn(Optional.of(user));
         // when
-        userReportService.reportUser(targetUserSeq, reporterUserSeq, reportUserRequest);
+        userReportService.reportUser(
+                targetUserSeq,
+                reporterUserSeq,
+                reportUserRequest.toCommand()
+        );
 
         // then
         verify(redisDistributedLock, times(1))
@@ -107,7 +113,7 @@ class UserReportServiceTest {
         assertThatThrownBy(() -> userReportService.reportUser(
                 targetUserSeq,
                 reporterUserSeq,
-                reportUserRequest
+                reportUserRequest.toCommand()
         ))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CANNOT_REPORT_MYSELF.getMessage());
@@ -127,7 +133,7 @@ class UserReportServiceTest {
         assertThatThrownBy(() -> userReportService.reportUser(
                 targetUserSeq,
                 reporterUserSeq,
-                reportUserRequest
+                reportUserRequest.toCommand()
         ))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ALREADY_REPORTED.getMessage());
