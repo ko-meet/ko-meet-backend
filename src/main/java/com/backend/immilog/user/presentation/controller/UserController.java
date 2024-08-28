@@ -1,5 +1,6 @@
 package com.backend.immilog.user.presentation.controller;
 
+import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
@@ -15,11 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.EmailComponents.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
 
 @Api(tags = "User API", description = "사용자 관련 API")
@@ -38,6 +39,7 @@ public class UserController {
     private final JwtProvider jwtProvider;
 
     @PostMapping
+    @ExtractUserId
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
     public ResponseEntity<UserApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest request
@@ -53,6 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/{userSeq}/verification")
+    @ExtractUserId
     @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
     public String verifyEmail(
             @PathVariable Long userSeq,
@@ -65,6 +68,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
+    @ExtractUserId
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
     public ResponseEntity<UserApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest request
@@ -79,12 +83,13 @@ public class UserController {
     }
 
     @PatchMapping("/information")
+    @ExtractUserId
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
     public ResponseEntity<UserApiResponse> updateInformation(
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
     ) {
-        final Long userSeq = jwtProvider.getIdFromToken(token);
+        Long userSeq = (Long) request.getAttribute("userSeq");
         CompletableFuture<Pair<String, String>> country =
                 locationService.getCountry(
                         userInfoUpdateRequest.latitude(),
@@ -97,13 +102,13 @@ public class UserController {
     }
 
     @PatchMapping("/password/change")
+    @ExtractUserId
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
     public ResponseEntity<UserApiResponse> changePassword(
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
     ) {
-        Long userSeq = jwtProvider.getIdFromToken(token);
-
+        Long userSeq = (Long) request.getAttribute("userSeq");
         userInformationService.changePassword(
                 userSeq,
                 userPasswordChangeRequest.toCommand()
@@ -113,6 +118,7 @@ public class UserController {
     }
 
     @GetMapping("/nicknames")
+    @ExtractUserId
     @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
     public ResponseEntity<UserApiResponse> checkNickname(
             @RequestParam String nickname
@@ -122,26 +128,27 @@ public class UserController {
     }
 
     @PatchMapping("/{userSeq}/{status}")
+    @ExtractUserId
     @ApiOperation(value = "사용자 차단/해제", notes = "사용자 차단/해제 진행")
     public ResponseEntity<Void> blockUser(
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @PathVariable Long userSeq,
             @PathVariable String status
     ) {
-        Long adminSeq = jwtProvider.getIdFromToken(token);
-        UserStatus userStatus = UserStatus.valueOf(status);
+        Long adminSeq = (Long) request.getAttribute("userSeq");        UserStatus userStatus = UserStatus.valueOf(status);
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, userStatus);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @PatchMapping("/{userSeq}/report")
+    @ExtractUserId
     @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
     public ResponseEntity<Void> reportUser(
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @PathVariable Long userSeq,
             @Valid @RequestBody UserReportRequest userReportRequest
     ) {
-        Long reporterSeq = jwtProvider.getIdFromToken(token);
+        Long reporterSeq = (Long) request.getAttribute("userSeq");
         userReportService.reportUser(
                 userSeq,
                 reporterSeq,
