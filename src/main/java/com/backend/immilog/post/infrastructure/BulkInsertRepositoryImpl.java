@@ -1,5 +1,6 @@
-package com.backend.immilog.global.infrastructure;
+package com.backend.immilog.post.infrastructure;
 
+import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -42,7 +43,10 @@ public class BulkInsertRepositoryImpl implements BulkInsertRepository {
                                 sqlCommand,
                                 new BatchPreparedStatementSetter() {
                                     @Override
-                                    public void setValues(PreparedStatement ps, int i) {
+                                    public void setValues(
+                                            PreparedStatement ps,
+                                            int i
+                                    ) {
                                         T entity = batchList.get(i);
                                         setStatement.accept(ps, entity);
                                     }

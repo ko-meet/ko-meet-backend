@@ -1,7 +1,7 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.post.model.services.CommentUploadService;
 import com.backend.immilog.post.presentation.request.CommentUploadRequest;
 import io.swagger.annotations.Api;
@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @Api(tags = "Comment API", description = "댓글 관련 API")
@@ -21,19 +21,19 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class CommentController {
     private final CommentUploadService commentUploadService;
-    private final JwtProvider jwtProvider;
 
     @PostMapping("/{referenceType}/{postSeq}")
+    @ExtractUserId
     @ApiOperation(value = "댓글 작성", notes = "댓글을 작성합니다.")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable String referenceType,
             @PathVariable Long postSeq,
-            @RequestHeader(AUTHORIZATION) String token,
+            HttpServletRequest request,
             @Valid @RequestBody CommentUploadRequest commentUploadRequest
     ) {
-        Long userId = jwtProvider.getIdFromToken(token);
+        Long userSeq = (Long) request.getAttribute("userSeq");
         commentUploadService.uploadComment(
-                userId,
+                userSeq,
                 postSeq,
                 referenceType,
                 commentUploadRequest

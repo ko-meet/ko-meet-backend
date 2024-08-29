@@ -1,9 +1,9 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.infrastructure.BulkInsertRepository;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
+import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;

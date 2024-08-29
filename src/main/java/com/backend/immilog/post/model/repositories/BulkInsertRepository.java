@@ -1,4 +1,4 @@
-package com.backend.immilog.global.infrastructure;
+package com.backend.immilog.post.model.repositories;
 
 import org.springframework.transaction.annotation.Transactional;
 
