@@ -1,19 +1,17 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.enums.EmailComponents;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.services.*;
 import com.backend.immilog.user.presentation.request.*;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.util.Pair;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
@@ -21,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.global.enums.Countries.INDONESIA;
+import static com.backend.immilog.global.enums.Countries.JAPAN;
 import static com.backend.immilog.user.enums.ReportReason.FRAUD;
-import static com.backend.immilog.user.model.enums.Countries.INDONESIA;
-import static com.backend.immilog.user.model.enums.Countries.JAPAN;
 import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -41,8 +39,6 @@ class UserControllerTest {
     private UserInformationService userInformationService;
     @Mock
     private UserReportServiceImpl userReportService;
-    @Mock
-    private JwtProvider jwtProvider;
 
     @Mock
     private EmailService emailService;
@@ -57,8 +53,7 @@ class UserControllerTest {
                 userInformationService,
                 userReportService,
                 locationService,
-                emailService,
-                jwtProvider
+                emailService
         );
     }
 
@@ -80,7 +75,7 @@ class UserControllerTest {
                 .thenReturn(Pair.of(1L, "test"));
 
         // when
-        ResponseEntity<UserApiResponse> response = userController.signUp(param);
+        ResponseEntity<ApiResponse> response = userController.signUp(param);
 
         // then
         verify(emailService, times(1)).sendHtmlEmail(
@@ -135,7 +130,7 @@ class UserControllerTest {
                 locationService.getCountry(param.latitude(), param.longitude()))
         ).thenReturn(UserSignInDTO.builder().build());
         // when
-        ResponseEntity<UserApiResponse> response = userController.signIn(param);
+        ResponseEntity<ApiResponse> response = userController.signIn(param);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
@@ -161,7 +156,7 @@ class UserControllerTest {
         when(locationService.getCountry(param.latitude(), param.longitude()))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("Japan", "Tokyo")));
         // when
-        ResponseEntity<UserApiResponse> response =
+        ResponseEntity<ApiResponse> response =
                 userController.updateInformation(request, param);
 
         // then
@@ -184,7 +179,7 @@ class UserControllerTest {
                 .build();
         when(request.getAttribute("userSeq")).thenReturn(1L);
         // when
-        ResponseEntity<UserApiResponse> response =
+        ResponseEntity<ApiResponse> response =
                 userController.changePassword(request, param);
 
         // then
@@ -201,11 +196,11 @@ class UserControllerTest {
         when(userSignUpService.checkNickname(nickname)).thenReturn(true);
 
         // when
-        ResponseEntity<UserApiResponse> response =
+        ResponseEntity<ApiResponse> response =
                 userController.checkNickname(nickname);
 
         // then
-        UserApiResponse body = Objects.requireNonNull(response.getBody());
+        ApiResponse body = Objects.requireNonNull(response.getBody());
         assertThat(body.data()).isEqualTo(true);
     }
 

@@ -1,16 +1,15 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.RedisService;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.model.TokenIssuanceDTO;
-import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.services.UserSignInServiceImpl;
-import com.backend.immilog.user.model.enums.Countries;
-import com.backend.immilog.user.model.enums.UserRole;
-import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserSignInService;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
@@ -25,6 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static com.backend.immilog.global.enums.Countries.MALAYSIA;
+import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +41,7 @@ class UserSignInServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private JwtProvider jwtProvider;
+    private TokenProvider tokenProvider;
     @Mock
     private RedisService redisService;
     @Mock
@@ -53,7 +55,7 @@ class UserSignInServiceTest {
         userSignInService = new UserSignInServiceImpl(
                 userRepository,
                 passwordEncoder,
-                jwtProvider,
+                tokenProvider,
                 redisService
         );
     }
@@ -87,9 +89,13 @@ class UserSignInServiceTest {
                 .thenReturn(Optional.of(user));
         when(passwordEncoder.matches(userSignInRequest.password(), user.getPassword()))
                 .thenReturn(true);
-        when(jwtProvider.issueAccessToken(any(TokenIssuanceDTO.class)))
-                .thenReturn("accessToken");
-        when(jwtProvider.issueRefreshToken())
+        when(tokenProvider.issueAccessToken(
+                anyLong(),
+                anyString(),
+                any(UserRole.class),
+                any(Countries.class)
+        )).thenReturn("accessToken");
+        when(tokenProvider.issueRefreshToken())
                 .thenReturn("refreshToken");
         when(country.orTimeout(5, SECONDS))
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
@@ -101,8 +107,13 @@ class UserSignInServiceTest {
         // then
         assertThat(userSignInDTO.userSeq()).isEqualTo(user.getSeq());
         assertThat(userSignInDTO.accessToken()).isEqualTo("accessToken");
-        verify(jwtProvider, times(1)).issueAccessToken(any(TokenIssuanceDTO.class));
-        verify(jwtProvider, times(1)).issueRefreshToken();
+        verify(tokenProvider, times(1)).issueAccessToken(
+                anyLong(),
+                anyString(),
+                any(UserRole.class),
+                any(Countries.class)
+        );
+        verify(tokenProvider, times(1)).issueRefreshToken();
     }
 
     @Test
@@ -136,5 +147,77 @@ class UserSignInServiceTest {
         })
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회 성공 : 위치 정보 일치")
+    void getUserSignInDTO_success() {
+        // given
+        Long userSeq = 1L;
+        User user = User.builder()
+                .seq(userSeq)
+                .email("test@email.com")
+                .nickName("test")
+                .imageUrl("image")
+                .userStatus(UserStatus.PENDING)
+                .userRole(ROLE_USER)
+                .interestCountry(SOUTH_KOREA)
+                .location(Location.of(SOUTH_KOREA, "Seoul"))
+                .reportInfo(null)
+                .build();
+
+        Pair<String, String> country = Pair.of("South Korea", "Seoul");
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(tokenProvider.issueAccessToken(
+                anyLong(),
+                anyString(),
+                any(UserRole.class),
+                any(Countries.class)
+        )).thenReturn("accessToken");
+        when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
+
+        // when
+        UserSignInDTO result = userSignInService.getUserSignInDTO(userSeq, country);
+        // then
+        verify(redisService, times(1)).saveKeyAndValue(
+                "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
+        );
+        assertThat(result.userSeq()).isEqualTo(userSeq);
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회 성공 : 위치 정보 불 일치")
+    void getUserSignInDTO_success_location_not_match() {
+        // given
+        Long userSeq = 1L;
+        User user = User.builder()
+                .seq(userSeq)
+                .email("test@email.com")
+                .nickName("test")
+                .imageUrl("image")
+                .userStatus(UserStatus.PENDING)
+                .userRole(ROLE_USER)
+                .interestCountry(SOUTH_KOREA)
+                .location(Location.of(MALAYSIA, "KL"))
+                .reportInfo(null)
+                .build();
+
+        Pair<String, String> country = Pair.of("South Korea", "Seoul");
+        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(tokenProvider.issueAccessToken(
+                anyLong(),
+                anyString(),
+                any(UserRole.class),
+                any(Countries.class)
+        )).thenReturn("accessToken");
+        when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
+
+        // when
+        UserSignInDTO result = userSignInService.getUserSignInDTO(userSeq, country);
+        // then
+        verify(redisService, times(1)).saveKeyAndValue(
+                "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
+        );
+        assertThat(result.userSeq()).isEqualTo(userSeq);
     }
 }
