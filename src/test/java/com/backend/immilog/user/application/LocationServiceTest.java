@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.model.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -43,12 +43,12 @@ class LocationServiceTest {
         // Mock 서버에서 반환할 올바른 JSON 응답 설정
         mockServer.expect(MockRestRequestMatchers.anything())
                 .andRespond(withSuccess("""
-                    {
-                    "plus_code": {
-                        "compound_code": "HX8H+H6R 대한민국 서울특별시",
-                        "global_code": "8Q98HX8H+H6R"
-                    }
-                    }""".trim(), MediaType.APPLICATION_JSON));
+                                        {
+                                        "plus_code": {
+                                            "compound_code": "HX8H+H6R 대한민국 서울특별시",
+                                            "global_code": "8Q98HX8H+H6R"
+                                        }
+                                        }""".trim(), MediaType.APPLICATION_JSON));
 
         // when
         CompletableFuture<Pair<String, String>> resultFuture =
@@ -106,8 +106,8 @@ class LocationServiceTest {
         // Mock 서버에서 반환할 올바른 JSON 응답 설정
         mockServer.expect(MockRestRequestMatchers.anything())
                 .andRespond(withSuccess("""
-                        }{
-                        """.trim(), MediaType.APPLICATION_JSON));
+                                        }{
+                                        """.trim(), MediaType.APPLICATION_JSON));
 
         // when
         CompletableFuture<Pair<String, String>> resultFuture =

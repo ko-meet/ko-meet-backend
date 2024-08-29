@@ -1,9 +1,8 @@
 package com.backend.immilog.global.security;
 
-import com.backend.immilog.global.model.TokenIssuanceDTO;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
-import com.backend.immilog.user.model.enums.Countries;
-import com.backend.immilog.user.model.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
@@ -30,8 +28,7 @@ class JwtProviderTest {
     @Mock
     private UserDetailsServiceImpl userDetailsService;
 
-    @InjectMocks
-    private JwtProvider jwtProvider;
+    private TokenProvider tokenProvider;
 
     private SecretKey secretKey;
 
@@ -41,24 +38,22 @@ class JwtProviderTest {
         String key =
                 "c2VjcmV0S2V5U3RyaW5nc2VjcmV0S2V5U3RyaW5nc2VjcmV0S2V5U3RyaW5nc2VjcmV0S2V5U3RyaW5n";  // Base64로 인코딩된 문자열
         secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(key));
-        jwtProvider = new JwtProvider(userDetailsService);
-        ReflectionTestUtils.setField(jwtProvider, "issuer", "issuer");
-        ReflectionTestUtils.setField(jwtProvider, "secretKey", secretKey);
-        ReflectionTestUtils.setField(jwtProvider, "secretKeyString", key);
-        jwtProvider.init();  // init 메서드를 필드 설정 후에 호출
+        tokenProvider = new JwtProvider(userDetailsService);
+        ReflectionTestUtils.setField(tokenProvider, "issuer", "issuer");
+        ReflectionTestUtils.setField(tokenProvider, "secretKey", secretKey);
+        ReflectionTestUtils.setField(tokenProvider, "secretKeyString", key);
+        tokenProvider.init();  // init 메서드를 필드 설정 후에 호출
     }
 
     @Test
     @DisplayName("JwtProvider 객체 생성")
     void testIssueAccessToken() {
-        TokenIssuanceDTO tokenIssuanceDTO = TokenIssuanceDTO.builder()
-                .id(1L)
-                .email("test@example.com")
-                .userRole(UserRole.ROLE_USER)
-                .country(Countries.SOUTH_KOREA)
-                .build();
-
-        String token = jwtProvider.issueAccessToken(tokenIssuanceDTO);
+        String token = tokenProvider.issueAccessToken(
+                1L,
+                "test@example.com",
+                UserRole.ROLE_USER,
+                Countries.SOUTH_KOREA
+        );
         assertNotNull(token);
 
         Claims claims = Jwts.parserBuilder()
@@ -76,7 +71,7 @@ class JwtProviderTest {
     @Test
     @DisplayName("Refresh Token 발급")
     void testIssueRefreshToken() {
-        String token = jwtProvider.issueRefreshToken();
+        String token = tokenProvider.issueRefreshToken();
         assertNotNull(token);
 
         Jws<Claims> claimsJws = Jwts.parserBuilder()
@@ -90,16 +85,14 @@ class JwtProviderTest {
     @Test
     @DisplayName("토큰 유효성 검사")
     void testValidateToken_Valid() {
-        TokenIssuanceDTO tokenIssuanceDTO = TokenIssuanceDTO.builder()
-                .id(1L)
-                .email("test@example.com")
-                .userRole(UserRole.ROLE_USER)
-                .country(Countries.SOUTH_KOREA)
-                .build();
+        String token = tokenProvider.issueAccessToken(
+                1L,
+                "test@example.com",
+                UserRole.ROLE_USER,
+                Countries.SOUTH_KOREA
+        );
 
-        String token = jwtProvider.issueAccessToken(tokenIssuanceDTO);
-
-        boolean isValid = jwtProvider.validateToken(token);
+        boolean isValid = tokenProvider.validateToken(token);
         assertTrue(isValid);
     }
 
@@ -107,59 +100,53 @@ class JwtProviderTest {
     @DisplayName("토큰 유효성 검사 - 유효하지 않은 토큰")
     void testValidateToken_Invalid() {
         String invalidToken = "invalid.token.value";
-        boolean isValid = jwtProvider.validateToken(invalidToken);
+        boolean isValid = tokenProvider.validateToken(invalidToken);
         assertFalse(isValid);
     }
 
     @Test
     @DisplayName("토큰에서 ID 추출")
     void testGetIdFromToken() {
-        TokenIssuanceDTO tokenIssuanceDTO = TokenIssuanceDTO.builder()
-                .id(1L)
-                .email("test@example.com")
-                .userRole(UserRole.ROLE_USER)
-                .country(Countries.SOUTH_KOREA)
-                .build();
+        String token = tokenProvider.issueAccessToken(
+                1L,
+                "test@example.com",
+                UserRole.ROLE_USER,
+                Countries.SOUTH_KOREA
+        );
 
-        String token = jwtProvider.issueAccessToken(tokenIssuanceDTO);
-
-        Long id = jwtProvider.getIdFromToken(token);
+        Long id = tokenProvider.getIdFromToken(token);
         assertEquals(1L, id);
     }
 
     @Test
     @DisplayName("토큰에서 이메일 추출")
     void testGetEmailFromToken() {
-        TokenIssuanceDTO tokenIssuanceDTO = TokenIssuanceDTO.builder()
-                .id(1L)
-                .email("test@example.com")
-                .userRole(UserRole.ROLE_USER)
-                .country(Countries.SOUTH_KOREA)
-                .build();
+        String token = tokenProvider.issueAccessToken(
+                1L,
+                "test@example.com",
+                UserRole.ROLE_USER,
+                Countries.SOUTH_KOREA
+        );
 
-        String token = jwtProvider.issueAccessToken(tokenIssuanceDTO);
-
-        String email = jwtProvider.getEmailFromToken(token);
+        String email = tokenProvider.getEmailFromToken(token);
         assertEquals("test@example.com", email);
     }
 
     @Test
     @DisplayName("Authentication 객체 조회")
     void testGetAuthentication() {
-        TokenIssuanceDTO tokenIssuanceDTO = TokenIssuanceDTO.builder()
-                .id(1L)
-                .email("test@example.com")
-                .userRole(UserRole.ROLE_USER)
-                .country(Countries.SOUTH_KOREA)
-                .build();
-
-        String token = jwtProvider.issueAccessToken(tokenIssuanceDTO);
+        String token = tokenProvider.issueAccessToken(
+                1L,
+                "test@example.com",
+                UserRole.ROLE_USER,
+                Countries.SOUTH_KOREA
+        );
 
         UserDetails mockUserDetails = mock(UserDetails.class);
         when(userDetailsService.loadUserByUsername("test@example.com"))
                 .thenReturn(mockUserDetails);
 
-        Authentication authentication = jwtProvider.getAuthentication(token);
+        Authentication authentication = tokenProvider.getAuthentication(token);
 
         assertNotNull(authentication);
         assertEquals(mockUserDetails, authentication.getPrincipal());

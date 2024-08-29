@@ -8,9 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CompletableFuture;
 
 public interface UserSignInService {
-    @Transactional
+    @Transactional(readOnly = true)
     UserSignInDTO signIn(
             UserSignInCommand userSignInRequest,
             CompletableFuture<Pair<String, String>> country
+    );
+
+    @Transactional(readOnly = true)
+    UserSignInDTO getUserSignInDTO(
+            Long userSeq,
+            Pair<String, String> country
     );
 }

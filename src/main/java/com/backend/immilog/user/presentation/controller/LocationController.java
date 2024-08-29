@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.model.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class LocationController {
      */
     @GetMapping
     @ApiOperation(value = "위치 정보", notes = "위치 정보를 가져옵니다.")
-    public ResponseEntity<UserApiResponse> getLocation(
+    public ResponseEntity<ApiResponse> getLocation(
             @RequestParam Double latitude,
             @RequestParam Double longitude
     ) {
@@ -37,7 +37,7 @@ public class LocationController {
 
         return ResponseEntity
                 .status(OK)
-                .body(UserApiResponse.of(
+                .body(ApiResponse.of(
                                 LocationResponse.from(
                                         Countries.getCountryByKoreanName(country.getFirst()),
                                         country.getSecond()
