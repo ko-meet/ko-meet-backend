@@ -1,9 +1,9 @@
 package com.backend.immilog.user.model.dtos;
 
-import com.backend.immilog.user.model.enums.Countries;
-import com.backend.immilog.user.model.enums.UserRole;
-import com.backend.immilog.user.model.enums.UserStatus;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserStatus;
 import lombok.Builder;
 
 import java.sql.Date;

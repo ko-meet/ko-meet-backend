@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.command;
 
-import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.user.model.enums.UserStatus;
 import lombok.Builder;
 

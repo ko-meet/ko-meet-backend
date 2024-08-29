@@ -1,16 +1,12 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.global.application.RedisService;
+import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.model.TokenIssuanceDTO;
-import com.backend.immilog.global.security.JwtProvider;
 import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
 import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
-import com.backend.immilog.user.model.enums.Countries;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserInformationService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.backend.immilog.user.model.enums.UserRole.ROLE_ADMIN;
+import static com.backend.immilog.global.enums.UserRole.ROLE_ADMIN;
 import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @Slf4j
@@ -30,40 +26,8 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 @Service
 public class UserInformationServiceImpl implements UserInformationService {
     private final UserRepository userRepository;
-
-    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-
-    private final RedisService redisService;
     private final ImageService imageService;
-
-    final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
-    final String TOKEN_PREFIX = "Refresh: ";
-
-    @Override
-    public UserSignInDTO getUserSignInDTO(
-            Long userSeq,
-            Pair<String, String> country
-    ) {
-        final User user = getUser(userSeq);
-        boolean isLocationMatch = isLocationMatch(user, country);
-        TokenIssuanceDTO tokenTokenIssuanceDto = TokenIssuanceDTO.of(user);
-        final String accessToken = jwtProvider.issueAccessToken(tokenTokenIssuanceDto);
-        final String refreshToken = jwtProvider.issueRefreshToken();
-
-        redisService.saveKeyAndValue(
-                TOKEN_PREFIX + refreshToken,
-                user.getEmail(),
-                REFRESH_TOKEN_EXPIRE_TIME
-        );
-
-        return UserSignInDTO.of(
-                user,
-                accessToken,
-                refreshToken,
-                isLocationMatch
-        );
-    }
 
     @Override
     public void updateInformation(
@@ -179,16 +143,6 @@ public class UserInformationServiceImpl implements UserInformationService {
     ) {
         return userRepository.findById(userSeq)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-    }
-
-    private static boolean isLocationMatch(
-            User user,
-            Pair<String, String> countryPair
-    ) {
-        Countries country = user.getLocation().getCountry();
-        String region = user.getLocation().getRegion();
-        return country.getCountryKoreanName().equals(countryPair.getFirst()) &&
-                region.equals(countryPair.getSecond());
     }
 
 }

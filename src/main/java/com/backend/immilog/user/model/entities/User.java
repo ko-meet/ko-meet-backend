@@ -1,12 +1,12 @@
 package com.backend.immilog.user.model.entities;
 
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.user.application.command.UserSignUpCommand;
-import com.backend.immilog.user.model.enums.Countries;
-import com.backend.immilog.user.model.enums.UserRole;
-import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
+import com.backend.immilog.user.model.enums.UserStatus;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
