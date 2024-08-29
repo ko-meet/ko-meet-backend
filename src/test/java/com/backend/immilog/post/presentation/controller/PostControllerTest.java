@@ -1,5 +1,6 @@
 package com.backend.immilog.post.presentation.controller;
 
+import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.enums.Categories;
@@ -12,7 +13,6 @@ import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.Countries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
