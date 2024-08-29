@@ -1,7 +1,6 @@
 package com.backend.immilog.global.presentation.controller;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.global.model.dtos.ImageDTO;
 import com.backend.immilog.global.presentation.request.ImageRequest;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +37,7 @@ class ImageControllerTest {
         // given
         List<MultipartFile> files = List.of(mock(MultipartFile.class));
         String imagePath = "imagePath";
-        ImageDTO imageDTO = ImageDTO.builder()
-                .imageUrl(List.of("imageUrl"))
-                .build();
+        List<String> imageDTO = List.of("imageUrl");
         when(imageService.saveFiles(files, imagePath))
                 .thenReturn(imageDTO);
         // when
@@ -48,8 +45,8 @@ class ImageControllerTest {
                 imageController.uploadImage(files, imagePath);
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        ImageDTO data = (ImageDTO) Objects.requireNonNull(response.getBody()).data();
-        assertThat(data.imageUrl().get(0)).isEqualTo("imageUrl");
+        List<String> data = (List<String>) Objects.requireNonNull(response.getBody()).data();
+        assertThat(data.get(0)).isEqualTo("imageUrl");
     }
 
     @Test
