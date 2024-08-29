@@ -1,7 +1,6 @@
 package com.backend.immilog.global.application;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.backend.immilog.global.model.dtos.ImageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,9 @@ class ImageServiceTest {
         when(amazonS3.getUrl(anyString(), anyString()))
                 .thenReturn(new URL(url));
         // when
-        ImageDTO dto = imageService.saveFiles(files, imagePath);
+        List<String> images = imageService.saveFiles(files, imagePath);
         // then
-        assertThat(dto.imageUrl().get(0)).isEqualTo(url);
+        assertThat(images.get(0)).isEqualTo(url);
     }
 
     @Test

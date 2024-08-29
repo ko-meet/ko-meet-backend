@@ -2,13 +2,13 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.infrastructure.BulkInsertRepository;
-import com.backend.immilog.post.model.enums.ResourceType;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
+import com.backend.immilog.post.model.enums.ResourceType;
+import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.InteractionUserRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;

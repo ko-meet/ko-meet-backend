@@ -1,10 +1,10 @@
 package com.backend.immilog.user.presentation.controller;
 
+import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.services.LocationService;
-import com.backend.immilog.user.model.services.UserInformationService;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
+import com.backend.immilog.user.model.services.UserSignInService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +26,12 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class AuthController {
     private final LocationService locationService;
-    private final UserInformationService userInformationService;
+    private final UserSignInService userSignInService;
 
     @GetMapping("/user")
     @ExtractUserId
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보 조회 진행")
-    public ResponseEntity<UserApiResponse> getUser(
+    public ResponseEntity<ApiResponse> getUser(
             HttpServletRequest request,
             @RequestParam("latitude") Double latitude,
             @RequestParam("longitude") Double longitude
@@ -45,11 +45,11 @@ public class AuthController {
         Long userSeq = (Long) request.getAttribute("userSeq");
 
         UserSignInDTO userSignInDTO =
-                userInformationService.getUserSignInDTO(userSeq, country);
+                userSignInService.getUserSignInDTO(userSeq, country);
 
         return ResponseEntity
                 .status(OK)
-                .body(UserApiResponse.of(userSignInDTO));
+                .body(ApiResponse.of(userSignInDTO));
     }
 
 }

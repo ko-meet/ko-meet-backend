@@ -1,14 +1,13 @@
 package com.backend.immilog.user.presentation.controller;
 
+import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.services.LocationService;
-import com.backend.immilog.user.model.services.UserInformationService;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
+import com.backend.immilog.user.model.services.UserSignInService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -27,7 +26,7 @@ class AuthControllerTest {
     @Mock
     private LocationService locationService;
     @Mock
-    private UserInformationService userInformationService;
+    private UserSignInService userSignInService;
     private AuthController authController;
 
     @BeforeEach
@@ -35,7 +34,7 @@ class AuthControllerTest {
         MockitoAnnotations.openMocks(this);
         authController = new AuthController(
                 locationService,
-                userInformationService
+                userSignInService
         );
     }
 
@@ -65,11 +64,11 @@ class AuthControllerTest {
                 CompletableFuture.completedFuture(location);
         when(locationService.getCountry(latitude, longitude)).thenReturn(value);
         when(locationService.joinCompletableFutureLocation(value)).thenReturn(location);
-        when(userInformationService.getUserSignInDTO(userSeq, location)).thenReturn(userSignInDTO);
+        when(userSignInService.getUserSignInDTO(userSeq, location)).thenReturn(userSignInDTO);
         when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
-        ResponseEntity<UserApiResponse> response =
+        ResponseEntity<ApiResponse> response =
                 authController.getUser(request, latitude, longitude);
 
         // then

@@ -1,4 +1,4 @@
-package com.backend.immilog.user.model.enums;
+package com.backend.immilog.global.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

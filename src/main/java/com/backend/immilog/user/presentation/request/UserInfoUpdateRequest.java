@@ -1,7 +1,7 @@
 package com.backend.immilog.user.presentation.request;
 
+import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
-import com.backend.immilog.user.model.enums.Countries;
 import com.backend.immilog.user.model.enums.UserStatus;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;

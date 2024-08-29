@@ -1,8 +1,8 @@
 package com.backend.immilog.global.security;
 
-import com.backend.immilog.global.model.TokenIssuanceDTO;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
-import com.backend.immilog.user.model.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class JwtProvider {
+public class JwtProvider implements TokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${token.issuer}")
@@ -44,22 +44,28 @@ public class JwtProvider {
     private static final long ONE_DAY = 24 * 60 * 60 * 1000L;
     private static final long SIX_MONTH = 6 * 30 * 24 * 60 * 60 * 1000L;
 
+    @Override
     public String issueAccessToken(
-            TokenIssuanceDTO tokenTokenIssuanceDto
+            Long id,
+            String email,
+            UserRole userRole,
+            Countries country
     ) {
         Claims claims =
-                Jwts.claims().setSubject(tokenTokenIssuanceDto.id().toString());
-        claims.put("email", tokenTokenIssuanceDto.email());
-        claims.put("userRole", tokenTokenIssuanceDto.userRole());
-        claims.put("country", tokenTokenIssuanceDto.country().getCountryCode());
+                Jwts.claims().setSubject(id.toString());
+        claims.put("email", email);
+        claims.put("userRole", userRole);
+        claims.put("country", country.getCountryCode());
 
         return buildJwt(claims);
     }
 
+    @Override
     public String issueRefreshToken() {
         return buildJwt(null);
     }
 
+    @Override
     public boolean validateToken(
             String token
     ) {
@@ -74,6 +80,7 @@ public class JwtProvider {
         }
     }
 
+    @Override
     public Long getIdFromToken(
             String token
     ) {
@@ -87,6 +94,7 @@ public class JwtProvider {
                 .getSubject());
     }
 
+    @Override
     public String getEmailFromToken(
             String token
     ) {
@@ -100,6 +108,7 @@ public class JwtProvider {
                 .get("email", String.class);
     }
 
+    @Override
     public Authentication getAuthentication(
             String token
     ) {

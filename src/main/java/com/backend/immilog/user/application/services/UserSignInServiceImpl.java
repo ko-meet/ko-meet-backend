@@ -2,13 +2,12 @@ package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.model.TokenIssuanceDTO;
-import com.backend.immilog.global.security.JwtProvider;
+import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.command.UserSignInCommand;
-import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserSignInService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 public class UserSignInServiceImpl implements UserSignInService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final TokenProvider tokenProvider;
     private final RedisService redisService;
 
     final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
@@ -37,11 +36,17 @@ public class UserSignInServiceImpl implements UserSignInService {
             UserSignInCommand userSignInCommand,
             CompletableFuture<Pair<String, String>> country
     ) {
-        User user = getUserByEmail(userSignInCommand.email());
+        User user = getUser(userSignInCommand.email());
         validateIfPasswordsMatches(userSignInCommand, user);
         validateIfUserStateIsActive(user);
-        String accessToken = jwtProvider.issueAccessToken(TokenIssuanceDTO.of(user));
-        String refreshToken = jwtProvider.issueRefreshToken();
+        String accessToken = tokenProvider.issueAccessToken(
+                user.getSeq(),
+                user.getEmail(),
+                user.getUserRole(),
+                user.getLocation().getCountry()
+        );
+
+        String refreshToken = tokenProvider.issueRefreshToken();
 
         redisService.saveKeyAndValue(
                 TOKEN_PREFIX + refreshToken, user.getEmail(),
@@ -55,6 +60,35 @@ public class UserSignInServiceImpl implements UserSignInService {
                 accessToken,
                 refreshToken,
                 isLocationMatch(user, countryAndRegionPair)
+        );
+    }
+
+    @Override
+    public UserSignInDTO getUserSignInDTO(
+            Long userSeq,
+            Pair<String, String> country
+    ) {
+        final User user = getUser(userSeq);
+        boolean isLocationMatch = isLocationMatch(user, country);
+        final String accessToken = tokenProvider.issueAccessToken(
+                user.getSeq(),
+                user.getEmail(),
+                user.getUserRole(),
+                user.getLocation().getCountry()
+        );
+        final String refreshToken = tokenProvider.issueRefreshToken();
+
+        redisService.saveKeyAndValue(
+                TOKEN_PREFIX + refreshToken,
+                user.getEmail(),
+                REFRESH_TOKEN_EXPIRE_TIME
+        );
+
+        return UserSignInDTO.of(
+                user,
+                accessToken,
+                refreshToken,
+                isLocationMatch
         );
     }
 
@@ -95,12 +129,15 @@ public class UserSignInServiceImpl implements UserSignInService {
         }
     }
 
-    private User getUserByEmail(
-            String email
-    ) {
+    private User getUser(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
+    private User getUser(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
 }

@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.user.model.services.LocationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

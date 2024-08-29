@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.user.model.enums.Countries;
+import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.model.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.model.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
@@ -55,7 +55,7 @@ class LocationControllerTest {
         assertThat(response).isNotNull();
         assertThat(OK).isEqualTo(response.getStatusCode());
         LocationResponse locationResponse =
-                (LocationResponse) ((UserApiResponse) Objects.requireNonNull(response.getBody())).data();
+                (LocationResponse) ((ApiResponse) Objects.requireNonNull(response.getBody())).data();
         assertThat(locationResponse).isNotNull();
         assertThat(Countries.getCountryByKoreanName(country).getCountryName())
                 .isEqualTo(locationResponse.country());

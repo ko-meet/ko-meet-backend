@@ -1,8 +1,8 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
-import static com.backend.immilog.user.model.enums.UserRole.ROLE_USER;
+import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
