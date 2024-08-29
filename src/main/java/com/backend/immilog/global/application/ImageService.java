@@ -4,7 +4,6 @@ package com.backend.immilog.global.application;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.global.model.dtos.ImageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,15 +23,13 @@ public class ImageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public ImageDTO saveFiles(
+    public List<String> saveFiles(
             List<MultipartFile> multipartFiles,
             String imagePath
     ) {
-        List<String> imageUrls = multipartFiles.stream()
+        return multipartFiles.stream()
                 .map(multipartFile -> saveFileAndGetUrl(multipartFile, imagePath))
                 .toList();
-
-        return ImageDTO.from(imageUrls);
     }
 
     public void deleteFile(

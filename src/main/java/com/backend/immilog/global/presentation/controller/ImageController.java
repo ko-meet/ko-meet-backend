@@ -1,7 +1,6 @@
 package com.backend.immilog.global.presentation.controller;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.global.model.dtos.ImageDTO;
 import com.backend.immilog.global.presentation.request.ImageRequest;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import io.swagger.annotations.Api;
@@ -30,7 +29,7 @@ public class ImageController {
             List<MultipartFile> multipartFile,
             @RequestParam String imagePath
     ) {
-        ImageDTO data = imageService.saveFiles(multipartFile, imagePath);
+        List<String> data = imageService.saveFiles(multipartFile, imagePath);
 
         return ResponseEntity
                 .status(OK)
