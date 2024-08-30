@@ -47,12 +47,8 @@ class PostDeleteServiceTest {
         Long postSeq = 1L;
         Post post = Post.builder()
                 .seq(postSeq)
-                .postMetaData(
-                        PostMetaData.builder().build()
-                )
-                .postUserData(
-                        PostUserData.builder().userSeq(userId).build()
-                )
+                .postMetaData(PostMetaData.builder().build())
+                .postUserData(PostUserData.builder().userSeq(userId).build())
                 .build();
         when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
 
