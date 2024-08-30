@@ -133,6 +133,19 @@ public class JwtProvider implements TokenProvider {
         );
     }
 
+    @Override
+    public UserRole getUserRoleFromToken(
+            String authorizationHeader
+    ) {
+        String token = removeBearer(authorizationHeader);
+        return UserRole.valueOf(Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userRole", String.class));
+    }
+
     private String removeBearer(
             String token
     ) {
