@@ -23,4 +23,6 @@ public interface TokenProvider {
     String getEmailFromToken(String token);
 
     Authentication getAuthentication(String token);
+
+    UserRole getUserRoleFromToken(String authorizationHeader);
 }
