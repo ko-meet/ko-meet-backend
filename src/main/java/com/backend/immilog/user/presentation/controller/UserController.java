@@ -36,7 +36,6 @@ public class UserController {
     private final EmailService emailService;
 
     @PostMapping
-    @ExtractUserId
     @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
     public ResponseEntity<ApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest request
@@ -52,7 +51,6 @@ public class UserController {
     }
 
     @GetMapping("/{userSeq}/verification")
-    @ExtractUserId
     @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
     public String verifyEmail(
             @PathVariable Long userSeq,
@@ -65,7 +63,6 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    @ExtractUserId
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
     public ResponseEntity<ApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest request
@@ -125,7 +122,6 @@ public class UserController {
     }
 
     @PatchMapping("/{userSeq}/{status}")
-    @ExtractUserId
     @ApiOperation(value = "사용자 차단/해제", notes = "사용자 차단/해제 진행")
     public ResponseEntity<Void> blockUser(
             HttpServletRequest request,
