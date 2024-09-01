@@ -56,7 +56,7 @@ class NoticeInquiryServiceTest {
         Page<NoticeDTO> notices = noticeInquiryService.getNotices(userSeq, page);
 
         // then
-        assertThat(notices.get().findFirst().get().getContent()).isEqualTo("content...");
+        assertThat(notices.get().findFirst().get().content()).isEqualTo("content");
     }
 
     @Test
@@ -71,6 +71,30 @@ class NoticeInquiryServiceTest {
 
         // then
         assertThat(notices).isEmpty();
+    }
+
+    @Test
+    @DisplayName("공지사항 상세 조회 - 성공")
+    void getNoticeDetail_Success() {
+        // given
+        Long noticeSeq = 1L;
+        Notice notice = Notice.builder()
+                .seq(noticeSeq)
+                .title("title")
+                .userSeq(1L)
+                .content("content")
+                .type(NoticeType.NOTICE)
+                .targetCountries(List.of(SOUTH_KOREA))
+                .status(NORMAL)
+                .build();
+
+        when(noticeRepository.findById(noticeSeq))
+                .thenReturn(java.util.Optional.of(notice));
+        // when
+        NoticeDTO noticeDTO = noticeInquiryService.getNoticeDetail(noticeSeq);
+
+        // then
+        assertThat(noticeDTO.content()).isEqualTo("content");
     }
 
 }

@@ -81,4 +81,19 @@ class NoticeControllerTest {
         verify(noticeInquiryService).getNotices(userSeq, page);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
+
+    @Test
+    @DisplayName("공지사항 상세 조회 테스트")
+    void getNoticeDetail_success() {
+        // given
+        Long noticeSeq = 1L;
+        when(noticeInquiryService.getNoticeDetail(noticeSeq)).thenReturn(null);
+
+        // when
+        ResponseEntity<ApiResponse> response = noticeController.getNoticeDetail(noticeSeq);
+
+        // then
+        verify(noticeInquiryService).getNoticeDetail(noticeSeq);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
 }
