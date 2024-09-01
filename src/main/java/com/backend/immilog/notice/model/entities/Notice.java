@@ -1,5 +1,6 @@
 package com.backend.immilog.notice.model.entities;
 
+import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.notice.model.enums.Countries;
 import com.backend.immilog.notice.model.enums.NoticeStatus;
 import com.backend.immilog.notice.model.enums.NoticeType;
@@ -20,7 +21,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @DynamicUpdate
 @Entity
-public class Notice {
+public class Notice extends BaseDateEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long seq;

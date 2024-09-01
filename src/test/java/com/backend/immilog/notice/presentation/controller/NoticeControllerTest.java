@@ -2,6 +2,7 @@ package com.backend.immilog.notice.presentation.controller;
 
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.presentation.response.ApiResponse;
+import com.backend.immilog.notice.application.NoticeInquiryService;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.model.services.NoticeRegisterService;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
@@ -22,12 +23,18 @@ class NoticeControllerTest {
     @Mock
     private NoticeRegisterService noticeRegisterService;
 
+    @Mock
+    private NoticeInquiryService noticeInquiryService;
+
     private NoticeController noticeController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        noticeController = new NoticeController(noticeRegisterService);
+        noticeController = new NoticeController(
+                noticeRegisterService,
+                noticeInquiryService
+        );
     }
 
     @Test
@@ -55,5 +62,38 @@ class NoticeControllerTest {
         verify(noticeRegisterService).registerNotice(userSeq, userRole, param);
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
 
+    }
+
+    @Test
+    @DisplayName("공지사항 목록 조회 테스트")
+    void getNotices_success() {
+        // given
+        Long userSeq = 1L;
+        Integer page = 0;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(userSeq);
+        when(noticeInquiryService.getNotices(userSeq, page)).thenReturn(null);
+
+        // when
+        ResponseEntity<ApiResponse> response = noticeController.getNotices(page, request);
+
+        // then
+        verify(noticeInquiryService).getNotices(userSeq, page);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("공지사항 상세 조회 테스트")
+    void getNoticeDetail_success() {
+        // given
+        Long noticeSeq = 1L;
+        when(noticeInquiryService.getNoticeDetail(noticeSeq)).thenReturn(null);
+
+        // when
+        ResponseEntity<ApiResponse> response = noticeController.getNoticeDetail(noticeSeq);
+
+        // then
+        verify(noticeInquiryService).getNoticeDetail(noticeSeq);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
 }
