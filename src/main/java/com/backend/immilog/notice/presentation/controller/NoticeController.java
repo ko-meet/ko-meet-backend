@@ -54,4 +54,13 @@ public class NoticeController {
         return ResponseEntity.status(OK).body(ApiResponse.of(notices));
     }
 
+    @GetMapping("/{noticeSeq}")
+    @ApiOperation(value = "공지사항 조회", notes = "공지사항을 조회합니다.")
+    public ResponseEntity<ApiResponse> getNoticeDetail(
+            @PathVariable Long noticeSeq
+    ) {
+        NoticeDTO notices = noticeInquiryService.getNoticeDetail(noticeSeq);
+        return ResponseEntity.status(OK).body(ApiResponse.of(notices));
+    }
+
 }
