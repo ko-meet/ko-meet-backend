@@ -1,7 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.enums.Countries;
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.enums.Categories;
@@ -11,6 +10,7 @@ import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,7 +76,7 @@ class PostUploadServiceTest {
                 .content("content")
                 .build();
         Location location = Location.builder()
-                .country(Countries.SOUTH_KOREA)
+                .country(UserCountry.SOUTH_KOREA)
                 .region("region")
                 .build();
         User user = User.builder()
@@ -132,7 +132,7 @@ class PostUploadServiceTest {
                 .content("content")
                 .build();
         Location location = Location.builder()
-                .country(Countries.SOUTH_KOREA)
+                .country(UserCountry.SOUTH_KOREA)
                 .region("region")
                 .build();
         User user = User.builder()
@@ -165,7 +165,7 @@ class PostUploadServiceTest {
                 .content("content")
                 .build();
         Location location = Location.builder()
-                .country(Countries.SOUTH_KOREA)
+                .country(UserCountry.SOUTH_KOREA)
                 .region("region")
                 .build();
         User user = User.builder()
@@ -187,7 +187,7 @@ class PostUploadServiceTest {
         assertThatThrownBy(() ->
                 postUploadService.uploadPost(userSeq, postUploadRequest)
         )
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(PostException.class)
                 .hasMessage(FAILED_TO_SAVE_POST.getMessage());
 
         verify(bulkInsertRepository).saveAll(anyList(), anyString(), any(BiConsumer.class));

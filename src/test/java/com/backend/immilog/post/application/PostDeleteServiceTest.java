@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.Post;
@@ -15,8 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
 import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
+import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
@@ -76,7 +76,7 @@ class PostDeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> postDeleteService.deletePost(userId, postSeq))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(PostException.class)
                 .hasMessage(NO_AUTHORITY.getMessage());
 
     }
