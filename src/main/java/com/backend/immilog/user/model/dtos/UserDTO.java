@@ -1,8 +1,8 @@
 package com.backend.immilog.user.model.dtos;
 
-import com.backend.immilog.global.enums.Countries;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.user.model.enums.UserStatus;
 import lombok.Builder;
 
@@ -16,8 +16,8 @@ public record UserDTO(
         String profileImage,
         Long reportedCount,
         Date reportedDate,
-        Countries country,
-        Countries interestCountry,
+        UserCountry country,
+        UserCountry interestCountry,
         String region,
         UserRole userRole,
         UserStatus userStatus
