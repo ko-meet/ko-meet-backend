@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(htmlBody, true);  // true는 HTML을 의미함
         } catch (MessagingException e) {
             log.error("Failed to send email", e);
-            throw new CustomException(EMAIL_SEND_FAILED);
+            throw new UserException(EMAIL_SEND_FAILED);
         }
 
         javaMailSender.send(message);

@@ -1,7 +1,7 @@
 package com.backend.immilog.notice.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.notice.model.enums.Countries;
+import com.backend.immilog.notice.model.enums.NoticeCountry;
 import com.backend.immilog.notice.model.enums.NoticeStatus;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
@@ -42,7 +42,7 @@ public class Notice extends BaseDateEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<Countries> targetCountries;
+    private List<NoticeCountry> targetCountries;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)

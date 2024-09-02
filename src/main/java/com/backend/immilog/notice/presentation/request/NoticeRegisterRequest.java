@@ -1,6 +1,6 @@
 package com.backend.immilog.notice.presentation.request;
 
-import com.backend.immilog.notice.model.enums.Countries;
+import com.backend.immilog.notice.model.enums.NoticeCountry;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +17,5 @@ public class NoticeRegisterRequest {
     private String title;
     private String content;
     private NoticeType type;
-    private List<Countries> targetCountries;
+    private List<NoticeCountry> targetCountries;
 }

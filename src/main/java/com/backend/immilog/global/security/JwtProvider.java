@@ -1,6 +1,6 @@
 package com.backend.immilog.global.security;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -49,7 +49,7 @@ public class JwtProvider implements TokenProvider {
             Long id,
             String email,
             UserRole userRole,
-            Countries country
+            GlobalCountry country
     ) {
         Claims claims =
                 Jwts.claims().setSubject(id.toString());

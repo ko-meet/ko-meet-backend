@@ -1,7 +1,7 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.enums.ResourceType;
@@ -172,7 +172,7 @@ public class PostUpdateServiceImpl implements PostUpdateService {
                             ps.setString(4, resource);
                         } catch (Exception e) {
                             log.error("Failed to save post resource", e);
-                            throw new CustomException(FAILED_TO_SAVE_POST);
+                            throw new PostException(FAILED_TO_SAVE_POST);
                         }
                     }
             );
@@ -199,7 +199,7 @@ public class PostUpdateServiceImpl implements PostUpdateService {
             Post post
     ) {
         if (!Objects.equals(post.getPostUserData().getUserSeq(), userId)) {
-            throw new CustomException(NO_AUTHORITY);
+            throw new PostException(NO_AUTHORITY);
         }
     }
 
@@ -207,6 +207,6 @@ public class PostUpdateServiceImpl implements PostUpdateService {
             Long postSeq
     ) {
         return postRepository.findById(postSeq)
-                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+                .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 }

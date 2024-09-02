@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
@@ -76,7 +76,7 @@ class CommentUploadServiceImplTest {
                 referenceType,
                 commentUploadRequest
         ))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(PostException.class)
                 .hasMessage(POST_NOT_FOUND.getMessage());
     }
 
@@ -98,7 +98,7 @@ class CommentUploadServiceImplTest {
                 referenceType,
                 commentUploadRequest
         ))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(PostException.class)
                 .hasMessage(INVALID_REFERENCE_TYPE.getMessage());
     }
 

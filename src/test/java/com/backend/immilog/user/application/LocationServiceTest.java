@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.global.enums.GlobalCountry.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;

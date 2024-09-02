@@ -1,9 +1,9 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.services.UserReportServiceImpl;
 import com.backend.immilog.user.enums.ReportReason;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.embeddables.ReportInfo;
 import com.backend.immilog.user.model.entities.Report;
@@ -23,11 +23,11 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.backend.immilog.global.enums.Countries.MALAYSIA;
-import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.ALREADY_REPORTED;
 import static com.backend.immilog.user.exception.UserErrorCode.CANNOT_REPORT_MYSELF;
+import static com.backend.immilog.user.model.enums.UserCountry.MALAYSIA;
+import static com.backend.immilog.user.model.enums.UserCountry.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -115,7 +115,7 @@ class UserReportServiceTest {
                 reporterUserSeq,
                 reportUserRequest.toCommand()
         ))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(CANNOT_REPORT_MYSELF.getMessage());
     }
 
@@ -135,7 +135,7 @@ class UserReportServiceTest {
                 reporterUserSeq,
                 reportUserRequest.toCommand()
         ))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(ALREADY_REPORTED.getMessage());
     }
 }

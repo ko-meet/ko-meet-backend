@@ -1,6 +1,6 @@
 package com.backend.immilog.global.security;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.application.services.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -52,7 +52,7 @@ class JwtProviderTest {
                 1L,
                 "test@example.com",
                 UserRole.ROLE_USER,
-                Countries.SOUTH_KOREA
+                GlobalCountry.SOUTH_KOREA
         );
         assertNotNull(token);
 
@@ -89,7 +89,7 @@ class JwtProviderTest {
                 1L,
                 "test@example.com",
                 UserRole.ROLE_USER,
-                Countries.SOUTH_KOREA
+                GlobalCountry.SOUTH_KOREA
         );
 
         boolean isValid = tokenProvider.validateToken(token);
@@ -111,7 +111,7 @@ class JwtProviderTest {
                 1L,
                 "test@example.com",
                 UserRole.ROLE_USER,
-                Countries.SOUTH_KOREA
+                GlobalCountry.SOUTH_KOREA
         );
 
         Long id = tokenProvider.getIdFromToken(token);
@@ -125,7 +125,7 @@ class JwtProviderTest {
                 1L,
                 "test@example.com",
                 UserRole.ROLE_USER,
-                Countries.SOUTH_KOREA
+                GlobalCountry.SOUTH_KOREA
         );
 
         String email = tokenProvider.getEmailFromToken(token);
@@ -139,7 +139,7 @@ class JwtProviderTest {
                 1L,
                 "test@example.com",
                 UserRole.ROLE_USER,
-                Countries.SOUTH_KOREA
+                GlobalCountry.SOUTH_KOREA
         );
 
         UserDetails mockUserDetails = mock(UserDetails.class);

@@ -1,7 +1,7 @@
 package com.backend.immilog.user.application;
 
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.services.UserSignUpServiceImpl;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserSignUpService;
@@ -16,9 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.backend.immilog.user.model.enums.UserStatus.*;
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.user.model.enums.UserStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -82,7 +82,7 @@ class UserSignUpServiceTest {
                 .thenReturn(Optional.of(new User()));
 
         assertThatThrownBy(() -> userSignUpService.signUp(param.toCommand()))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(EXISTING_USER.getMessage());
     }
 
@@ -132,7 +132,7 @@ class UserSignUpServiceTest {
         when(userRepository.findById(userSeq)).thenReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> userSignUpService.verifyEmail(userSeq))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
     }
 

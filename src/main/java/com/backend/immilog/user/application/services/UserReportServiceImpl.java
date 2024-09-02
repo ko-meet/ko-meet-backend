@@ -1,8 +1,8 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.command.UserReportCommand;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.ReportRepository;
@@ -91,7 +91,7 @@ public class UserReportServiceImpl implements UserReportService {
             Long reporterUserSeq
     ) {
         if (targetUserSeq.equals(reporterUserSeq)) {
-            throw new CustomException(CANNOT_REPORT_MYSELF);
+            throw new UserException(CANNOT_REPORT_MYSELF);
         }
     }
 
@@ -104,7 +104,7 @@ public class UserReportServiceImpl implements UserReportService {
                         targetUserSeq, reporterUserSeq
                 );
         if (isExist) {
-            throw new CustomException(ALREADY_REPORTED);
+            throw new UserException(ALREADY_REPORTED);
         }
     }
 
@@ -113,6 +113,6 @@ public class UserReportServiceImpl implements UserReportService {
     ) {
         return userRepository
                 .findById(targetUserSeq)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

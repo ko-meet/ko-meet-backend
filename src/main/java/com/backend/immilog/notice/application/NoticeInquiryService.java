@@ -1,7 +1,6 @@
 package com.backend.immilog.notice.application;
 
-import com.backend.immilog.global.exception.CustomException;
-import com.backend.immilog.notice.exception.NoticeErrorCode;
+import com.backend.immilog.notice.exception.NoticeException;
 import com.backend.immilog.notice.model.dtos.NoticeDTO;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.backend.immilog.notice.exception.NoticeErrorCode.*;
+import static com.backend.immilog.notice.exception.NoticeErrorCode.NOTICE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,7 @@ public class NoticeInquiryService {
             Long userSeq,
             Integer page
     ) {
-        if(userSeq == null) {
+        if (userSeq == null) {
             return Page.empty();
         }
         Pageable pageable = PageRequest.of(page, 10);
@@ -34,6 +33,6 @@ public class NoticeInquiryService {
         return noticeRepository
                 .findById(noticeSeq)
                 .map(NoticeDTO::from)
-                .orElseThrow(()-> new CustomException(NOTICE_NOT_FOUND));
+                .orElseThrow(() -> new NoticeException(NOTICE_NOT_FOUND));
     }
 }

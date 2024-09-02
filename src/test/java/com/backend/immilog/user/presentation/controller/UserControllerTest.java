@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.global.enums.Countries.INDONESIA;
-import static com.backend.immilog.global.enums.Countries.JAPAN;
+import static com.backend.immilog.user.model.enums.UserCountry.INDONESIA;
+import static com.backend.immilog.user.model.enums.UserCountry.JAPAN;
 import static com.backend.immilog.user.enums.ReportReason.FRAUD;
 import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
