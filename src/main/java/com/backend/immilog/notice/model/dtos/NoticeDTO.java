@@ -1,7 +1,7 @@
 package com.backend.immilog.notice.model.dtos;
 
 import com.backend.immilog.notice.model.entities.Notice;
-import com.backend.immilog.notice.model.enums.Countries;
+import com.backend.immilog.notice.model.enums.NoticeCountry;
 import com.backend.immilog.notice.model.enums.NoticeStatus;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public record NoticeDTO(
         String content,
         NoticeType type,
         NoticeStatus status,
-        List<Countries> targetCountries,
+        List<NoticeCountry> targetCountries,
         List<Long> readUsers,
         LocalDateTime createdAt
 ) {

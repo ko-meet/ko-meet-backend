@@ -1,7 +1,7 @@
 package com.backend.immilog.notice.application;
 
 import com.backend.immilog.global.enums.UserRole;
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.notice.exception.NoticeException;
 import com.backend.immilog.notice.model.entities.Notice;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
 import com.backend.immilog.notice.model.services.NoticeRegisterService;
@@ -33,7 +33,7 @@ public class NoticeRegisterServiceImpl implements NoticeRegisterService {
             UserRole userRole
     ) {
         if (!Objects.equals(userRole, ROLE_ADMIN)) {
-            throw new CustomException(NOT_AN_ADMIN_USER);
+            throw new NoticeException(NOT_AN_ADMIN_USER);
         }
     }
 }
