@@ -1,9 +1,9 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
 import com.backend.immilog.user.application.services.UserInformationServiceImpl;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;
@@ -22,11 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.global.enums.Countries.*;
 import static com.backend.immilog.global.enums.UserRole.ROLE_ADMIN;
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.PASSWORD_NOT_MATCH;
+import static com.backend.immilog.user.model.enums.UserCountry.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -161,7 +161,7 @@ class UserInformationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> userInformationService.changePassword(userSeq, param.toCommand()))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(PASSWORD_NOT_MATCH.getMessage());
     }
 
@@ -231,7 +231,7 @@ class UserInformationServiceTest {
                 adminSeq,
                 userStatus
         ))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(NOT_AN_ADMIN_USER.getMessage());
     }
 }
