@@ -1,5 +1,6 @@
 package com.backend.immilog.post.model.enums;
 
+import com.backend.immilog.global.enums.GlobalCountry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -49,5 +50,9 @@ public enum Countries {
                 .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public GlobalCountry toGlobalCountries() {
+        return GlobalCountry.valueOf(this.name());
     }
 }

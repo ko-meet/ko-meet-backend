@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
@@ -43,7 +43,7 @@ public class PostDeleteServiceImpl implements PostDeleteService {
             Long postSeq
     ) {
         return postRepository.findById(postSeq)
-                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+                .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 
     private void validateAuthor(
@@ -51,7 +51,7 @@ public class PostDeleteServiceImpl implements PostDeleteService {
             Post post
     ) {
         if (!Objects.equals(post.getPostUserData().getUserSeq(), userId)) {
-            throw new CustomException(NO_AUTHORITY);
+            throw new PostException(NO_AUTHORITY);
         }
     }
 }

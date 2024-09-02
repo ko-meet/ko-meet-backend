@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
@@ -82,7 +82,7 @@ public class PostUploadServiceImpl implements PostUploadService {
                         ps.setString(4, postResource.getContent());
                     } catch (SQLException e) {
                         log.error("Failed to save post resource: {}", e.getMessage());
-                        throw new CustomException(FAILED_TO_SAVE_POST);
+                        throw new PostException(FAILED_TO_SAVE_POST);
                     }
                 }
         );
@@ -131,7 +131,7 @@ public class PostUploadServiceImpl implements PostUploadService {
     ) {
         return userRepository
                 .findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new PostException(USER_NOT_FOUND));
     }
 
 }

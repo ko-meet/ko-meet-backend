@@ -1,6 +1,6 @@
 package com.backend.immilog.post.model.enums;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +22,6 @@ public enum ReferenceType {
         return Arrays.stream(values())
                 .filter(type -> type.stringValue.equals(referenceType))
                 .findFirst()
-                .orElseThrow(() -> new CustomException(INVALID_REFERENCE_TYPE));
+                .orElseThrow(() -> new PostException(INVALID_REFERENCE_TYPE));
     }
 }

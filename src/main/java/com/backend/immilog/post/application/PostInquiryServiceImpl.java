@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.dtos.CommentDTO;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.enums.Categories;
@@ -79,6 +79,6 @@ public class PostInquiryServiceImpl implements PostInquiryService {
     private PostDTO getPostDTO(Long postSeq) {
         return postRepository
                 .getPost(postSeq)
-                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+                .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 }
