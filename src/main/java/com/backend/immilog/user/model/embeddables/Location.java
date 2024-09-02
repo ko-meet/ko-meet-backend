@@ -1,6 +1,6 @@
 package com.backend.immilog.user.model.embeddables;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.user.model.enums.UserCountry;
 import lombok.*;
 
 import javax.persistence.Embeddable;
@@ -15,11 +15,11 @@ import javax.persistence.Enumerated;
 @Embeddable
 public class Location {
     @Enumerated(EnumType.STRING)
-    private Countries country;
+    private UserCountry country;
     private String region;
 
     public static Location of(
-            Countries country,
+            UserCountry country,
             String region
     ) {
         return Location.builder()

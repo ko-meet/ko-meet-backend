@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Comment;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.enums.ReferenceType;
@@ -48,6 +48,6 @@ public class CommentUploadServiceImpl implements CommentUploadService {
     ) {
         return postRepository
                 .findById(postSeq)
-                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+                .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 }

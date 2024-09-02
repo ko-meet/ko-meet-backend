@@ -1,11 +1,11 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.RedisService;
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.enums.UserRole;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.services.UserSignInServiceImpl;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
@@ -24,10 +24,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.global.enums.Countries.MALAYSIA;
-import static com.backend.immilog.global.enums.Countries.SOUTH_KOREA;
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.user.model.enums.UserCountry.MALAYSIA;
+import static com.backend.immilog.user.model.enums.UserCountry.SOUTH_KOREA;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -72,7 +72,7 @@ class UserSignInServiceTest {
                 .build();
 
         Location location = Location.builder()
-                .country(Countries.SOUTH_KOREA)
+                .country(SOUTH_KOREA)
                 .region("서울")
                 .build();
 
@@ -93,7 +93,7 @@ class UserSignInServiceTest {
                 anyLong(),
                 anyString(),
                 any(UserRole.class),
-                any(Countries.class)
+                any(GlobalCountry.class)
         )).thenReturn("accessToken");
         when(tokenProvider.issueRefreshToken())
                 .thenReturn("refreshToken");
@@ -111,7 +111,7 @@ class UserSignInServiceTest {
                 anyLong(),
                 anyString(),
                 any(UserRole.class),
-                any(Countries.class)
+                any(GlobalCountry.class)
         );
         verify(tokenProvider, times(1)).issueRefreshToken();
     }
@@ -128,7 +128,7 @@ class UserSignInServiceTest {
                 .build();
 
         Location location = Location.builder()
-                .country(Countries.SOUTH_KOREA)
+                .country(SOUTH_KOREA)
                 .region("서울")
                 .build();
 
@@ -145,7 +145,7 @@ class UserSignInServiceTest {
         assertThatThrownBy(() -> {
             userSignInService.signIn(userSignInRequest.toCommand(), country);
         })
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
     }
 
@@ -172,7 +172,7 @@ class UserSignInServiceTest {
                 anyLong(),
                 anyString(),
                 any(UserRole.class),
-                any(Countries.class)
+                any(GlobalCountry.class)
         )).thenReturn("accessToken");
         when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
 
@@ -208,7 +208,7 @@ class UserSignInServiceTest {
                 anyLong(),
                 anyString(),
                 any(UserRole.class),
-                any(Countries.class)
+                any(GlobalCountry.class)
         )).thenReturn("accessToken");
         when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
 

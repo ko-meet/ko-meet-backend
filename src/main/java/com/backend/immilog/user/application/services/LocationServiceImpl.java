@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.user.model.services.LocationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +45,7 @@ public class LocationServiceImpl implements LocationService {
             String compoundCode = extractCompoundCode(response.join());
             String[] parts = Objects.requireNonNull(compoundCode).split(" ");
             if (parts.length >= 3) {
-                String country = Countries.getCountryByKoreanName(parts[1]).getCountryName();
+                String country = GlobalCountry.getCountryByKoreanName(parts[1]).getCountryName();
                 String city = parts[2];
                 return CompletableFuture.completedFuture(Pair.of(country, city));
             }

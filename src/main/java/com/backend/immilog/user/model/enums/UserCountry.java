@@ -1,4 +1,4 @@
-package com.backend.immilog.post.model.enums;
+package com.backend.immilog.user.model.enums;
 
 import com.backend.immilog.global.enums.GlobalCountry;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Countries {
+public enum UserCountry {
     ALL("ALL","ALL", "전체"),
     MALAYSIA("MALAYSIA","MY","말레이시아"),
     SINGAPORE("SINGAPORE","SG","싱가포르"),
@@ -34,19 +34,19 @@ public enum Countries {
     private final String countryCode;
     private final String countryKoreanName;
 
-    public static Countries getCountry(
+    public static UserCountry getCountry(
             String countryName
     ) {
-        return Arrays.stream(Countries.values())
+        return Arrays.stream(UserCountry.values())
                 .filter(country -> country.getCountryName().equals(countryName))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static Countries getCountryByKoreanName(
+    public static UserCountry getCountryByKoreanName(
             String countryKoreanName
     ) {
-        return Arrays.stream(Countries.values())
+        return Arrays.stream(UserCountry.values())
                 .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
                 .findFirst()
                 .orElse(null);

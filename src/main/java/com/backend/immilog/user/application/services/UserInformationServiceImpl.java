@@ -1,11 +1,11 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.global.enums.Countries;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
 import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserInformationService;
@@ -71,7 +71,7 @@ public class UserInformationServiceImpl implements UserInformationService {
             Long userSeq
     ) {
         if (!getUser(userSeq).getUserRole().equals(ROLE_ADMIN)) {
-            throw new CustomException(NOT_AN_ADMIN_USER);
+            throw new UserException(NOT_AN_ADMIN_USER);
         }
         ;
     }
@@ -81,7 +81,7 @@ public class UserInformationServiceImpl implements UserInformationService {
             String currentPassword
     ) {
         if (!passwordEncoder.matches(existingPassword, currentPassword)) {
-            throw new CustomException(PASSWORD_NOT_MATCH);
+            throw new UserException(PASSWORD_NOT_MATCH);
         }
     }
 
@@ -111,7 +111,7 @@ public class UserInformationServiceImpl implements UserInformationService {
     }
 
     private static void setUserInterestCountryIfItsChanged(
-            Countries interestCountry,
+            UserCountry interestCountry,
             User user
     ) {
         if (interestCountry != null) {
@@ -142,7 +142,7 @@ public class UserInformationServiceImpl implements UserInformationService {
             Long userSeq
     ) {
         return userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 
 }

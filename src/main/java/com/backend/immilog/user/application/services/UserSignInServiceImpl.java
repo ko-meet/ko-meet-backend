@@ -1,9 +1,9 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisService;
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.command.UserSignInCommand;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
@@ -43,7 +43,7 @@ public class UserSignInServiceImpl implements UserSignInService {
                 user.getSeq(),
                 user.getEmail(),
                 user.getUserRole(),
-                user.getLocation().getCountry()
+                user.getLocation().getCountry().toGlobalCountries()
         );
 
         String refreshToken = tokenProvider.issueRefreshToken();
@@ -74,7 +74,7 @@ public class UserSignInServiceImpl implements UserSignInService {
                 user.getSeq(),
                 user.getEmail(),
                 user.getUserRole(),
-                user.getLocation().getCountry()
+                user.getLocation().getCountry().toGlobalCountries()
         );
         final String refreshToken = tokenProvider.issueRefreshToken();
 
@@ -116,7 +116,7 @@ public class UserSignInServiceImpl implements UserSignInService {
             User user
     ) {
         if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
-            throw new CustomException(USER_STATUS_NOT_ACTIVE);
+            throw new UserException(USER_STATUS_NOT_ACTIVE);
         }
     }
 
@@ -125,19 +125,19 @@ public class UserSignInServiceImpl implements UserSignInService {
             User user
     ) {
         if (!passwordEncoder.matches(userSignInCommand.password(), user.getPassword())) {
-            throw new CustomException(PASSWORD_NOT_MATCH);
+            throw new UserException(PASSWORD_NOT_MATCH);
         }
     }
 
     private User getUser(String email) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 
     private User getUser(Long id) {
         return userRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

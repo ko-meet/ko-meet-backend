@@ -1,6 +1,6 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.user.model.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
@@ -39,7 +39,7 @@ public class LocationController {
                 .status(OK)
                 .body(ApiResponse.of(
                                 LocationResponse.from(
-                                        Countries.getCountryByKoreanName(country.getFirst()),
+                                        GlobalCountry.getCountryByKoreanName(country.getFirst()),
                                         country.getSecond()
                                 )
                         )

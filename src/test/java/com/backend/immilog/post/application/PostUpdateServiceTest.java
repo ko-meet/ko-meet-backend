@@ -1,7 +1,7 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.entities.InteractionUser;
@@ -149,7 +149,7 @@ class PostUpdateServiceTest {
         // when & then
         assertThatThrownBy(() ->
                 postUpdateService.updatePost(userSeq, postSeq, postUpdateRequest))
-                .isInstanceOf(CustomException.class)
+                .isInstanceOf(PostException.class)
                 .hasMessage(FAILED_TO_SAVE_POST.getMessage());
 
         verify(bulkInsertRepository).saveAll(anyList(), anyString(), any(BiConsumer.class));

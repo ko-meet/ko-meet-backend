@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.global.exception.CustomException;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +41,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     ) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

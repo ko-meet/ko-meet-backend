@@ -1,9 +1,9 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.global.exception.CustomException;
 import com.backend.immilog.user.application.command.UserSignUpCommand;
-import com.backend.immilog.user.model.enums.UserStatus;
+import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.model.services.UserSignUpService;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +45,7 @@ public class UserSignUpServiceImpl implements UserSignUpService {
             Long userSeq
     ) {
         User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
         String resultString = "이메일 인증이 완료되었습니다.";
         UserStatus currentUserStatus = user.getUserStatus();
         return getVerificationResult(currentUserStatus, user, resultString);
@@ -57,7 +57,7 @@ public class UserSignUpServiceImpl implements UserSignUpService {
         userRepository
                 .findByEmail(email)
                 .ifPresent(user -> {
-                    throw new CustomException(EXISTING_USER);
+                    throw new UserException(EXISTING_USER);
                 });
     }
 

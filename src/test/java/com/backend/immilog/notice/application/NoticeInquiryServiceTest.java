@@ -15,7 +15,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static com.backend.immilog.notice.model.enums.Countries.SOUTH_KOREA;
+import static com.backend.immilog.notice.model.enums.NoticeCountry.SOUTH_KOREA;
 import static com.backend.immilog.notice.model.enums.NoticeStatus.NORMAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;

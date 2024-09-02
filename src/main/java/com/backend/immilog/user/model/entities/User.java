@@ -1,6 +1,6 @@
 package com.backend.immilog.user.model.entities;
 
-import com.backend.immilog.global.enums.Countries;
+import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.user.application.command.UserSignUpCommand;
@@ -44,7 +44,7 @@ public class User extends BaseDateEntity {
 
     @Setter
     @Enumerated(EnumType.STRING)
-    private Countries interestCountry;
+    private UserCountry interestCountry;
 
     @Embedded
     private Location location;
@@ -56,10 +56,10 @@ public class User extends BaseDateEntity {
             UserSignUpCommand userSignUpCommand,
             String encodedPassword
     ) {
-        Countries interestCountry =
+        UserCountry interestCountry =
                 userSignUpCommand.interestCountry() != null ?
-                        Countries.getCountry(userSignUpCommand.interestCountry()) : null;
-        Countries country = Countries.getCountryByKoreanName(userSignUpCommand.country());
+                        UserCountry.getCountry(userSignUpCommand.interestCountry()) : null;
+        UserCountry country = UserCountry.getCountryByKoreanName(userSignUpCommand.country());
 
         return User.builder()
                 .nickName(userSignUpCommand.nickName())

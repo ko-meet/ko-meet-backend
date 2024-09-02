@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Countries {
+public enum GlobalCountry {
     ALL("ALL", "ALL", "전체"),
     MALAYSIA("MALAYSIA", "MY", "말레이시아"),
     SINGAPORE("SINGAPORE", "SG", "싱가포르"),
@@ -33,19 +33,19 @@ public enum Countries {
     private final String countryCode;
     private final String countryKoreanName;
 
-    public static Countries getCountry(
+    public static GlobalCountry getCountry(
             String countryName
     ) {
-        return Arrays.stream(Countries.values())
+        return Arrays.stream(GlobalCountry.values())
                 .filter(country -> country.getCountryName().equals(countryName))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static Countries getCountryByKoreanName(
+    public static GlobalCountry getCountryByKoreanName(
             String countryKoreanName
     ) {
-        return Arrays.stream(Countries.values())
+        return Arrays.stream(GlobalCountry.values())
                 .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
                 .findFirst()
                 .orElse(null);
