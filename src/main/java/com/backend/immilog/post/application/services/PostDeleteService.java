@@ -1,13 +1,13 @@
-package com.backend.immilog.post.application;
+package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
-import com.backend.immilog.post.model.services.PostDeleteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -18,11 +18,11 @@ import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostDeleteServiceImpl implements PostDeleteService {
+public class PostDeleteService {
     private final PostRepository postRepository;
     private final PostResourceRepository postResourceRepository;
 
-    @Override
+    @Transactional
     public void deletePost(
             Long userId,
             Long postSeq
