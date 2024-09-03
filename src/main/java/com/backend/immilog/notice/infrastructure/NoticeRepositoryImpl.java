@@ -1,6 +1,6 @@
 package com.backend.immilog.notice.infrastructure;
 
-import com.backend.immilog.notice.model.dtos.NoticeDTO;
+import com.backend.immilog.notice.application.dtos.NoticeDTO;
 import com.backend.immilog.notice.model.entities.QNotice;
 import com.backend.immilog.notice.model.repositories.NoticeRepositoryCustom;
 import com.backend.immilog.user.model.entities.QUser;

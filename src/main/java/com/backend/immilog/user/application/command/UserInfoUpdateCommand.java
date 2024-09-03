@@ -1,4 +1,4 @@
-package com.backend.immilog.user.application.dto;
+package com.backend.immilog.user.application.command;
 
 import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.user.model.enums.UserStatus;

@@ -1,10 +1,10 @@
-package com.backend.immilog.notice.application;
+package com.backend.immilog.notice.application.services;
 
 import com.backend.immilog.global.enums.UserRole;
+import com.backend.immilog.notice.application.command.NoticeUploadCommand;
 import com.backend.immilog.notice.exception.NoticeException;
 import com.backend.immilog.notice.model.entities.Notice;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
-import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +23,10 @@ public class NoticeRegisterService {
     public void registerNotice(
             Long userSeq,
             UserRole userRole,
-            NoticeRegisterRequest request
+            NoticeUploadCommand command
     ) {
         validateAdminUser(userRole);
-        noticeRepository.save(Notice.of(userSeq, request));
+        noticeRepository.save(Notice.of(userSeq, command));
     }
 
     private static void validateAdminUser(

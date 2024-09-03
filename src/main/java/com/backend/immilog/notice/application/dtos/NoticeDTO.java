@@ -1,4 +1,4 @@
-package com.backend.immilog.notice.model.dtos;
+package com.backend.immilog.notice.application.dtos;
 
 import com.backend.immilog.notice.model.entities.Notice;
 import com.backend.immilog.notice.model.enums.NoticeCountry;

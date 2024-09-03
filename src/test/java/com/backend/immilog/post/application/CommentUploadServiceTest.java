@@ -52,7 +52,7 @@ class CommentUploadServiceTest {
                 userId,
                 postSeq,
                 referenceType,
-                commentUploadRequest
+                commentUploadRequest.content()
         );
         // then
         verify(postRepository, times(1)).findById(postSeq);
@@ -74,7 +74,7 @@ class CommentUploadServiceTest {
                 userId,
                 postSeq,
                 referenceType,
-                commentUploadRequest
+                commentUploadRequest.content()
         ))
                 .isInstanceOf(PostException.class)
                 .hasMessage(POST_NOT_FOUND.getMessage());
@@ -96,7 +96,7 @@ class CommentUploadServiceTest {
                 userId,
                 postSeq,
                 referenceType,
-                commentUploadRequest
+                commentUploadRequest.content()
         ))
                 .isInstanceOf(PostException.class)
                 .hasMessage(INVALID_REFERENCE_TYPE.getMessage());

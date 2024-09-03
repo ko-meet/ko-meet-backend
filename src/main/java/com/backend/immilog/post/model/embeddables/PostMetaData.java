@@ -1,8 +1,8 @@
 package com.backend.immilog.post.model.embeddables;
 
+import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.model.enums.Countries;
 import com.backend.immilog.post.model.enums.PostStatus;
-import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import lombok.*;
 
 import javax.persistence.Embeddable;
@@ -38,13 +38,13 @@ public class PostMetaData {
     private Countries country;
 
     public static PostMetaData of(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             Countries country,
             String region
     ) {
         return PostMetaData.builder()
-                .title(postUploadRequest.title())
-                .content(postUploadRequest.content())
+                .title(postUploadCommand.title())
+                .content(postUploadCommand.content())
                 .viewCount(0L)
                 .likeCount(0L)
                 .status(PostStatus.NORMAL)

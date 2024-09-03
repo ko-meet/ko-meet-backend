@@ -1,15 +1,15 @@
 package com.backend.immilog.post.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
+import com.backend.immilog.post.application.dtos.PostDTO;
 import com.backend.immilog.post.application.services.PostDeleteService;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.application.services.PostUpdateService;
 import com.backend.immilog.post.application.services.PostUploadService;
-import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
+import com.backend.immilog.post.presentation.response.PostApiResponse;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserCountry;
@@ -75,13 +75,13 @@ class PostControllerTest {
         when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.createPost(
+        ResponseEntity<PostApiResponse> response = postController.createPost(
                 request,
                 postUploadRequest
         );
 
         // then
-        verify(postUploadService).uploadPost(user.getSeq(), postUploadRequest);
+        verify(postUploadService).uploadPost(user.getSeq(), postUploadRequest.toCommand());
         assertThat(response.getStatusCode()).isEqualTo(ResponseEntity.status(CREATED).build().getStatusCode());
     }
 
@@ -103,14 +103,14 @@ class PostControllerTest {
                 .build();
 
         // when
-        ResponseEntity<ApiResponse> response = postController.updatePost(
+        ResponseEntity<PostApiResponse> response = postController.updatePost(
                 postSeq,
                 request,
                 postUpdateRequest
         );
 
         // then
-        verify(postUpdateService).updatePost(1L, postSeq, postUpdateRequest);
+        verify(postUpdateService).updatePost(1L, postSeq, postUpdateRequest.toCommand());
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 
@@ -140,8 +140,7 @@ class PostControllerTest {
         Long postSeq = 1L;
 
         // when
-        ResponseEntity<ApiResponse> response =
-                postController.increaseViewCount(postSeq);
+        ResponseEntity<PostApiResponse> response = postController.increaseViewCount(postSeq);
 
         // then
         verify(postUpdateService).increaseViewCount(postSeq);
@@ -157,7 +156,7 @@ class PostControllerTest {
         when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.likePost(
+        ResponseEntity<PostApiResponse> response = postController.likePost(
                 postSeq,
                 request
         );
@@ -186,7 +185,7 @@ class PostControllerTest {
         )).thenReturn(posts);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.getPosts(
+        ResponseEntity<PostApiResponse> response = postController.getPosts(
                 com.backend.immilog.post.model.enums.Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
@@ -211,7 +210,7 @@ class PostControllerTest {
         when(postDTO.getSeq()).thenReturn(postSeq);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.getPost(postSeq);
+        ResponseEntity<PostApiResponse> response = postController.getPost(postSeq);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
@@ -233,7 +232,7 @@ class PostControllerTest {
         )).thenReturn(posts);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.searchPosts(
+        ResponseEntity<PostApiResponse> response = postController.searchPosts(
                 keyword,
                 page
         );
@@ -258,7 +257,7 @@ class PostControllerTest {
         )).thenReturn(posts);
 
         // when
-        ResponseEntity<ApiResponse> response = postController.getUserPosts(
+        ResponseEntity<PostApiResponse> response = postController.getUserPosts(
                 userSeq,
                 page
         );

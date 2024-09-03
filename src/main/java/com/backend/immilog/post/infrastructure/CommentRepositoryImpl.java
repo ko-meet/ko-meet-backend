@@ -1,6 +1,6 @@
 package com.backend.immilog.post.infrastructure;
 
-import com.backend.immilog.post.model.dtos.CommentDTO;
+import com.backend.immilog.post.application.dtos.CommentDTO;
 import com.backend.immilog.post.model.entities.QComment;
 import com.backend.immilog.post.model.repositories.CommentRepositoryCustom;
 import com.backend.immilog.user.model.entities.QUser;

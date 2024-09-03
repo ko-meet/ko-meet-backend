@@ -1,11 +1,11 @@
 package com.backend.immilog.notice.presentation.controller;
 
 import com.backend.immilog.global.enums.UserRole;
-import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.notice.application.NoticeInquiryService;
-import com.backend.immilog.notice.application.NoticeRegisterService;
+import com.backend.immilog.notice.application.services.NoticeInquiryService;
+import com.backend.immilog.notice.application.services.NoticeRegisterService;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
+import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,10 +56,10 @@ class NoticeControllerTest {
 
 
         // when
-        ResponseEntity<ApiResponse> response = noticeController.registerNotice(param, request);
+        ResponseEntity<NoticeApiResponse> response = noticeController.registerNotice(param, request);
 
         // then
-        verify(noticeRegisterService).registerNotice(userSeq, userRole, param);
+        verify(noticeRegisterService).registerNotice(userSeq, userRole, param.toCommand());
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
 
     }
@@ -75,7 +75,7 @@ class NoticeControllerTest {
         when(noticeInquiryService.getNotices(userSeq, page)).thenReturn(null);
 
         // when
-        ResponseEntity<ApiResponse> response = noticeController.getNotices(page, request);
+        ResponseEntity<NoticeApiResponse> response = noticeController.getNotices(page, request);
 
         // then
         verify(noticeInquiryService).getNotices(userSeq, page);
@@ -90,7 +90,7 @@ class NoticeControllerTest {
         when(noticeInquiryService.getNoticeDetail(noticeSeq)).thenReturn(null);
 
         // when
-        ResponseEntity<ApiResponse> response = noticeController.getNoticeDetail(noticeSeq);
+        ResponseEntity<NoticeApiResponse> response = noticeController.getNoticeDetail(noticeSeq);
 
         // then
         verify(noticeInquiryService).getNoticeDetail(noticeSeq);

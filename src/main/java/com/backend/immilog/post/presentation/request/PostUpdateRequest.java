@@ -1,9 +1,8 @@
 package com.backend.immilog.post.presentation.request;
 
+import com.backend.immilog.post.application.command.PostUpdateCommand;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.util.List;
 
@@ -18,4 +17,15 @@ public record PostUpdateRequest(
         List<String> addAttachments,
         Boolean isPublic
 ) {
+    public PostUpdateCommand toCommand() {
+        return PostUpdateCommand.builder()
+                .title(title)
+                .content(content)
+                .deleteTags(deleteTags)
+                .addTags(addTags)
+                .deleteAttachments(deleteAttachments)
+                .addAttachments(addAttachments)
+                .isPublic(isPublic)
+                .build();
+    }
 }

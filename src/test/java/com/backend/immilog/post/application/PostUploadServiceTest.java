@@ -97,7 +97,7 @@ class PostUploadServiceTest {
                 ArgumentCaptor.forClass(BiConsumer.class);
 
         // when
-        postUploadService.uploadPost(userSeq, postUploadRequest);
+        postUploadService.uploadPost(userSeq, postUploadRequest.toCommand());
 
         // then
         verify(postRepository).save(any(Post.class));
@@ -145,7 +145,7 @@ class PostUploadServiceTest {
         when(postRepository.save(any(Post.class))).thenReturn(post);
 
         // when
-        postUploadService.uploadPost(userSeq, postUploadRequest);
+        postUploadService.uploadPost(userSeq, postUploadRequest.toCommand());
 
         // then
         verify(postRepository).save(any(Post.class));
@@ -185,7 +185,7 @@ class PostUploadServiceTest {
 
         // when & then
         assertThatThrownBy(() ->
-                postUploadService.uploadPost(userSeq, postUploadRequest)
+                postUploadService.uploadPost(userSeq, postUploadRequest.toCommand())
         )
                 .isInstanceOf(PostException.class)
                 .hasMessage(FAILED_TO_SAVE_POST.getMessage());

@@ -2,9 +2,9 @@ package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.security.TokenProvider;
-import com.backend.immilog.user.application.dto.UserSignInCommand;
+import com.backend.immilog.user.application.command.UserSignInCommand;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.application.dto.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;

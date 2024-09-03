@@ -1,7 +1,7 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.user.application.dto.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
 import com.backend.immilog.user.application.services.UserInformationService;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.embeddables.Location;

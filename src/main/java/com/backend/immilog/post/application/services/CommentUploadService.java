@@ -26,19 +26,14 @@ public class CommentUploadService {
             Long userId,
             Long postSeq,
             String referenceType,
-            CommentUploadRequest commentUploadRequest
+            String content
     ) {
         Post post = getPost(postSeq);
         post.setCommentCount(post.getCommentCount() + 1);
 
         ReferenceType reference = ReferenceType.getByString(referenceType);
 
-        Comment comment = Comment.of(
-                userId,
-                postSeq,
-                commentUploadRequest.content(),
-                reference
-        );
+        Comment comment = Comment.of(userId, postSeq, content, reference);
 
         commentRepository.save(comment);
     }

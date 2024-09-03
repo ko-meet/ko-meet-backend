@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
+import com.backend.immilog.user.application.dto.UserSignInDTO;
 import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.application.services.UserSignInService;
-import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ class AuthControllerTest {
         when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
-        ResponseEntity<ApiResponse> response =
+        ResponseEntity<UserApiResponse> response =
                 authController.getUser(request, latitude, longitude);
 
         // then

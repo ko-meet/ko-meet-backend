@@ -1,7 +1,7 @@
-package com.backend.immilog.notice.application;
+package com.backend.immilog.notice.application.services;
 
 import com.backend.immilog.notice.exception.NoticeException;
-import com.backend.immilog.notice.model.dtos.NoticeDTO;
+import com.backend.immilog.notice.application.dtos.NoticeDTO;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

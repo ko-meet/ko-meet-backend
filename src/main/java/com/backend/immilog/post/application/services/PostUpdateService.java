@@ -1,6 +1,7 @@
 package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
+import com.backend.immilog.post.application.command.PostUpdateCommand;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.InteractionUser;
 import com.backend.immilog.post.model.entities.Post;
@@ -9,7 +10,6 @@ import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.InteractionUserRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
-import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -42,12 +42,12 @@ public class PostUpdateService {
     public void updatePost(
             Long userId,
             Long postSeq,
-            PostUpdateRequest postUpdateRequest
+            PostUpdateCommand postUpdateCommand
     ) {
         final Post post = getPost(postSeq);
         validateAuthor(userId, post);
-        updatePostMetaData(post, postUpdateRequest);
-        updateResources(postSeq, postUpdateRequest);
+        updatePostMetaData(post, postUpdateCommand);
+        updateResources(postSeq, postUpdateCommand);
     }
 
     @Async
@@ -124,7 +124,7 @@ public class PostUpdateService {
 
     private void updateResources(
             Long postSeq,
-            PostUpdateRequest request
+            PostUpdateCommand request
     ) {
         updateResource(postSeq, request.deleteTags(), request.addTags(), TAG);
         updateResource(postSeq, request.deleteAttachments(), request.addAttachments(), ATTACHMENT);
@@ -159,13 +159,13 @@ public class PostUpdateService {
             bulkInsertRepository.saveAll(
                     addResources,
                     """
-                            INSERT INTO post_resource (
-                                post_seq,
-                                post_type,
-                                resource_type,
-                                content
-                            ) VALUES (?, ?, ?, ?)
-                            """,
+                    INSERT INTO post_resource (
+                        post_seq,
+                        post_type,
+                        resource_type,
+                        content
+                    ) VALUES (?, ?, ?, ?)
+                    """,
                     (ps, resource) -> {
                         try {
                             ps.setLong(1, postSeq);
@@ -183,7 +183,7 @@ public class PostUpdateService {
 
     private void updatePostMetaData(
             Post post,
-            PostUpdateRequest request
+            PostUpdateCommand request
     ) {
         if (request.title() != null) {
             post.getPostMetaData().setTitle(request.title());
