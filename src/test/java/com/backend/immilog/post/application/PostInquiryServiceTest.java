@@ -1,11 +1,11 @@
 package com.backend.immilog.post.application;
 
+import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.services.PostInquiryService;
 import com.backend.immilog.post.model.enums.Countries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ class PostInquiryServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        postInquiryService = new PostInquiryServiceImpl(
+        postInquiryService = new PostInquiryService(
                 postRepository,
                 commentRepository
         );
