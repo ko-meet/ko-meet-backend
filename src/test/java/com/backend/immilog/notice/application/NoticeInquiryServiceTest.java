@@ -1,6 +1,7 @@
 package com.backend.immilog.notice.application;
 
-import com.backend.immilog.notice.model.dtos.NoticeDTO;
+import com.backend.immilog.notice.application.services.NoticeInquiryService;
+import com.backend.immilog.notice.application.dtos.NoticeDTO;
 import com.backend.immilog.notice.model.entities.Notice;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
