@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.immilog.notice.exception.NoticeErrorCode.NOTICE_NOT_FOUND;
 
@@ -16,6 +17,7 @@ import static com.backend.immilog.notice.exception.NoticeErrorCode.NOTICE_NOT_FO
 public class NoticeInquiryService {
     private final NoticeRepository noticeRepository;
 
+    @Transactional
     public Page<NoticeDTO> getNotices(
             Long userSeq,
             Integer page
@@ -27,6 +29,7 @@ public class NoticeInquiryService {
         return noticeRepository.getNotices(userSeq, pageable);
     }
 
+    @Transactional
     public NoticeDTO getNoticeDetail(
             Long noticeSeq
     ) {
