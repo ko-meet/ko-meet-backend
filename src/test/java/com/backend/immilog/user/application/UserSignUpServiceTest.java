@@ -1,10 +1,9 @@
 package com.backend.immilog.user.application;
 
-import com.backend.immilog.user.application.services.UserSignUpServiceImpl;
+import com.backend.immilog.user.application.services.UserSignUpService;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserSignUpService;
 import com.backend.immilog.user.presentation.request.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,12 +29,12 @@ class UserSignUpServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
-    private UserSignUpService userSignUpService;
+    private com.backend.immilog.user.application.services.UserSignUpService userSignUpService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userSignUpService = new UserSignUpServiceImpl(
+        userSignUpService = new UserSignUpService(
                 userRepository,
                 passwordEncoder
         );

@@ -1,17 +1,17 @@
-package com.backend.immilog.post.application;
+package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,12 +27,12 @@ import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PostUploadServiceImpl implements PostUploadService {
+public class PostUploadService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final BulkInsertRepository bulkInsertRepository;
 
-    @Override
+    @Transactional
     public void uploadPost(
             Long userSeq,
             PostUploadRequest postUploadRequest

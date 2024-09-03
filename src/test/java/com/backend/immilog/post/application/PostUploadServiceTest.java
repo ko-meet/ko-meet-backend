@@ -1,12 +1,12 @@
 package com.backend.immilog.post.application;
 
+import com.backend.immilog.post.application.services.PostUploadService;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
@@ -53,7 +53,7 @@ class PostUploadServiceTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        postUploadService = new PostUploadServiceImpl(
+        postUploadService = new PostUploadService(
                 postRepository,
                 userRepository,
                 bulkInsertRepository

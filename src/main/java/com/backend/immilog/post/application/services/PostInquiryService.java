@@ -1,4 +1,4 @@
-package com.backend.immilog.post.application;
+package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.dtos.CommentDTO;
@@ -8,13 +8,13 @@ import com.backend.immilog.post.model.enums.Countries;
 import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.services.PostInquiryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ import static com.backend.immilog.post.exception.PostErrorCode.POST_NOT_FOUND;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostInquiryServiceImpl implements PostInquiryService {
+public class PostInquiryService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @Override
+    @Transactional(readOnly = true)
     public Page<PostDTO> getPosts(
             Countries country,
             SortingMethods sortingMethod,
@@ -46,7 +46,7 @@ public class PostInquiryServiceImpl implements PostInquiryService {
         );
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public PostDTO getPost(
             Long postSeq
     ) {
@@ -56,7 +56,7 @@ public class PostInquiryServiceImpl implements PostInquiryService {
         return postDTO;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Page<PostDTO> searchKeyword(
             String keyword,
             Integer page
@@ -66,7 +66,7 @@ public class PostInquiryServiceImpl implements PostInquiryService {
                 .getPostsByKeyword(keyword, pageRequest);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Page<PostDTO> getUserPosts(
             Long userSeq,
             Integer page

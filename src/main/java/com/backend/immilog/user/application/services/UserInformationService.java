@@ -1,19 +1,19 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
-import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.dto.UserInfoUpdateCommand;
+import com.backend.immilog.user.application.dto.UserPasswordChangeCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserCountry;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserInformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -24,12 +24,12 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserInformationServiceImpl implements UserInformationService {
+public class UserInformationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
 
-    @Override
+    @Transactional
     public void updateInformation(
             Long userSeq,
             CompletableFuture<Pair<String, String>> country,
@@ -43,7 +43,7 @@ public class UserInformationServiceImpl implements UserInformationService {
         setUserImageProfileIfItsChanged(userInfoUpdateCommand.profileImage(), user);
     }
 
-    @Override
+    @Transactional
     public void changePassword(
             Long userSeq,
             UserPasswordChangeCommand userPasswordChangeRequest
@@ -56,7 +56,7 @@ public class UserInformationServiceImpl implements UserInformationService {
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
-    @Override
+    @Transactional
     public void blockOrUnblockUser(
             Long userSeq,
             Long adminSeq,

@@ -1,4 +1,4 @@
-package com.backend.immilog.post.application;
+package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
 import com.backend.immilog.post.exception.PostException;
@@ -9,11 +9,12 @@ import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.InteractionUserRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
-import com.backend.immilog.post.model.services.PostUpdateService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,8 +28,7 @@ import static com.backend.immilog.post.model.enums.ResourceType.TAG;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostUpdateServiceImpl implements PostUpdateService {
-    private static final String POST_TYPE = POST.toString();
+public class PostUpdateService {
     private final PostRepository postRepository;
     private final PostResourceRepository postResourceRepository;
     private final BulkInsertRepository bulkInsertRepository;
@@ -38,19 +38,20 @@ public class PostUpdateServiceImpl implements PostUpdateService {
     final String LIKE_LOCK_KEY = "likePost : ";
     final String VIEW_LOCK_KEY = "viewPost : ";
 
-    @Override
+    @Transactional
     public void updatePost(
             Long userId,
             Long postSeq,
             PostUpdateRequest postUpdateRequest
     ) {
-        Post post = getPost(postSeq);
+        final Post post = getPost(postSeq);
         validateAuthor(userId, post);
         updatePostMetaData(post, postUpdateRequest);
         updateResources(postSeq, postUpdateRequest);
     }
 
-    @Override
+    @Async
+    @Transactional
     public void increaseViewCount(Long postSeq) {
         executeWithLock(
                 VIEW_LOCK_KEY,
@@ -63,7 +64,8 @@ public class PostUpdateServiceImpl implements PostUpdateService {
         );
     }
 
-    @Override
+    @Async
+    @Transactional
     public void likePost(
             Long userSeq,
             Long postSeq
@@ -157,17 +159,17 @@ public class PostUpdateServiceImpl implements PostUpdateService {
             bulkInsertRepository.saveAll(
                     addResources,
                     """
-                    INSERT INTO post_resource (
-                        post_seq,
-                        post_type,
-                        resource_type,
-                        content
-                    ) VALUES (?, ?, ?, ?)
-                    """,
+                            INSERT INTO post_resource (
+                                post_seq,
+                                post_type,
+                                resource_type,
+                                content
+                            ) VALUES (?, ?, ?, ?)
+                            """,
                     (ps, resource) -> {
                         try {
                             ps.setLong(1, postSeq);
-                            ps.setString(2, POST_TYPE);
+                            ps.setString(2, POST.name());
                             ps.setString(3, resourceType.name());
                             ps.setString(4, resource);
                         } catch (Exception e) {

@@ -3,7 +3,6 @@ package com.backend.immilog.notice.application;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
-import com.backend.immilog.notice.model.services.NoticeRegisterService;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +23,7 @@ class NoticeRegisterServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        noticeRegisterService = new NoticeRegisterServiceImpl(
+        noticeRegisterService = new NoticeRegisterService(
                 noticeRepository
         );
     }

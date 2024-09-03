@@ -4,10 +4,10 @@ import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.notice.exception.NoticeException;
 import com.backend.immilog.notice.model.entities.Notice;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
-import com.backend.immilog.notice.model.services.NoticeRegisterService;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -16,10 +16,10 @@ import static com.backend.immilog.notice.exception.NoticeErrorCode.NOT_AN_ADMIN_
 
 @Service
 @RequiredArgsConstructor
-public class NoticeRegisterServiceImpl implements NoticeRegisterService {
+public class NoticeRegisterService {
     private final NoticeRepository noticeRepository;
 
-    @Override
+    @Transactional
     public void registerNotice(
             Long userSeq,
             UserRole userRole,

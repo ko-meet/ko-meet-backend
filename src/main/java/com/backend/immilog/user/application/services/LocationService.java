@@ -1,13 +1,13 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.enums.GlobalCountry;
-import com.backend.immilog.user.model.services.LocationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,13 +16,10 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Geocoder API를 사용하여 위도와 경도를 기반으로 국가와 도시를 추출하는 서비스
- */
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LocationServiceImpl implements LocationService {
+public class LocationService {
     private final RestTemplate restTemplate;
 
     @Value("${geocode.url}")
@@ -31,7 +28,7 @@ public class LocationServiceImpl implements LocationService {
     @Value("${geocode.key}")
     private String geocoderKey;
 
-    @Override
+    @Async
     public CompletableFuture<Pair<String, String>> getCountry(
             Double latitude,
             Double longitude
@@ -81,7 +78,6 @@ public class LocationServiceImpl implements LocationService {
         return null;
     }
 
-    @Override
     public Pair<String, String> joinCompletableFutureLocation(
             CompletableFuture<Pair<String, String>> countryFuture
     ) {

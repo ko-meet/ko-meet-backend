@@ -1,16 +1,17 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.user.application.command.UserReportCommand;
+import com.backend.immilog.user.application.dto.UserReportCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.ReportRepository;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -22,13 +23,14 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserReportServiceImpl implements UserReportService {
+public class UserReportService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final RedisDistributedLock redisDistributedLock;
     final String LOCK_KEY = "reportUser : ";
 
-    @Override
+    @Async
+    @Transactional
     public void reportUser(
             Long targetUserSeq,
             Long reporterUserSeq,

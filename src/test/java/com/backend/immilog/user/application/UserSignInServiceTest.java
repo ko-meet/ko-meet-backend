@@ -4,14 +4,13 @@ import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.security.TokenProvider;
-import com.backend.immilog.user.application.services.UserSignInServiceImpl;
+import com.backend.immilog.user.application.services.UserSignInService;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserSignInService;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,12 +46,12 @@ class UserSignInServiceTest {
     @Mock
     private CompletableFuture<Pair<String, String>> country;
 
-    private UserSignInService userSignInService;
+    private com.backend.immilog.user.application.services.UserSignInService userSignInService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userSignInService = new UserSignInServiceImpl(
+        userSignInService = new UserSignInService(
                 userRepository,
                 passwordEncoder,
                 tokenProvider,
