@@ -1,8 +1,8 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.user.application.dto.UserInfoUpdateCommand;
-import com.backend.immilog.user.application.dto.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.command.UserInfoUpdateCommand;
+import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserCountry;

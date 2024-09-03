@@ -1,7 +1,7 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
-import com.backend.immilog.user.application.dto.UserReportCommand;
+import com.backend.immilog.user.application.command.UserReportCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.Report;
 import com.backend.immilog.user.model.entities.User;

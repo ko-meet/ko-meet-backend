@@ -1,10 +1,10 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.ExtractUserId;
+import com.backend.immilog.user.application.dto.UserSignInDTO;
 import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.application.services.UserSignInService;
-import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class AuthController {
     @GetMapping("/user")
     @ExtractUserId
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보 조회 진행")
-    public ResponseEntity<ApiResponse> getUser(
+    public ResponseEntity<UserApiResponse> getUser(
             HttpServletRequest request,
             @RequestParam("latitude") Double latitude,
             @RequestParam("longitude") Double longitude
@@ -49,7 +49,7 @@ public class AuthController {
 
         return ResponseEntity
                 .status(OK)
-                .body(ApiResponse.of(userSignInDTO));
+                .body(UserApiResponse.of(userSignInDTO));
     }
 
 }
