@@ -1,4 +1,4 @@
-package com.backend.immilog.post.model.dtos;
+package com.backend.immilog.post.application.dtos;
 
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;

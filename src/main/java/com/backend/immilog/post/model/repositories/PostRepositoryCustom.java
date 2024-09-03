@@ -1,6 +1,6 @@
 package com.backend.immilog.post.model.repositories;
 
-import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.application.dtos.PostDTO;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.Countries;
 import com.backend.immilog.post.model.enums.SortingMethods;

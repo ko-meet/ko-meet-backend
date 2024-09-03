@@ -1,8 +1,8 @@
-package com.backend.immilog.post.model.dtos;
+package com.backend.immilog.post.application.dtos;
 
 import com.backend.immilog.post.model.entities.Comment;
 import com.backend.immilog.post.model.enums.PostStatus;
-import com.backend.immilog.user.model.dtos.UserDTO;
+import com.backend.immilog.user.application.dto.UserDataDTO;
 import com.backend.immilog.user.model.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @Builder
 public class CommentDTO {
     private Long seq;
-    private UserDTO user;
+    private UserDataDTO user;
     private String content;
     private List<CommentDTO> replies;
     private int upVotes;
@@ -39,7 +39,7 @@ public class CommentDTO {
         List<CommentDTO> replyList = combineReplies(replies, replyUsers);
 
         this.seq = comment.getSeq();
-        this.user = UserDTO.from(user);
+        this.user = UserDataDTO.from(user);
         this.content = comment.getContent();
         this.replies = replyList;
         this.upVotes = comment.getLikeCount();
@@ -55,7 +55,7 @@ public class CommentDTO {
     ) {
         return CommentDTO.builder()
                 .seq(comment.getSeq())
-                .user(UserDTO.from(user))
+                .user(UserDataDTO.from(user))
                 .content(comment.getContent())
                 .replies(new ArrayList<>())
                 .upVotes(comment.getLikeCount())

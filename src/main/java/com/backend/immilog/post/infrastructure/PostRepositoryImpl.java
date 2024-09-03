@@ -1,6 +1,6 @@
 package com.backend.immilog.post.infrastructure;
 
-import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.application.dtos.PostDTO;
 import com.backend.immilog.post.model.entities.QInteractionUser;
 import com.backend.immilog.post.model.entities.QPost;
 import com.backend.immilog.post.model.entities.QPostResource;
