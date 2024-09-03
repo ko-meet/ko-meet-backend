@@ -2,7 +2,7 @@ package com.backend.immilog.global.presentation.controller;
 
 import com.backend.immilog.global.application.ImageService;
 import com.backend.immilog.global.presentation.request.ImageRequest;
-import com.backend.immilog.global.presentation.response.ApiResponse;
+import com.backend.immilog.global.presentation.response.GlobalApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class ImageController {
 
     @PostMapping
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
-    public ResponseEntity<ApiResponse> uploadImage(
+    public ResponseEntity<GlobalApiResponse> uploadImage(
             List<MultipartFile> multipartFile,
             @RequestParam String imagePath
     ) {
@@ -33,12 +33,12 @@ public class ImageController {
 
         return ResponseEntity
                 .status(OK)
-                .body(ApiResponse.of(data));
+                .body(GlobalApiResponse.of(data));
     }
 
     @DeleteMapping
     @ApiOperation(value = "이미지 삭제", notes = "이미지를 삭제합니다.")
-    public ResponseEntity<ApiResponse> deleteImage(
+    public ResponseEntity<GlobalApiResponse> deleteImage(
             ImageRequest imageRequest
     ) {
         imageService.deleteFile(imageRequest.imagePath());
