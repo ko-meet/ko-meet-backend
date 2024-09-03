@@ -2,7 +2,7 @@ package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.user.model.services.LocationService;
+import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -2,10 +2,10 @@ package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.user.application.services.UserReportServiceImpl;
+import com.backend.immilog.user.application.services.*;
+import com.backend.immilog.user.application.services.UserReportService;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.services.*;
 import com.backend.immilog.user.presentation.request.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ public class UserController {
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
     private final UserInformationService userInformationService;
-    private final UserReportServiceImpl userReportService;
+    private final UserReportService userReportService;
 
     private final LocationService locationService;
     private final EmailService emailService;

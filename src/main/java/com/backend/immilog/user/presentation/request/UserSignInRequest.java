@@ -1,6 +1,6 @@
 package com.backend.immilog.user.presentation.request;
 
-import com.backend.immilog.user.application.command.UserSignInCommand;
+import com.backend.immilog.user.application.dto.UserSignInCommand;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 

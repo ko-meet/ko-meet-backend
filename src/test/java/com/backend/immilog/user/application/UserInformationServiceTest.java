@@ -1,14 +1,13 @@
 package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.application.ImageService;
-import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
-import com.backend.immilog.user.application.services.UserInformationServiceImpl;
+import com.backend.immilog.user.application.dto.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.services.UserInformationService;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserInformationService;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,12 +38,12 @@ class UserInformationServiceTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private ImageService imageService;
-    private UserInformationService userInformationService;
+    private com.backend.immilog.user.application.services.UserInformationService userInformationService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userInformationService = new UserInformationServiceImpl(
+        userInformationService = new UserInformationService(
                 userRepository,
                 passwordEncoder,
                 imageService

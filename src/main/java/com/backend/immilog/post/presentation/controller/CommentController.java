@@ -2,7 +2,7 @@ package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.post.model.services.CommentUploadService;
+import com.backend.immilog.post.application.services.CommentUploadService;
 import com.backend.immilog.post.presentation.request.CommentUploadRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,10 +1,10 @@
 package com.backend.immilog.post.application;
 
+import com.backend.immilog.post.application.services.CommentUploadService;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.services.CommentUploadService;
 import com.backend.immilog.post.presentation.request.CommentUploadRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @DisplayName("CommentUploadService 테스트")
-class CommentUploadServiceImplTest {
+class CommentUploadServiceTest {
     @Mock
     private CommentRepository commentRepository;
     @Mock
@@ -30,7 +30,7 @@ class CommentUploadServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        commentUploadService = new CommentUploadServiceImpl(
+        commentUploadService = new CommentUploadService(
                 commentRepository,
                 postRepository
         );

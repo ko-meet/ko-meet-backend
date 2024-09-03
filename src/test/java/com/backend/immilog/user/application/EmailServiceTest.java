@@ -1,7 +1,6 @@
 package com.backend.immilog.user.application;
 
-import com.backend.immilog.user.application.services.EmailServiceImpl;
-import com.backend.immilog.user.model.services.EmailService;
+import com.backend.immilog.user.application.services.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ class EmailServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        emailService = new EmailServiceImpl(javaMailSender);
+        emailService = new EmailService(javaMailSender);
     }
 
     @Test

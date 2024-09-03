@@ -1,6 +1,7 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.application.RedisDistributedLock;
+import com.backend.immilog.post.application.services.PostUpdateService;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
@@ -12,7 +13,6 @@ import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.InteractionUserRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.repositories.PostResourceRepository;
-import com.backend.immilog.post.model.services.PostUpdateService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -60,7 +60,7 @@ class PostUpdateServiceTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        postUpdateService = new PostUpdateServiceImpl(
+        postUpdateService = new PostUpdateService(
                 postRepository,
                 postResourceRepository,
                 bulkInsertRepository,

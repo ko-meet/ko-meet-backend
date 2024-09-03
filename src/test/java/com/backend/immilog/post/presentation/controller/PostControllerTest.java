@@ -1,13 +1,13 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
+import com.backend.immilog.post.application.services.PostDeleteService;
+import com.backend.immilog.post.application.services.PostInquiryService;
+import com.backend.immilog.post.application.services.PostUpdateService;
+import com.backend.immilog.post.application.services.PostUploadService;
 import com.backend.immilog.post.model.dtos.PostDTO;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.SortingMethods;
-import com.backend.immilog.post.model.services.PostDeleteService;
-import com.backend.immilog.post.model.services.PostInquiryService;
-import com.backend.immilog.post.model.services.PostUpdateService;
-import com.backend.immilog.post.model.services.PostUploadService;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.embeddables.Location;

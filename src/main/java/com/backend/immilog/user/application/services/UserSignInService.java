@@ -2,18 +2,18 @@ package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.security.TokenProvider;
-import com.backend.immilog.user.application.command.UserSignInCommand;
+import com.backend.immilog.user.application.dto.UserSignInCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserSignInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
-public class UserSignInServiceImpl implements UserSignInService {
+public class UserSignInService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
@@ -31,7 +31,7 @@ public class UserSignInServiceImpl implements UserSignInService {
     final int REFRESH_TOKEN_EXPIRE_TIME = 5 * 29 * 24 * 60;
     final String TOKEN_PREFIX = "Refresh: ";
 
-    @Override
+    @Transactional(readOnly = true)
     public UserSignInDTO signIn(
             UserSignInCommand userSignInCommand,
             CompletableFuture<Pair<String, String>> country
@@ -63,7 +63,7 @@ public class UserSignInServiceImpl implements UserSignInService {
         );
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public UserSignInDTO getUserSignInDTO(
             Long userSeq,
             Pair<String, String> country

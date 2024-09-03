@@ -1,4 +1,4 @@
-package com.backend.immilog.user.application.command;
+package com.backend.immilog.user.application.dto;
 
 import com.backend.immilog.user.enums.ReportReason;
 import lombok.Builder;
