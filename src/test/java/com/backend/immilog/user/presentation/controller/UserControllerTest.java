@@ -1,10 +1,10 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.presentation.response.ApiResponse;
-import com.backend.immilog.user.application.services.UserReportServiceImpl;
+import com.backend.immilog.user.application.services.*;
+import com.backend.immilog.user.application.services.UserReportService;
 import com.backend.immilog.user.enums.EmailComponents;
 import com.backend.immilog.user.model.dtos.UserSignInDTO;
-import com.backend.immilog.user.model.services.*;
 import com.backend.immilog.user.presentation.request.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ class UserControllerTest {
     @Mock
     private UserInformationService userInformationService;
     @Mock
-    private UserReportServiceImpl userReportService;
+    private UserReportService userReportService;
 
     @Mock
     private EmailService emailService;

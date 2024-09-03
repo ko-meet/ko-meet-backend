@@ -1,7 +1,6 @@
 package com.backend.immilog.user.application;
 
-import com.backend.immilog.user.application.services.LocationServiceImpl;
-import com.backend.immilog.user.model.services.LocationService;
+import com.backend.immilog.user.application.services.LocationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class LocationServiceTest {
     @BeforeEach
     void setUp() {
         RestTemplate restTemplate = new RestTemplate();
-        locationService = new LocationServiceImpl(restTemplate);
+        locationService = new LocationService(restTemplate);
         mockServer = MockRestServiceServer.bindTo(restTemplate).build();
         ReflectionTestUtils.setField(locationService, "geocoderUrl", "https://example.com/geocode?lat=%f&lng=%f&key=%s");
         ReflectionTestUtils.setField(locationService, "geocoderKey", "fake-key");
