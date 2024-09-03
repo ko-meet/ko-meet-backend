@@ -1,16 +1,16 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.user.application.command.UserSignUpCommand;
+import com.backend.immilog.user.application.dto.UserSignUpCommand;
 import com.backend.immilog.user.exception.UserException;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;
 import com.backend.immilog.user.model.repositories.UserRepository;
-import com.backend.immilog.user.model.services.UserSignUpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
@@ -19,11 +19,11 @@ import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserSignUpServiceImpl implements UserSignUpService {
+public class UserSignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
+    @Transactional
     public Pair<Long, String> signUp(
             UserSignUpCommand userSignUpCommand
     ) {
@@ -33,14 +33,14 @@ public class UserSignUpServiceImpl implements UserSignUpService {
         return Pair.of(user.getSeq(), user.getNickName());
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Boolean checkNickname(
             String nickname
     ) {
         return userRepository.findByNickName(nickname).isEmpty();
     }
 
-    @Override
+    @Transactional
     public Pair<String, Boolean> verifyEmail(
             Long userSeq
     ) {

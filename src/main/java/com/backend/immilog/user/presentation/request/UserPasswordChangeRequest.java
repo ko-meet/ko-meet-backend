@@ -1,6 +1,6 @@
 package com.backend.immilog.user.presentation.request;
 
-import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
+import com.backend.immilog.user.application.dto.UserPasswordChangeCommand;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 

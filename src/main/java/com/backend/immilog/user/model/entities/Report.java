@@ -1,7 +1,7 @@
 package com.backend.immilog.user.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.user.application.command.UserReportCommand;
+import com.backend.immilog.user.application.dto.UserReportCommand;
 import com.backend.immilog.user.enums.ReportReason;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
