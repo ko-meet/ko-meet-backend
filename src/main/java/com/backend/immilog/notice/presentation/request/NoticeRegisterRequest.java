@@ -1,21 +1,27 @@
 package com.backend.immilog.notice.presentation.request;
 
+import com.backend.immilog.notice.application.command.NoticeUploadCommand;
 import com.backend.immilog.notice.model.enums.NoticeCountry;
 import com.backend.immilog.notice.model.enums.NoticeType;
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class NoticeRegisterRequest {
-    private String title;
-    private String content;
-    private NoticeType type;
-    private List<NoticeCountry> targetCountries;
+@ApiModel(value = "NoticeRegisterRequest", description = "공지사항 생성 요청 서비스 DTO")
+public record NoticeRegisterRequest(
+        String title,
+        String content,
+        NoticeType type,
+        List<NoticeCountry> targetCountries
+) {
+    public NoticeUploadCommand toCommand() {
+        return NoticeUploadCommand.builder()
+                .title(title)
+                .content(content)
+                .type(type)
+                .targetCountries(targetCountries)
+                .build();
+    }
 }

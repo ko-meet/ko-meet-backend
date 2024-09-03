@@ -1,10 +1,10 @@
 package com.backend.immilog.notice.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
+import com.backend.immilog.notice.application.command.NoticeUploadCommand;
 import com.backend.immilog.notice.model.enums.NoticeCountry;
 import com.backend.immilog.notice.model.enums.NoticeStatus;
 import com.backend.immilog.notice.model.enums.NoticeType;
-import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
@@ -50,14 +50,14 @@ public class Notice extends BaseDateEntity {
 
     public static Notice of(
             Long userSeq,
-            NoticeRegisterRequest request
+            NoticeUploadCommand command
     ) {
         return Notice.builder()
-                .title(request.getTitle())
+                .title(command.title())
                 .userSeq(userSeq)
-                .content(request.getContent())
-                .type(request.getType())
-                .targetCountries(request.getTargetCountries())
+                .content(command.content())
+                .type(command.type())
+                .targetCountries(command.targetCountries())
                 .status(NORMAL)
                 .build();
     }
