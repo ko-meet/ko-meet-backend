@@ -1,9 +1,10 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.enums.GlobalCountry;
-import com.backend.immilog.global.presentation.response.ApiResponse;
+
 import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.presentation.response.LocationResponse;
+import com.backend.immilog.user.presentation.response.UserApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class LocationControllerTest {
         assertThat(response).isNotNull();
         assertThat(OK).isEqualTo(response.getStatusCode());
         LocationResponse locationResponse =
-                (LocationResponse) ((ApiResponse) Objects.requireNonNull(response.getBody())).data();
+                (LocationResponse) ((UserApiResponse) Objects.requireNonNull(response.getBody())).data();
         assertThat(locationResponse).isNotNull();
         assertThat(GlobalCountry.getCountryByKoreanName(country).getCountryName())
                 .isEqualTo(locationResponse.country());

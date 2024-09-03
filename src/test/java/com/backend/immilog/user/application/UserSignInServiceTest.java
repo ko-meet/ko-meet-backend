@@ -6,7 +6,7 @@ import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.services.UserSignInService;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.dtos.UserSignInDTO;
+import com.backend.immilog.user.application.dto.UserSignInDTO;
 import com.backend.immilog.user.model.embeddables.Location;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.enums.UserStatus;

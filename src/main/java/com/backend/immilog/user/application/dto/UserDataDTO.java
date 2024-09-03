@@ -1,4 +1,4 @@
-package com.backend.immilog.user.model.dtos;
+package com.backend.immilog.user.application.dto;
 
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.user.model.entities.User;
@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.sql.Date;
 
 @Builder
-public record UserDTO(
+public record UserDataDTO(
         Long seq,
         String nickName,
         String email,
@@ -22,10 +22,10 @@ public record UserDTO(
         UserRole userRole,
         UserStatus userStatus
 ) {
-    public static UserDTO from(
+    public static UserDataDTO from(
             User user
     ) {
-        return UserDTO.builder()
+        return UserDataDTO.builder()
                 .seq(user.getSeq())
                 .nickName(user.getNickName())
                 .email(user.getEmail())
@@ -40,12 +40,12 @@ public record UserDTO(
                 .build();
     }
 
-    public static UserDTO from(
+    public static UserDataDTO from(
             Long seq,
             String nickName,
             String profileImage
     ) {
-        return UserDTO.builder()
+        return UserDataDTO.builder()
                 .seq(seq)
                 .nickName(nickName)
                 .profileImage(profileImage)

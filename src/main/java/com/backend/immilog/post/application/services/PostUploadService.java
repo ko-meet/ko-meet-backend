@@ -1,11 +1,11 @@
 package com.backend.immilog.post.application.services;
 
+import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.entities.User;
 import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,33 +35,33 @@ public class PostUploadService {
     @Transactional
     public void uploadPost(
             Long userSeq,
-            PostUploadRequest postUploadRequest
+            PostUploadCommand postUploadCommand
     ) {
         User user = getUser(userSeq);
         Post post = postRepository.save(
-                createPostEntity(userSeq, postUploadRequest, user)
+                createPostEntity(userSeq, postUploadCommand, user)
         );
         Long postSeq = post.getSeq();
-        insertAllPostResources(postUploadRequest, postSeq);
+        insertAllPostResources(postUploadCommand, postSeq);
     }
 
     private static Post createPostEntity(
             Long userSeq,
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             User user
     ) {
         return Post.of(
-                postUploadRequest,
+                postUploadCommand,
                 user
         );
     }
 
     private void insertAllPostResources(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             Long postSeq
     ) {
         List<PostResource> postResourceList = getPostResourceList(
-                postUploadRequest,
+                postUploadCommand,
                 postSeq
         );
         bulkInsertRepository.saveAll(
@@ -89,23 +89,23 @@ public class PostUploadService {
     }
 
     private List<PostResource> getPostResourceList(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             Long postSeq
     ) {
         List<PostResource> postResources = new ArrayList<>();
-        postResources.addAll(getTagEntities(postUploadRequest, postSeq));
-        postResources.addAll(getAttachmentEntities(postUploadRequest, postSeq));
+        postResources.addAll(getTagEntities(postUploadCommand, postSeq));
+        postResources.addAll(getAttachmentEntities(postUploadCommand, postSeq));
         return Collections.unmodifiableList(postResources);
     }
 
     private List<PostResource> getTagEntities(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             Long postSeq
     ) {
-        if (postUploadRequest.tags() == null) {
+        if (postUploadCommand.tags() == null) {
             return List.of();
         }
-        return postUploadRequest
+        return postUploadCommand
                 .tags()
                 .stream()
                 .map(tag -> PostResource.of(POST, TAG, tag, postSeq))
@@ -113,13 +113,13 @@ public class PostUploadService {
     }
 
     private List<PostResource> getAttachmentEntities(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             Long postSeq
     ) {
-        if (postUploadRequest.attachments() == null) {
+        if (postUploadCommand.attachments() == null) {
             return List.of();
         }
-        return postUploadRequest
+        return postUploadCommand
                 .attachments()
                 .stream()
                 .map(url -> PostResource.of(POST, ATTACHMENT, url, postSeq))

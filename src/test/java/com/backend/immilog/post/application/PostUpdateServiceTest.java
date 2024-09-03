@@ -100,7 +100,7 @@ class PostUpdateServiceTest {
                 ArgumentCaptor.forClass(BiConsumer.class);
 
         // when
-        postUpdateService.updatePost(userSeq, postSeq, postUpdateRequest);
+        postUpdateService.updatePost(userSeq, postSeq, postUpdateRequest.toCommand());
 
         // then
         verify(postResourceRepository, times(2))
@@ -148,7 +148,8 @@ class PostUpdateServiceTest {
 
         // when & then
         assertThatThrownBy(() ->
-                postUpdateService.updatePost(userSeq, postSeq, postUpdateRequest))
+                postUpdateService.updatePost(userSeq, postSeq,
+                        postUpdateRequest.toCommand()))
                 .isInstanceOf(PostException.class)
                 .hasMessage(FAILED_TO_SAVE_POST.getMessage());
 

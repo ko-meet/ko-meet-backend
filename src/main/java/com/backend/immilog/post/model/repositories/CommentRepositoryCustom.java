@@ -1,6 +1,6 @@
 package com.backend.immilog.post.model.repositories;
 
-import com.backend.immilog.post.model.dtos.CommentDTO;
+import com.backend.immilog.post.application.dtos.CommentDTO;
 
 import java.util.List;
 

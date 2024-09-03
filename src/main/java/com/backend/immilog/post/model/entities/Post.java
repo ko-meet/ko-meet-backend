@@ -1,11 +1,11 @@
 package com.backend.immilog.post.model.entities;
 
 import com.backend.immilog.global.model.BaseDateEntity;
+import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.Countries;
-import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.user.model.entities.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -40,11 +40,11 @@ public class Post extends BaseDateEntity {
     private Long commentCount;
 
     public static Post of(
-            PostUploadRequest postUploadRequest,
+            PostUploadCommand postUploadCommand,
             User user
     ) {
         PostMetaData postMetaData = PostMetaData.of(
-                postUploadRequest,
+                postUploadCommand,
                 Countries.valueOf(user.getLocation().getCountry().toString()),
                 user.getLocation().getRegion()
         );
@@ -58,8 +58,8 @@ public class Post extends BaseDateEntity {
         return Post.builder()
                 .postUserData(postUserData)
                 .postMetaData(postMetaData)
-                .category(postUploadRequest.category())
-                .isPublic(postUploadRequest.isPublic() ? "Y" : "N")
+                .category(postUploadCommand.category())
+                .isPublic(postUploadCommand.isPublic() ? "Y" : "N")
                 .commentCount(0L)
                 .build();
     }

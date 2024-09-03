@@ -1,4 +1,4 @@
-package com.backend.immilog.user.model.dtos;
+package com.backend.immilog.user.application.dto;
 
 import com.backend.immilog.user.model.entities.User;
 import lombok.Builder;

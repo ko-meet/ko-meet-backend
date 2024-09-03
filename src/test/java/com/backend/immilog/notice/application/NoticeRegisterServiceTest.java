@@ -1,6 +1,7 @@
 package com.backend.immilog.notice.application;
 
 import com.backend.immilog.global.enums.UserRole;
+import com.backend.immilog.notice.application.services.NoticeRegisterService;
 import com.backend.immilog.notice.model.enums.NoticeType;
 import com.backend.immilog.notice.model.repositories.NoticeRepository;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
@@ -42,7 +43,7 @@ class NoticeRegisterServiceTest {
                 .type(NoticeType.NOTICE)
                 .build();
         // when
-        noticeRegisterService.registerNotice(userSeq, userRole, param);
+        noticeRegisterService.registerNotice(userSeq, userRole, param.toCommand());
         // then
         verify(noticeRepository, times(1)).save(any());
     }

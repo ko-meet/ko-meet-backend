@@ -3,7 +3,7 @@ package com.backend.immilog.post.application;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.SortingMethods;
-import com.backend.immilog.post.model.dtos.PostDTO;
+import com.backend.immilog.post.application.dtos.PostDTO;
 import com.backend.immilog.post.model.repositories.CommentRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.model.enums.Countries;
