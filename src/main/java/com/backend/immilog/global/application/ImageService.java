@@ -1,5 +1,6 @@
 package com.backend.immilog.global.application;
 
+import com.backend.immilog.global.infrastructure.storage.FileStorageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,4 +1,4 @@
-package com.backend.immilog.global.application;
+package com.backend.immilog.global.infrastructure.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
