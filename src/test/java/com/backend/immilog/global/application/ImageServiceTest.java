@@ -1,16 +1,13 @@
 package com.backend.immilog.global.application;
 
-import com.amazonaws.services.s3.AmazonS3;
+import com.backend.immilog.global.infrastructure.storage.FileStorageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,41 +15,49 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("이미지 서비스 테스트")
 class ImageServiceTest {
+
     @Mock
-    private AmazonS3 amazonS3;
+    private FileStorageHandler fileStorageHandler;
+
     private ImageService imageService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        imageService = new ImageService(amazonS3);
-        ReflectionTestUtils.setField(imageService, "bucket", "immilog");
+        imageService = new ImageService(fileStorageHandler);
     }
 
     @Test
-    @DisplayName("이미지 S3 업로드")
-    void uploadImageToS3() throws MalformedURLException {
+    @DisplayName("이미지 업로드")
+    void uploadImage() {
         // given
         List<MultipartFile> files = List.of(mock(MultipartFile.class));
         String imagePath = "imagePath";
-        String url = "https://example.com/path";
-        when(amazonS3.getUrl(anyString(), anyString()))
-                .thenReturn(new URL(url));
+        String mockUrl = "https://example.com/path";
+
+        when(fileStorageHandler.uploadFile(any(MultipartFile.class), eq(imagePath)))
+                .thenReturn(mockUrl);
+
         // when
         List<String> images = imageService.saveFiles(files, imagePath);
+
         // then
-        assertThat(images.get(0)).isEqualTo(url);
+        assertThat(images).isNotEmpty();
+        assertThat(images.get(0)).isEqualTo(mockUrl);
+
+        verify(fileStorageHandler, times(1)).uploadFile(any(MultipartFile.class), eq(imagePath));
     }
 
     @Test
-    @DisplayName("이미지 S3 삭제")
-    void deleteImageFromS3() {
+    @DisplayName("이미지 삭제")
+    void deleteImage() {
         // given
         String imagePath = "imagePath";
+
         // when
         imageService.deleteFile(imagePath);
+
         // then
-        verify(amazonS3, times(1))
-                .deleteObject(anyString(), anyString());
+        verify(fileStorageHandler, times(1)).deleteFile(eq(imagePath));
     }
 }

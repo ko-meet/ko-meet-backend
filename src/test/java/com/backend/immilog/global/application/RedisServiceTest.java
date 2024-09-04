@@ -1,12 +1,11 @@
 package com.backend.immilog.global.application;
 
+import com.backend.immilog.global.infrastructure.repository.DataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -14,58 +13,58 @@ import static org.mockito.Mockito.*;
 @DisplayName("Redis 키/값 테스트")
 class RedisServiceTest {
     @Mock
-    private RedisTemplate<String, String> stringRedisTemplate;
+    private DataRepository dataRepository;
     private RedisService redisService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        redisService = new RedisService(stringRedisTemplate);
+        redisService = new RedisService(dataRepository);
     }
 
     @Test
     @DisplayName("키/값 저장")
-    void saveKeyAndValue() {
+    void save() {
         // given
         String key = "key";
         String value = "value";
         int expireTime = 10;
-        ValueOperations<String, String> ops =
-                mock(ValueOperations.class);
-        when(stringRedisTemplate.opsForValue())
-                .thenReturn(ops);
+
         // when
         redisService.saveKeyAndValue(key, value, expireTime);
+
         // then
-        verify(ops).set(key, value);
+        verify(dataRepository, times(1)).save(key, value, expireTime);
     }
 
     @Test
     @DisplayName("키로 값 가져오기")
-    void getValueByKey() {
+    void findByKey() {
         // given
         String key = "key";
-        String value = "value";
-        ValueOperations<String, String> ops =
-                mock(ValueOperations.class);
-        when(stringRedisTemplate.opsForValue())
-                .thenReturn(ops);
-        when(ops.get(key))
-                .thenReturn(value);
+        String expectedValue = "value";
+
+        when(dataRepository.findByKey(key)).thenReturn(expectedValue);
+
         // when
         String result = redisService.getValueByKey(key);
+
         // then
-        assertThat(result).isEqualTo(value);
+        assertThat(result).isEqualTo(expectedValue);
+        verify(dataRepository, times(1)).findByKey(key);
     }
 
     @Test
     @DisplayName("키로 값 삭제")
-    void deleteValueByKey() {
+    void deleteByKey() {
         // given
         String key = "key";
+
         // when
         redisService.deleteValueByKey(key);
+
         // then
-        verify(stringRedisTemplate).delete(key);
+        verify(dataRepository, times(1)).deleteByKey(key);
     }
 }
+

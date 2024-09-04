@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application.services;
 
-import com.backend.immilog.global.application.RedisDistributedLock;
+import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.post.application.command.PostUpdateCommand;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.model.entities.InteractionUser;

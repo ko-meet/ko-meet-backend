@@ -1,18 +1,16 @@
-package com.backend.immilog.global.application;
+package com.backend.immilog.global.infrastructure.lock;
 
+import com.backend.immilog.global.infrastructure.repository.DataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisDistributedLock {
-    private final RedisTemplate<String, String> redisTemplate;
+    private final DataRepository dataRepository;
     final int MAX_RETRY = 3;
     final int EXPIRE_TIME_IN_SECONDS = 10;
     final long RETRY_DELAY_MILLIS = 500;
@@ -39,9 +37,9 @@ public class RedisDistributedLock {
             String requestId
     ) {
         try {
-            String storedRequestId = redisTemplate.opsForValue().get(lockKey);
+            String storedRequestId = dataRepository.findByKey(lockKey);
             if (requestId.equals(storedRequestId)) {
-                redisTemplate.delete(lockKey);
+                dataRepository.deleteByKey(lockKey);
             }
         } catch (DataAccessException e) {
             log.error("Failed to release lock", e);
@@ -54,11 +52,11 @@ public class RedisDistributedLock {
             long expireTimeInSeconds
     ) {
         try {
-            Boolean lockAcquired = redisTemplate.opsForValue().setIfAbsent(
+            // DataRepository를 사용하여 setIfAbsent 처리
+            Boolean lockAcquired = dataRepository.saveIfAbsent(
                     lockKey,
                     requestId,
-                    expireTimeInSeconds,
-                    TimeUnit.SECONDS
+                    expireTimeInSeconds
             );
             return lockAcquired != null && lockAcquired;
         } catch (DataAccessException e) {
