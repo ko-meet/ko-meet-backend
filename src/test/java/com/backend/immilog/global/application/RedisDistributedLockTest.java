@@ -1,30 +1,28 @@
 package com.backend.immilog.global.application;
-
+import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
+import com.backend.immilog.global.infrastructure.repository.DataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@DisplayName("RedisDistributedLock 테스트")
 class RedisDistributedLockTest {
+
     @Mock
-    private RedisTemplate<String, String> redisTemplate;
+    private DataRepository dataRepository; // DataRepository를 Mock으로 사용
 
     private RedisDistributedLock redisDistributedLock;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        redisDistributedLock = new RedisDistributedLock(redisTemplate);
+        redisDistributedLock = new RedisDistributedLock(dataRepository); // Mock 주입
     }
 
     @Test
@@ -33,26 +31,21 @@ class RedisDistributedLockTest {
         // given
         String lockKey = "lockKey";
         String requestId = "requestId";
-        ValueOperations<String, String> valueOperations = Mockito.mock(ValueOperations.class);
 
-        // 첫 번째와 두 번째 시도는 실패 (false 반환)
-        when(valueOperations.setIfAbsent(
-                lockKey, requestId, 10, TimeUnit.SECONDS
-        ))
+        // 첫 번째와 두 번째 시도는 실패 (false 반환), 세 번째 시도는 성공 (true 반환)
+        when(dataRepository.saveIfAbsent(lockKey, requestId, 10))
                 .thenReturn(false)
                 .thenReturn(false)
                 .thenReturn(true);
-
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 
         // when
         boolean result = redisDistributedLock.tryAcquireLock(lockKey, requestId);
 
         // then
-        assertThat(result).isTrue();
+        assertThat(result).isTrue(); // 락이 성공적으로 획득되었는지 검증
 
-        // 세 번 시도했는지 확인
-        verify(valueOperations, times(3)).setIfAbsent(lockKey, requestId, 10, TimeUnit.SECONDS);
+        // saveIfAbsent가 3번 호출되었는지 확인
+        verify(dataRepository, times(3)).saveIfAbsent(lockKey, requestId, 10);
     }
 
     @Test
@@ -61,16 +54,15 @@ class RedisDistributedLockTest {
         // given
         String lockKey = "lockKey";
         String requestId = "requestId";
-        ValueOperations<String, String> valueOperations = Mockito.mock(ValueOperations.class);
 
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get(lockKey)).thenReturn(requestId);
+        // dataRepository에서 반환하는 값이 requestId와 일치할 때
+        when(dataRepository.findByKey(lockKey)).thenReturn(requestId);
 
         // when
         redisDistributedLock.releaseLock(lockKey, requestId);
 
         // then
-        verify(redisTemplate, times(1)).delete(lockKey);
+        verify(dataRepository, times(1)).deleteByKey(lockKey); // 삭제되었는지 확인
     }
 
     @Test
@@ -80,16 +72,15 @@ class RedisDistributedLockTest {
         String lockKey = "lockKey";
         String requestId = "requestId";
         String differentRequestId = "differentRequestId";
-        ValueOperations<String, String> valueOperations = Mockito.mock(ValueOperations.class);
 
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get(lockKey)).thenReturn(differentRequestId);
+        // dataRepository에서 반환하는 값이 requestId와 일치하지 않을 때
+        when(dataRepository.findByKey(lockKey)).thenReturn(differentRequestId);
 
         // when
         redisDistributedLock.releaseLock(lockKey, requestId);
 
         // then
-        verify(redisTemplate, never()).delete(lockKey);
+        verify(dataRepository, never()).deleteByKey(lockKey); // 삭제가 호출되지 않음을 검증
     }
 
     @Test
@@ -98,16 +89,14 @@ class RedisDistributedLockTest {
         // given
         String lockKey = "lockKey";
         String requestId = "requestId";
-        ValueOperations<String, String> valueOperations = Mockito.mock(ValueOperations.class);
 
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get(lockKey)).thenThrow(new DataAccessException(
-                "Error") {});
+        // 예외가 발생하는 상황을 가정
+        when(dataRepository.findByKey(lockKey)).thenThrow(new DataAccessException("Error") {});
 
         // when
         redisDistributedLock.releaseLock(lockKey, requestId);
 
         // then
-        verify(redisTemplate, never()).delete(lockKey);
+        verify(dataRepository, never()).deleteByKey(lockKey); // 예외가 발생하면 삭제가 호출되지 않음을 검증
     }
 }

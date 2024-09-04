@@ -1,5 +1,6 @@
 package com.backend.immilog.global.application;
 
+import com.backend.immilog.global.infrastructure.storage.FileStorageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
