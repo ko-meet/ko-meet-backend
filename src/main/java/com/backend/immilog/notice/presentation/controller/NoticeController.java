@@ -2,9 +2,9 @@ package com.backend.immilog.notice.presentation.controller;
 
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.notice.application.dtos.NoticeDTO;
+import com.backend.immilog.notice.application.result.NoticeResult;
+import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
-import com.backend.immilog.notice.application.services.NoticeRegisterService;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 @RestController
 public class NoticeController {
-    private final NoticeRegisterService noticeRegisterService;
+    private final NoticeCreateService noticeRegisterService;
     private final NoticeInquiryService noticeInquiryService;
 
     @PostMapping
@@ -35,7 +35,7 @@ public class NoticeController {
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
-        UserRole userRole = (UserRole) request.getAttribute("userRole");
+        String userRole = ((UserRole) request.getAttribute("userRole")).name();
         noticeRegisterService.registerNotice(userSeq, userRole, noticeRegisterRequest.toCommand());
         return ResponseEntity
                 .status(CREATED)
@@ -50,7 +50,7 @@ public class NoticeController {
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
-        Page<NoticeDTO> notices = noticeInquiryService.getNotices(userSeq, page);
+        Page<NoticeResult> notices = noticeInquiryService.getNotices(userSeq, page);
         return ResponseEntity.status(OK).body(NoticeApiResponse.of(notices));
     }
 
@@ -59,7 +59,7 @@ public class NoticeController {
     public ResponseEntity<NoticeApiResponse> getNoticeDetail(
             @PathVariable Long noticeSeq
     ) {
-        NoticeDTO notices = noticeInquiryService.getNoticeDetail(noticeSeq);
+        NoticeResult notices = noticeInquiryService.getNoticeDetail(noticeSeq);
         return ResponseEntity.status(OK).body(NoticeApiResponse.of(notices));
     }
 

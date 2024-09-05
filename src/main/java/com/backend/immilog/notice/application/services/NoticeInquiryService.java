@@ -1,8 +1,8 @@
 package com.backend.immilog.notice.application.services;
 
+import com.backend.immilog.notice.application.result.NoticeResult;
+import com.backend.immilog.notice.domain.repositories.NoticeRepository;
 import com.backend.immilog.notice.exception.NoticeException;
-import com.backend.immilog.notice.application.dtos.NoticeDTO;
-import com.backend.immilog.notice.model.repositories.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,7 @@ public class NoticeInquiryService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Page<NoticeDTO> getNotices(
+    public Page<NoticeResult> getNotices(
             Long userSeq,
             Integer page
     ) {
@@ -30,12 +30,11 @@ public class NoticeInquiryService {
     }
 
     @Transactional
-    public NoticeDTO getNoticeDetail(
+    public NoticeResult getNoticeDetail(
             Long noticeSeq
     ) {
-        return noticeRepository
-                .findById(noticeSeq)
-                .map(NoticeDTO::from)
+        return noticeRepository.findBySeq(noticeSeq)
+                .map(NoticeResult::from)
                 .orElseThrow(() -> new NoticeException(NOTICE_NOT_FOUND));
     }
 }

@@ -1,8 +1,8 @@
 package com.backend.immilog.notice.presentation.request;
 
 import com.backend.immilog.notice.application.command.NoticeUploadCommand;
-import com.backend.immilog.notice.model.enums.NoticeCountry;
-import com.backend.immilog.notice.model.enums.NoticeType;
+import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
+import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 
