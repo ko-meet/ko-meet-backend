@@ -10,9 +10,9 @@ import com.backend.immilog.post.model.enums.SortingMethods;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserCountry;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.vo.Location;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,7 +81,7 @@ class PostControllerTest {
         );
 
         // then
-        verify(postUploadService).uploadPost(user.getSeq(), postUploadRequest.toCommand());
+        verify(postUploadService).uploadPost(user.seq(), postUploadRequest.toCommand());
         assertThat(response.getStatusCode()).isEqualTo(ResponseEntity.status(CREATED).build().getStatusCode());
     }
 

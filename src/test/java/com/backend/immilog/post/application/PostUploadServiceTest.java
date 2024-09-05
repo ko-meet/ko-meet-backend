@@ -8,10 +8,10 @@ import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserCountry;
-import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
+import com.backend.immilog.user.domain.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.vo.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         when(postRepository.save(any(Post.class))).thenReturn(post);
 
         doNothing().when(preparedStatement).setLong(eq(1), anyLong());
@@ -141,7 +141,7 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         when(postRepository.save(any(Post.class))).thenReturn(post);
 
         // when
@@ -172,7 +172,7 @@ class PostUploadServiceTest {
                 .seq(userSeq)
                 .location(location)
                 .build();
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         when(postRepository.save(any(Post.class))).thenReturn(Post.builder().seq(1L).build());
         doThrow(new SQLException("Mock SQL Exception"))
                 .when(preparedStatement).setLong(anyInt(), anyLong());
