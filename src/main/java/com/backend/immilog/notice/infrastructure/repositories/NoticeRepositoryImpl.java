@@ -1,8 +1,11 @@
-package com.backend.immilog.notice.infrastructure;
+package com.backend.immilog.notice.infrastructure.repositories;
 
-import com.backend.immilog.notice.application.dtos.NoticeDTO;
-import com.backend.immilog.notice.model.entities.QNotice;
-import com.backend.immilog.notice.model.repositories.NoticeRepositoryCustom;
+import com.backend.immilog.notice.application.result.NoticeResult;
+import com.backend.immilog.notice.domain.model.Notice;
+import com.backend.immilog.notice.domain.repositories.NoticeRepository;
+import com.backend.immilog.notice.infrastructure.jpa.entities.NoticeEntity;
+import com.backend.immilog.notice.infrastructure.jpa.entities.QNoticeEntity;
+import com.backend.immilog.notice.infrastructure.jpa.repositories.NoticeJpaRepository;
 import com.backend.immilog.user.model.entities.QUser;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -14,18 +17,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
+public class NoticeRepositoryImpl implements NoticeRepository {
     private final JPAQueryFactory jpaQueryFactory;
+    private final NoticeJpaRepository noticeJpaRepository;
 
     @Override
-    public Page<NoticeDTO> getNotices(
+    public Page<NoticeResult> getNotices(
             Long userSeq,
             Pageable pageable
     ) {
-        QNotice notice = QNotice.notice;
+        QNoticeEntity notice = QNoticeEntity.noticeEntity;
         QUser user = QUser.user;
         BooleanBuilder predicateBuilder = new BooleanBuilder();
 
@@ -35,7 +40,7 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
                         .or(notice.targetCountries.any().stringValue().eq("ALL"))
         );
         Long total = getTotal(predicateBuilder.getValue());
-        List<NoticeDTO> result =
+        List<NoticeResult> result =
                 jpaQueryFactory
                         .selectFrom(notice)
                         .leftJoin(user)
@@ -49,14 +54,25 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
                         .orderBy(notice.createdAt.desc())
                         .fetch()
                         .stream()
-                        .map(NoticeDTO::from)
+                        .map(NoticeEntity::toDomain)
+                        .map(NoticeResult::from)
                         .toList();
 
         return new PageImpl<>(result, pageable, total);
     }
 
+    @Override
+    public void saveEntity(Notice notice) {
+        noticeJpaRepository.save(NoticeEntity.from(notice));
+    }
+
+    @Override
+    public Optional<Notice> findBySeq(Long noticeSeq) {
+        return noticeJpaRepository.findById(noticeSeq).map(NoticeEntity::toDomain);
+    }
+
     private Long getTotal(Predicate predicate) {
-        QNotice notice = QNotice.notice;
+        QNoticeEntity notice = QNoticeEntity.noticeEntity;
         QUser user = QUser.user;
 
         return jpaQueryFactory
