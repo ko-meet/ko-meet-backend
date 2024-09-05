@@ -1,10 +1,10 @@
 package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.user.application.command.UserSignUpCommand;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -12,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.backend.immilog.user.domain.model.enums.UserStatus.ACTIVE;
 import static com.backend.immilog.user.exception.UserErrorCode.EXISTING_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
-import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,25 +29,24 @@ public class UserSignUpService {
     ) {
         validateUserNotExists(userSignUpCommand.email());
         String password = passwordEncoder.encode(userSignUpCommand.password());
-        User user = userRepository.save(User.of(userSignUpCommand, password));
-        return Pair.of(user.getSeq(), user.getNickName());
+        User user = userRepository.saveEntity(User.of(userSignUpCommand, password));
+        return Pair.of(user.seq(), user.nickName());
     }
 
     @Transactional(readOnly = true)
     public Boolean checkNickname(
             String nickname
     ) {
-        return userRepository.findByNickName(nickname).isEmpty();
+        return userRepository.getByUserNickname(nickname).isEmpty();
     }
 
     @Transactional
     public Pair<String, Boolean> verifyEmail(
             Long userSeq
     ) {
-        User user = userRepository.findById(userSeq)
-                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        User user = userRepository.getById(userSeq).orElseThrow(() -> new UserException(USER_NOT_FOUND));
         String resultString = "이메일 인증이 완료되었습니다.";
-        UserStatus currentUserStatus = user.getUserStatus();
+        UserStatus currentUserStatus = user.userStatus();
         return getVerificationResult(currentUserStatus, user, resultString);
     }
 
@@ -55,7 +54,7 @@ public class UserSignUpService {
             String email
     ) {
         userRepository
-                .findByEmail(email)
+                .getByEmail(email)
                 .ifPresent(user -> {
                     throw new UserException(EXISTING_USER);
                 });
@@ -68,7 +67,7 @@ public class UserSignUpService {
     ) {
         boolean isLoginAvailable = true;
         switch (userStatus) {
-            case PENDING -> user.setUserStatus(ACTIVE);
+            case PENDING -> user.copyWithNewUserStatus(ACTIVE);
             case ACTIVE -> resultString = "이미 인증된 사용자입니다.";
             case BLOCKED -> {
                 resultString = "차단된 사용자입니다.";

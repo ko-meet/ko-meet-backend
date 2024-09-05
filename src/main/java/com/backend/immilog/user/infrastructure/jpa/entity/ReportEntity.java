@@ -1,8 +1,8 @@
-package com.backend.immilog.user.model.entities;
+package com.backend.immilog.user.infrastructure.jpa.entity;
 
 import com.backend.immilog.global.model.BaseDateEntity;
-import com.backend.immilog.user.application.command.UserReportCommand;
-import com.backend.immilog.user.enums.ReportReason;
+import com.backend.immilog.user.domain.model.Report;
+import com.backend.immilog.user.domain.model.enums.ReportReason;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Builder
 @DynamicUpdate
 @Entity
-public class Report extends BaseDateEntity {
+public class ReportEntity extends BaseDateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
@@ -28,23 +28,24 @@ public class Report extends BaseDateEntity {
     @Enumerated(EnumType.STRING)
     private ReportReason reason;
 
-    /**
-     * 신고 엔티티 팩토리 메서드
-     */
-    public static Report of(
-            Long targetUserSeq,
-            Long reporterUserSeq,
-            UserReportCommand reportUserCommand,
-            boolean isOther
+    public static ReportEntity from(
+            Report report
     ) {
-        String description = isOther ?
-                reportUserCommand.description() :
-                reportUserCommand.reason().getReason();
+        return ReportEntity.builder()
+                .reportedUserSeq(report.reportedUserSeq())
+                .reporterUserSeq(report.reporterUserSeq())
+                .description(report.description())
+                .reason(report.reason())
+                .build();
+    }
+
+    public Report toDomain() {
         return Report.builder()
-                .reportedUserSeq(targetUserSeq)
+                .seq(seq)
+                .reportedUserSeq(reportedUserSeq)
                 .reporterUserSeq(reporterUserSeq)
-                .reason(reportUserCommand.reason())
                 .description(description)
+                .reason(reason)
                 .build();
     }
 }

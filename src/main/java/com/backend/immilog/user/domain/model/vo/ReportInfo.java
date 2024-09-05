@@ -1,4 +1,4 @@
-package com.backend.immilog.user.model.embeddables;
+package com.backend.immilog.user.domain.model.vo;
 
 import lombok.*;
 

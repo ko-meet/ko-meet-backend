@@ -1,6 +1,6 @@
-package com.backend.immilog.user.model.embeddables;
+package com.backend.immilog.user.domain.model.vo;
 
-import com.backend.immilog.user.model.enums.UserCountry;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
 import lombok.*;
 
 import javax.persistence.Embeddable;

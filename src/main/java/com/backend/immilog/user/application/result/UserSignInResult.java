@@ -1,10 +1,10 @@
-package com.backend.immilog.user.application.dto;
+package com.backend.immilog.user.application.result;
 
-import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.domain.model.User;
 import lombok.Builder;
 
 @Builder
-public record UserSignInDTO(
+public record UserSignInResult(
         Long userSeq,
         String email,
         String nickname,
@@ -16,26 +16,26 @@ public record UserSignInDTO(
         String userProfileUrl,
         Boolean isLocationMatch
 ) {
-    public static UserSignInDTO of(
+    public static UserSignInResult of(
             User user,
             String accessToken,
             String refreshToken,
             boolean isLocationMatch
     ) {
         String interestCountry =
-                user.getInterestCountry() == null ? null :
-                        user.getInterestCountry().getCountryName();
+                user.interestCountry() == null ? null :
+                        user.interestCountry().getCountryName();
 
-        return UserSignInDTO.builder()
-                .userSeq(user.getSeq())
-                .email(user.getEmail())
-                .nickname(user.getNickName())
+        return UserSignInResult.builder()
+                .userSeq(user.seq())
+                .email(user.email())
+                .nickname(user.nickName())
                 .accessToken(accessToken == null ? "" : accessToken)
                 .refreshToken(refreshToken == null ? "" : refreshToken)
-                .country(user.getLocation().getCountry().getCountryName())
+                .country(user.location().getCountry().getCountryName())
                 .interestCountry(interestCountry)
-                .region(user.getLocation().getRegion())
-                .userProfileUrl(user.getImageUrl())
+                .region(user.location().getRegion())
+                .userProfileUrl(user.imageUrl())
                 .isLocationMatch(isLocationMatch)
                 .build();
     }

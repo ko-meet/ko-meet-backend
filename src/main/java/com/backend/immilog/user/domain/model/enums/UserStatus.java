@@ -1,4 +1,4 @@
-package com.backend.immilog.user.model.enums;
+package com.backend.immilog.user.domain.model.enums;
 
 public enum UserStatus {
     ACTIVE,

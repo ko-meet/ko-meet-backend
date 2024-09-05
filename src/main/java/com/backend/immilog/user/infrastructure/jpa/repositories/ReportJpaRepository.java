@@ -1,11 +1,11 @@
-package com.backend.immilog.user.model.repositories;
+package com.backend.immilog.user.infrastructure.jpa.repositories;
 
-import com.backend.immilog.user.model.entities.Report;
+import com.backend.immilog.user.infrastructure.jpa.entity.ReportEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReportRepository extends JpaRepository<Report, Long> {
+public interface ReportJpaRepository extends JpaRepository<ReportEntity, Long> {
 
     boolean existsByReportedUserSeqAndReporterUserSeq(
             Long targetUserSeq,
