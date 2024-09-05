@@ -5,12 +5,12 @@ import com.backend.immilog.global.enums.GlobalCountry;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.services.UserSignInService;
+import com.backend.immilog.user.domain.model.User;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.application.dto.UserSignInDTO;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.application.result.UserSignInResult;
+import com.backend.immilog.user.domain.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.vo.Location;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
 import com.backend.immilog.user.presentation.request.UserSignInRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +25,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
-import static com.backend.immilog.user.model.enums.UserCountry.MALAYSIA;
-import static com.backend.immilog.user.model.enums.UserCountry.SOUTH_KOREA;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.MALAYSIA;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.SOUTH_KOREA;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -84,9 +84,9 @@ class UserSignInServiceTest {
                 .location(location)
                 .build();
 
-        when(userRepository.findByEmail(userSignInRequest.email()))
+        when(userRepository.getByEmail(userSignInRequest.email()))
                 .thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(userSignInRequest.password(), user.getPassword()))
+        when(passwordEncoder.matches(userSignInRequest.password(), user.password()))
                 .thenReturn(true);
         when(tokenProvider.issueAccessToken(
                 anyLong(),
@@ -100,12 +100,12 @@ class UserSignInServiceTest {
                 .thenReturn(CompletableFuture.completedFuture(Pair.of("대한민국", "서울")));
 
         // when
-        UserSignInDTO userSignInDTO =
+        UserSignInResult userSignInResult =
                 userSignInService.signIn(userSignInRequest.toCommand(), country);
 
         // then
-        assertThat(userSignInDTO.userSeq()).isEqualTo(user.getSeq());
-        assertThat(userSignInDTO.accessToken()).isEqualTo("accessToken");
+        assertThat(userSignInResult.userSeq()).isEqualTo(user.seq());
+        assertThat(userSignInResult.accessToken()).isEqualTo("accessToken");
         verify(tokenProvider, times(1)).issueAccessToken(
                 anyLong(),
                 anyString(),
@@ -166,7 +166,7 @@ class UserSignInServiceTest {
                 .build();
 
         Pair<String, String> country = Pair.of("South Korea", "Seoul");
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         when(tokenProvider.issueAccessToken(
                 anyLong(),
                 anyString(),
@@ -176,10 +176,10 @@ class UserSignInServiceTest {
         when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
 
         // when
-        UserSignInDTO result = userSignInService.getUserSignInDTO(userSeq, country);
+        UserSignInResult result = userSignInService.getUserSignInDTO(userSeq, country);
         // then
         verify(redisService, times(1)).saveKeyAndValue(
-                "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
+                "Refresh: refreshToken", user.email(), 5 * 29 * 24 * 60
         );
         assertThat(result.userSeq()).isEqualTo(userSeq);
     }
@@ -202,7 +202,7 @@ class UserSignInServiceTest {
                 .build();
 
         Pair<String, String> country = Pair.of("South Korea", "Seoul");
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         when(tokenProvider.issueAccessToken(
                 anyLong(),
                 anyString(),
@@ -212,10 +212,10 @@ class UserSignInServiceTest {
         when(tokenProvider.issueRefreshToken()).thenReturn("refreshToken");
 
         // when
-        UserSignInDTO result = userSignInService.getUserSignInDTO(userSeq, country);
+        UserSignInResult result = userSignInService.getUserSignInDTO(userSeq, country);
         // then
         verify(redisService, times(1)).saveKeyAndValue(
-                "Refresh: refreshToken", user.getEmail(), 5 * 29 * 24 * 60
+                "Refresh: refreshToken", user.email(), 5 * 29 * 24 * 60
         );
         assertThat(result.userSeq()).isEqualTo(userSeq);
     }

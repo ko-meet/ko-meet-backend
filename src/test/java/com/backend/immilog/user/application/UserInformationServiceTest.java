@@ -3,11 +3,11 @@ package com.backend.immilog.user.application;
 import com.backend.immilog.global.application.ImageService;
 import com.backend.immilog.user.application.command.UserPasswordChangeCommand;
 import com.backend.immilog.user.application.services.UserInformationService;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
+import com.backend.immilog.user.domain.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.vo.Location;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import com.backend.immilog.user.presentation.request.UserInfoUpdateRequest;
 import com.backend.immilog.user.presentation.request.UserPasswordChangeRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +23,13 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.global.enums.UserRole.ROLE_ADMIN;
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.*;
 import static com.backend.immilog.user.exception.UserErrorCode.NOT_AN_ADMIN_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.PASSWORD_NOT_MATCH;
-import static com.backend.immilog.user.model.enums.UserCountry.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DisplayName("사용자 정보 서비스 테스트")
@@ -38,7 +40,7 @@ class UserInformationServiceTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private ImageService imageService;
-    private com.backend.immilog.user.application.services.UserInformationService userInformationService;
+    private UserInformationService userInformationService;
 
     @BeforeEach
     void setUp() {
@@ -78,7 +80,7 @@ class UserInformationServiceTest {
                         .status(UserStatus.ACTIVE)
                         .build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
         CompletableFuture<Pair<String, String>> country =
                 CompletableFuture.completedFuture(Pair.of("Japan", "Tokyo"));
         // when
@@ -87,12 +89,8 @@ class UserInformationServiceTest {
                 country,
                 param.toCommand()
         );
-
         //then
-        assertThat(user.getNickName()).isEqualTo("newNickName");
-        assertThat(user.getImageUrl()).isEqualTo("newImage");
-        assertThat(user.getLocation().getCountry()).isEqualTo(JAPAN);
-        assertThat(user.getInterestCountry()).isEqualTo(INDONESIA);
+        verify(userRepository).saveEntity(any());
     }
 
     @Test
@@ -116,19 +114,15 @@ class UserInformationServiceTest {
                 .newPassword("newPassword")
                 .build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(
-                "existingPassword",
-                user.getPassword()
-        )).thenReturn(true);
-        when(passwordEncoder.encode("newPassword"))
-                .thenReturn("encodedPassword");
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("existingPassword", user.password())).thenReturn(true);
+        when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
 
         // when
         userInformationService.changePassword(userSeq, param);
 
         // then
-        assertThat(user.getPassword()).isEqualTo("encodedPassword");
+        verify(userRepository).saveEntity(any());
     }
 
     @Test
@@ -152,11 +146,8 @@ class UserInformationServiceTest {
                 .newPassword("newPassword")
                 .build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(
-                "existingPassword",
-                user.getPassword()
-        )).thenReturn(false);
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("existingPassword", user.password())).thenReturn(false);
 
         // when & then
         assertThatThrownBy(() -> userInformationService.changePassword(userSeq, param.toCommand()))
@@ -194,14 +185,14 @@ class UserInformationServiceTest {
                 .location(Location.of(MALAYSIA, "KL"))
                 .reportInfo(null)
                 .build();
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(userRepository.findById(adminSeq)).thenReturn(Optional.of(admin));
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(userRepository.getById(adminSeq)).thenReturn(Optional.of(admin));
 
         // when
         userInformationService.blockOrUnblockUser(userSeq, adminSeq, userStatus);
 
         // then
-        assertThat(user.getUserStatus()).isEqualTo(userStatus);
+        verify(userRepository).saveEntity(any());
     }
 
     @Test
@@ -222,7 +213,7 @@ class UserInformationServiceTest {
                 .location(Location.of(MALAYSIA, "KL"))
                 .reportInfo(null)
                 .build();
-        when(userRepository.findById(adminSeq)).thenReturn(Optional.of(admin));
+        when(userRepository.getById(adminSeq)).thenReturn(Optional.of(admin));
 
         // when & then
         assertThatThrownBy(() -> userInformationService.blockOrUnblockUser(

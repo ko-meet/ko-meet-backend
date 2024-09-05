@@ -1,6 +1,6 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.user.application.dto.UserSignInDTO;
+import com.backend.immilog.user.application.result.UserSignInResult;
 import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.application.services.UserSignInService;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
@@ -46,7 +46,7 @@ class AuthControllerTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         Double latitude = 37.123456;
         Double longitude = 126.123456;
-        UserSignInDTO userSignInDTO = UserSignInDTO.builder()
+        UserSignInResult userSignInResult = UserSignInResult.builder()
                 .userSeq(userSeq)
                 .email("test@email.com")
                 .nickname("test")
@@ -64,7 +64,7 @@ class AuthControllerTest {
                 CompletableFuture.completedFuture(location);
         when(locationService.getCountry(latitude, longitude)).thenReturn(value);
         when(locationService.joinCompletableFutureLocation(value)).thenReturn(location);
-        when(userSignInService.getUserSignInDTO(userSeq, location)).thenReturn(userSignInDTO);
+        when(userSignInService.getUserSignInDTO(userSeq, location)).thenReturn(userSignInResult);
         when(request.getAttribute("userSeq")).thenReturn(1L);
 
         // when
@@ -74,6 +74,6 @@ class AuthControllerTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         Object data = Objects.requireNonNull(response.getBody()).data();
-        assertThat(((UserSignInDTO) data).email()).isEqualTo(userSignInDTO.email());
+        assertThat(((UserSignInResult) data).email()).isEqualTo(userSignInResult.email());
     }
 }
