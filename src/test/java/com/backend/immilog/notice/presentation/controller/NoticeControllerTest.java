@@ -1,9 +1,9 @@
 package com.backend.immilog.notice.presentation.controller;
 
 import com.backend.immilog.global.enums.UserRole;
+import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
-import com.backend.immilog.notice.application.services.NoticeRegisterService;
-import com.backend.immilog.notice.model.enums.NoticeType;
+import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 @DisplayName("공지사항 컨트롤러 테스트")
 class NoticeControllerTest {
     @Mock
-    private NoticeRegisterService noticeRegisterService;
+    private NoticeCreateService noticeRegisterService;
 
     @Mock
     private NoticeInquiryService noticeInquiryService;
@@ -59,7 +59,7 @@ class NoticeControllerTest {
         ResponseEntity<NoticeApiResponse> response = noticeController.registerNotice(param, request);
 
         // then
-        verify(noticeRegisterService).registerNotice(userSeq, userRole, param.toCommand());
+        verify(noticeRegisterService).registerNotice(userSeq, userRole.name(), param.toCommand());
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
 
     }
