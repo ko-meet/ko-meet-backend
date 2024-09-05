@@ -1,9 +1,9 @@
 package com.backend.immilog.notice.application;
 
 import com.backend.immilog.global.enums.UserRole;
-import com.backend.immilog.notice.application.services.NoticeRegisterService;
-import com.backend.immilog.notice.model.enums.NoticeType;
-import com.backend.immilog.notice.model.repositories.NoticeRepository;
+import com.backend.immilog.notice.application.services.NoticeCreateService;
+import com.backend.immilog.notice.domain.model.enums.NoticeType;
+import com.backend.immilog.notice.domain.repositories.NoticeRepository;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,15 +16,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @DisplayName("NoticeRegisterService 테스트")
-class NoticeRegisterServiceTest {
+class NoticeCreateServiceTest {
     @Mock
     private NoticeRepository noticeRepository;
-    private NoticeRegisterService noticeRegisterService;
+    private NoticeCreateService noticeRegisterService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        noticeRegisterService = new NoticeRegisterService(
+        noticeRegisterService = new NoticeCreateService(
                 noticeRepository
         );
     }
@@ -36,7 +36,7 @@ class NoticeRegisterServiceTest {
         Long userSeq = 1L;
         String title = "제목";
         String content = "내용";
-        UserRole userRole = UserRole.ROLE_ADMIN;
+        String userRole = UserRole.ROLE_ADMIN.name();
         NoticeRegisterRequest param = NoticeRegisterRequest.builder()
                 .title(title)
                 .content(content)
@@ -45,6 +45,6 @@ class NoticeRegisterServiceTest {
         // when
         noticeRegisterService.registerNotice(userSeq, userRole, param.toCommand());
         // then
-        verify(noticeRepository, times(1)).save(any());
+        verify(noticeRepository, times(1)).saveEntity(any());
     }
 }
