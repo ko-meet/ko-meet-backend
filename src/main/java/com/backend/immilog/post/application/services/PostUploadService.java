@@ -6,8 +6,8 @@ import com.backend.immilog.post.model.entities.Post;
 import com.backend.immilog.post.model.entities.PostResource;
 import com.backend.immilog.post.model.repositories.BulkInsertRepository;
 import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -130,7 +130,7 @@ public class PostUploadService {
             Long userSeq
     ) {
         return userRepository
-                .findById(userSeq)
+                .getById(userSeq)
                 .orElseThrow(() -> new PostException(USER_NOT_FOUND));
     }
 

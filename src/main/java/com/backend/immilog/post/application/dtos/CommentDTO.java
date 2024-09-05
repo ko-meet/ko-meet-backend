@@ -2,8 +2,8 @@ package com.backend.immilog.post.application.dtos;
 
 import com.backend.immilog.post.model.entities.Comment;
 import com.backend.immilog.post.model.enums.PostStatus;
-import com.backend.immilog.user.application.dto.UserDataDTO;
-import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.application.result.UserInfoResult;
+import com.backend.immilog.user.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @Builder
 public class CommentDTO {
     private Long seq;
-    private UserDataDTO user;
+    private UserInfoResult user;
     private String content;
     private List<CommentDTO> replies;
     private int upVotes;
@@ -39,7 +39,7 @@ public class CommentDTO {
         List<CommentDTO> replyList = combineReplies(replies, replyUsers);
 
         this.seq = comment.getSeq();
-        this.user = UserDataDTO.from(user);
+        this.user = UserInfoResult.from(user);
         this.content = comment.getContent();
         this.replies = replyList;
         this.upVotes = comment.getLikeCount();
@@ -55,7 +55,7 @@ public class CommentDTO {
     ) {
         return CommentDTO.builder()
                 .seq(comment.getSeq())
-                .user(UserDataDTO.from(user))
+                .user(UserInfoResult.from(user))
                 .content(comment.getContent())
                 .replies(new ArrayList<>())
                 .upVotes(comment.getLikeCount())
@@ -78,7 +78,7 @@ public class CommentDTO {
                 .map(reply -> {
                     return replyUsers.stream()
                             .filter(Objects::nonNull)
-                            .filter(u -> u.getSeq().equals(reply.getUserSeq()))
+                            .filter(u -> u.seq().equals(reply.getUserSeq()))
                             .findFirst()
                             .map(replyUser -> CommentDTO.of(reply, replyUser))
                             .orElse(null);

@@ -6,7 +6,7 @@ import com.backend.immilog.post.model.embeddables.PostMetaData;
 import com.backend.immilog.post.model.embeddables.PostUserData;
 import com.backend.immilog.post.model.enums.Categories;
 import com.backend.immilog.post.model.enums.Countries;
-import com.backend.immilog.user.model.entities.User;
+import com.backend.immilog.user.domain.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -45,14 +45,14 @@ public class Post extends BaseDateEntity {
     ) {
         PostMetaData postMetaData = PostMetaData.of(
                 postUploadCommand,
-                Countries.valueOf(user.getLocation().getCountry().toString()),
-                user.getLocation().getRegion()
+                Countries.valueOf(user.location().getCountry().toString()),
+                user.location().getRegion()
         );
 
         PostUserData postUserData = PostUserData.builder()
-                .userSeq(user.getSeq())
-                .profileImage(user.getImageUrl())
-                .nickname(user.getNickName())
+                .userSeq(user.seq())
+                .profileImage(user.imageUrl())
+                .nickname(user.nickName())
                 .build();
 
         return Post.builder()

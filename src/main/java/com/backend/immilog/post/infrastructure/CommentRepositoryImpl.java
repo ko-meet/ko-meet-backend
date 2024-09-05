@@ -3,7 +3,7 @@ package com.backend.immilog.post.infrastructure;
 import com.backend.immilog.post.application.dtos.CommentDTO;
 import com.backend.immilog.post.model.entities.QComment;
 import com.backend.immilog.post.model.repositories.CommentRepositoryCustom;
-import com.backend.immilog.user.model.entities.QUser;
+import com.backend.immilog.user.infrastructure.jpa.entity.QUserEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     public List<CommentDTO> getComments(Long postSeq) {
         QComment comment = QComment.comment;
         QComment childComment = new QComment("childComment");
-        QUser user = QUser.user;
-        QUser childCommentUser = new QUser("childCommentUser");
+        QUserEntity user = QUserEntity.userEntity;
+        QUserEntity childCommentUser = new QUserEntity("childCommentUser");
 
         return queryFactory
                 .select(comment, user, list(childComment), list(childCommentUser))
