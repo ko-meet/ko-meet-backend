@@ -1,14 +1,14 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.post.application.dtos.PostDTO;
+import com.backend.immilog.post.application.result.PostResult;
 import com.backend.immilog.post.application.services.PostDeleteService;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.application.services.PostUpdateService;
 import com.backend.immilog.post.application.services.PostUploadService;
-import com.backend.immilog.post.model.enums.Categories;
-import com.backend.immilog.post.model.enums.Countries;
-import com.backend.immilog.post.model.enums.SortingMethods;
+import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.enums.Countries;
+import com.backend.immilog.post.domain.enums.SortingMethods;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.*;
 
-@Api(tags = "Post API", description = "게시물 관련 API")
+@Api(tags = "PostEntity API", description = "게시물 관련 API")
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 @RestController
@@ -101,7 +101,7 @@ public class PostController {
             @RequestParam(required = false) Categories category,
             @RequestParam(required = false) Integer page
     ) {
-        Page<PostDTO> posts = postInquiryService.getPosts(
+        Page<PostResult> posts = postInquiryService.getPosts(
                 country,
                 sortingMethod,
                 isPublic,
@@ -116,7 +116,7 @@ public class PostController {
     public ResponseEntity<PostApiResponse> getPost(
             @PathVariable Long postSeq
     ) {
-        PostDTO post = postInquiryService.getPost(postSeq);
+        PostResult post = postInquiryService.getPost(postSeq);
         return ResponseEntity
                 .status(OK)
                 .body(PostApiResponse.of(post));
@@ -128,7 +128,7 @@ public class PostController {
             @RequestParam(required = true) String keyword,
             @RequestParam(required = true) Integer page
     ) {
-        Page<PostDTO> posts = postInquiryService.searchKeyword(keyword, page);
+        Page<PostResult> posts = postInquiryService.searchKeyword(keyword, page);
         return ResponseEntity.status(OK).body(PostApiResponse.of(posts));
     }
 
@@ -138,7 +138,7 @@ public class PostController {
             @PathVariable Long userSeq,
             @PathVariable Integer page
     ) {
-        Page<PostDTO> posts = postInquiryService.getUserPosts(userSeq, page);
+        Page<PostResult> posts = postInquiryService.getUserPosts(userSeq, page);
         return ResponseEntity.status(OK).body(PostApiResponse.of(posts));
     }
 

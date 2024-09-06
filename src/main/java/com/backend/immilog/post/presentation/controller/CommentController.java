@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@Api(tags = "Comment API", description = "댓글 관련 API")
+@Api(tags = "CommentEntity API", description = "댓글 관련 API")
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 @RestController

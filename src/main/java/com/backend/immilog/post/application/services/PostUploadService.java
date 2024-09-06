@@ -2,10 +2,10 @@ package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.entities.PostResource;
-import com.backend.immilog.post.model.repositories.BulkInsertRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.model.PostResource;
+import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import com.backend.immilog.user.domain.model.User;
 import com.backend.immilog.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
-import static com.backend.immilog.post.model.enums.PostType.POST;
-import static com.backend.immilog.post.model.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.model.enums.ResourceType.TAG;
+import static com.backend.immilog.post.domain.enums.PostType.POST;
+import static com.backend.immilog.post.domain.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.domain.enums.ResourceType.TAG;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
@@ -38,10 +38,10 @@ public class PostUploadService {
             PostUploadCommand postUploadCommand
     ) {
         User user = getUser(userSeq);
-        Post post = postRepository.save(
+        Post post = postRepository.saveEntity(
                 createPostEntity(userSeq, postUploadCommand, user)
         );
-        Long postSeq = post.getSeq();
+        Long postSeq = post.seq();
         insertAllPostResources(postUploadCommand, postSeq);
     }
 
@@ -76,10 +76,10 @@ public class PostUploadService {
                 """,
                 (ps, postResource) -> {
                     try {
-                        ps.setLong(1, postResource.getPostSeq());
-                        ps.setString(2, postResource.getPostType().name());
-                        ps.setString(3, postResource.getResourceType().name());
-                        ps.setString(4, postResource.getContent());
+                        ps.setLong(1, postResource.postSeq());
+                        ps.setString(2, postResource.postType().name());
+                        ps.setString(3, postResource.resourceType().name());
+                        ps.setString(4, postResource.content());
                     } catch (SQLException e) {
                         log.error("Failed to save post resource: {}", e.getMessage());
                         throw new PostException(FAILED_TO_SAVE_POST);

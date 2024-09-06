@@ -1,12 +1,11 @@
 package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.entities.Comment;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.enums.ReferenceType;
-import com.backend.immilog.post.model.repositories.CommentRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.presentation.request.CommentUploadRequest;
+import com.backend.immilog.post.domain.model.Comment;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.enums.ReferenceType;
+import com.backend.immilog.post.domain.repositories.CommentRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,20 +28,18 @@ public class CommentUploadService {
             String content
     ) {
         Post post = getPost(postSeq);
-        post.setCommentCount(post.getCommentCount() + 1);
-
+        post = post.copyWithNewCommentCount(post.commentCount() + 1);
         ReferenceType reference = ReferenceType.getByString(referenceType);
-
         Comment comment = Comment.of(userId, postSeq, content, reference);
-
-        commentRepository.save(comment);
+        postRepository.saveEntity(post);
+        commentRepository.saveEntity(comment);
     }
 
     private Post getPost(
             Long postSeq
     ) {
         return postRepository
-                .findById(postSeq)
+                .getById(postSeq)
                 .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 }
