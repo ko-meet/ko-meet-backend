@@ -1,12 +1,12 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.PostInquiryService;
-import com.backend.immilog.post.model.enums.Categories;
-import com.backend.immilog.post.model.enums.SortingMethods;
-import com.backend.immilog.post.application.dtos.PostDTO;
-import com.backend.immilog.post.model.repositories.CommentRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.enums.Countries;
+import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.enums.SortingMethods;
+import com.backend.immilog.post.application.result.PostResult;
+import com.backend.immilog.post.domain.enums.Countries;
+import com.backend.immilog.post.domain.repositories.CommentRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,8 +52,8 @@ class PostInquiryServiceTest {
         Categories category = Categories.ALL;
         int page = 0;
         Pageable pageable = PageRequest.of(page, 10);
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postRepository.getPosts(
                 country,
                 sortingMethod,
@@ -62,7 +62,7 @@ class PostInquiryServiceTest {
                 pageable
         )).thenReturn(posts);
         // when
-        Page<PostDTO> result = postInquiryService.getPosts(
+        Page<PostResult> result = postInquiryService.getPosts(
                 country,
                 sortingMethod,
                 isPublic,
@@ -78,13 +78,13 @@ class PostInquiryServiceTest {
     void getPost() {
         // given
         Long postSeq = 1L;
-        PostDTO postDTO = mock(PostDTO.class);
-        when(postRepository.getPost(postSeq)).thenReturn(java.util.Optional.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        when(postRepository.getPost(postSeq)).thenReturn(java.util.Optional.of(postResult));
         when(commentRepository.getComments(postSeq)).thenReturn(List.of());
         // when
-        PostDTO result = postInquiryService.getPost(postSeq);
+        PostResult result = postInquiryService.getPost(postSeq);
         // then
-        assertThat(result).isEqualTo(postDTO);
+        assertThat(result).isEqualTo(postResult);
     }
 
     @Test
@@ -94,11 +94,11 @@ class PostInquiryServiceTest {
         String keyword = "keyword";
         int page = 0;
         Pageable pageable = PageRequest.of(page, 10);
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postRepository.getPostsByKeyword(keyword, pageable)).thenReturn(posts);
         // when
-        Page<PostDTO> result = postInquiryService.searchKeyword(keyword, page);
+        Page<PostResult> result = postInquiryService.searchKeyword(keyword, page);
         // then
         assertThat(result.getTotalPages()).isEqualTo(1);
     }
@@ -110,11 +110,11 @@ class PostInquiryServiceTest {
         Long userSeq = 1L;
         int page = 0;
         Pageable pageable = PageRequest.of(page, 10);
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postRepository.getPostsByUserSeq(userSeq, pageable)).thenReturn(posts);
         // when
-        Page<PostDTO> result = postInquiryService.getUserPosts(userSeq, page);
+        Page<PostResult> result = postInquiryService.getUserPosts(userSeq, page);
         // then
         assertThat(result.getTotalPages()).isEqualTo(1);
     }

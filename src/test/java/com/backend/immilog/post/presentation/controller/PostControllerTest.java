@@ -1,12 +1,12 @@
 package com.backend.immilog.post.presentation.controller;
 
-import com.backend.immilog.post.application.dtos.PostDTO;
+import com.backend.immilog.post.application.result.PostResult;
 import com.backend.immilog.post.application.services.PostDeleteService;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.application.services.PostUpdateService;
 import com.backend.immilog.post.application.services.PostUploadService;
-import com.backend.immilog.post.model.enums.Categories;
-import com.backend.immilog.post.model.enums.SortingMethods;
+import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.enums.SortingMethods;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
@@ -174,10 +174,10 @@ class PostControllerTest {
         String isPublic = "Y";
         Categories category = Categories.ALL;
         Integer page = 0;
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.getPosts(
-                com.backend.immilog.post.model.enums.Countries.SOUTH_KOREA,
+                com.backend.immilog.post.domain.enums.Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,
@@ -186,7 +186,7 @@ class PostControllerTest {
 
         // when
         ResponseEntity<PostApiResponse> response = postController.getPosts(
-                com.backend.immilog.post.model.enums.Countries.SOUTH_KOREA,
+                com.backend.immilog.post.domain.enums.Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,
@@ -195,7 +195,7 @@ class PostControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
+        assertThat(((Page<PostResult>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
                 .isEqualTo(1);
 
     }
@@ -205,17 +205,17 @@ class PostControllerTest {
     void getPost() {
         // given
         Long postSeq = 1L;
-        PostDTO postDTO = mock(PostDTO.class);
-        when(postInquiryService.getPost(postSeq)).thenReturn(postDTO);
-        when(postDTO.getSeq()).thenReturn(postSeq);
+        PostResult postResult = mock(PostResult.class);
+        when(postInquiryService.getPost(postSeq)).thenReturn(postResult);
+        when(postResult.getSeq()).thenReturn(postSeq);
 
         // when
         ResponseEntity<PostApiResponse> response = postController.getPost(postSeq);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postDTO);
-        assertThat(((PostDTO) (response.getBody()).data()).getSeq()).isEqualTo(postSeq);
+        assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postResult);
+        assertThat(((PostResult) (response.getBody()).data()).getSeq()).isEqualTo(postSeq);
     }
 
     @Test
@@ -224,8 +224,8 @@ class PostControllerTest {
         // given
         String keyword = "keyword";
         Integer page = 0;
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.searchKeyword(
                 keyword,
                 page
@@ -239,7 +239,7 @@ class PostControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(((Page<PostDTO>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
+        assertThat(((Page<PostResult>) Objects.requireNonNull(response.getBody()).data()).getTotalPages())
                 .isEqualTo(1);
     }
 
@@ -249,8 +249,8 @@ class PostControllerTest {
         // given
         Long userSeq = 1L;
         Integer page = 0;
-        PostDTO postDTO = mock(PostDTO.class);
-        Page<PostDTO> posts = new PageImpl<>(List.of(postDTO));
+        PostResult postResult = mock(PostResult.class);
+        Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.getUserPosts(
                 userSeq,
                 page
@@ -264,7 +264,7 @@ class PostControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(((Page<PostDTO>) Objects.requireNonNull(
+        assertThat(((Page<PostResult>) Objects.requireNonNull(
                 response.getBody()).data()).getTotalPages())
                 .isEqualTo(1);
     }
