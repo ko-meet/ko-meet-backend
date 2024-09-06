@@ -1,7 +1,7 @@
 package com.backend.immilog.user.presentation.request;
 
 import com.backend.immilog.user.application.command.UserReportCommand;
-import com.backend.immilog.user.enums.ReportReason;
+import com.backend.immilog.user.domain.model.enums.ReportReason;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 

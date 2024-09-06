@@ -2,11 +2,11 @@ package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.user.application.command.UserReportCommand;
+import com.backend.immilog.user.domain.model.Report;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.repositories.ReportRepository;
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.entities.Report;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.repositories.ReportRepository;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -17,7 +17,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.backend.immilog.user.enums.ReportReason.OTHER;
+import static com.backend.immilog.user.domain.model.enums.ReportReason.OTHER;
 import static com.backend.immilog.user.exception.UserErrorCode.*;
 
 @Slf4j
@@ -60,9 +60,9 @@ public class UserReportService {
     ) {
         User targetUser = getUser(targetUserSeq);
         long reportCount = getReportCount(targetUser);
-        targetUser.getReportInfo().setReportedCount(reportCount + 1);
-        targetUser.getReportInfo().setReportedDate(Date.valueOf(LocalDate.now()));
-        reportRepository.save(
+        targetUser.reportInfo().setReportedCount(reportCount + 1);
+        targetUser.reportInfo().setReportedDate(Date.valueOf(LocalDate.now()));
+        reportRepository.saveEntity(
                 Report.of(
                         targetUserSeq,
                         reporterUserSeq,
@@ -76,8 +76,8 @@ public class UserReportService {
     private static long getReportCount(
             User targetUser
     ) {
-        return targetUser.getReportInfo().getReportedCount() == null ?
-                0 : targetUser.getReportInfo().getReportedCount();
+        return targetUser.reportInfo().getReportedCount() == null ?
+                0 : targetUser.reportInfo().getReportedCount();
     }
 
     private void reportValidation(
@@ -102,7 +102,7 @@ public class UserReportService {
             Long reporterUserSeq
     ) {
         boolean isExist =
-                reportRepository.existsByReportedUserSeqAndReporterUserSeq(
+                reportRepository.existsByUserSeqNumbers(
                         targetUserSeq, reporterUserSeq
                 );
         if (isExist) {
@@ -114,7 +114,7 @@ public class UserReportService {
             Long targetUserSeq
     ) {
         return userRepository
-                .findById(targetUserSeq)
+                .getById(targetUserSeq)
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

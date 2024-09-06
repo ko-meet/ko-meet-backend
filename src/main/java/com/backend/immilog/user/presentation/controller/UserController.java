@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.user.application.dto.UserSignInDTO;
+import com.backend.immilog.user.application.result.UserSignInResult;
 import com.backend.immilog.user.application.services.*;
-import com.backend.immilog.user.model.enums.UserStatus;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
 import com.backend.immilog.user.presentation.request.*;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
@@ -71,8 +71,8 @@ public class UserController {
                         request.latitude(),
                         request.longitude()
                 );
-        final UserSignInDTO userSignInDTO = userSignInService.signIn(request.toCommand(), country);
-        return ResponseEntity.status(OK).body(UserApiResponse.of(userSignInDTO));
+        final UserSignInResult userSignInResult = userSignInService.signIn(request.toCommand(), country);
+        return ResponseEntity.status(OK).body(UserApiResponse.of(userSignInResult));
     }
 
     @PatchMapping("/information")

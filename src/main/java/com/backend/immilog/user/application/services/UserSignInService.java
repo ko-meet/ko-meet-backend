@@ -3,12 +3,12 @@ package com.backend.immilog.user.application.services;
 import com.backend.immilog.global.application.RedisService;
 import com.backend.immilog.global.security.TokenProvider;
 import com.backend.immilog.user.application.command.UserSignInCommand;
+import com.backend.immilog.user.application.result.UserSignInResult;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
+import com.backend.immilog.user.domain.model.vo.Location;
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.application.dto.UserSignInDTO;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ public class UserSignInService {
     final String TOKEN_PREFIX = "Refresh: ";
 
     @Transactional(readOnly = true)
-    public UserSignInDTO signIn(
+    public UserSignInResult signIn(
             UserSignInCommand userSignInCommand,
             CompletableFuture<Pair<String, String>> country
     ) {
@@ -40,22 +40,22 @@ public class UserSignInService {
         validateIfPasswordsMatches(userSignInCommand, user);
         validateIfUserStateIsActive(user);
         String accessToken = tokenProvider.issueAccessToken(
-                user.getSeq(),
-                user.getEmail(),
-                user.getUserRole(),
-                user.getLocation().getCountry().toGlobalCountries()
+                user.seq(),
+                user.email(),
+                user.userRole(),
+                user.location().getCountry().toGlobalCountries()
         );
 
         String refreshToken = tokenProvider.issueRefreshToken();
 
         redisService.saveKeyAndValue(
-                TOKEN_PREFIX + refreshToken, user.getEmail(),
+                TOKEN_PREFIX + refreshToken, user.email(),
                 REFRESH_TOKEN_EXPIRE_TIME
         );
 
         Pair<String, String> countryAndRegionPair = fetchLocation(country);
 
-        return UserSignInDTO.of(
+        return UserSignInResult.of(
                 user,
                 accessToken,
                 refreshToken,
@@ -64,27 +64,27 @@ public class UserSignInService {
     }
 
     @Transactional(readOnly = true)
-    public UserSignInDTO getUserSignInDTO(
+    public UserSignInResult getUserSignInDTO(
             Long userSeq,
             Pair<String, String> country
     ) {
         final User user = getUser(userSeq);
         boolean isLocationMatch = isLocationMatch(user, country);
         final String accessToken = tokenProvider.issueAccessToken(
-                user.getSeq(),
-                user.getEmail(),
-                user.getUserRole(),
-                user.getLocation().getCountry().toGlobalCountries()
+                user.seq(),
+                user.email(),
+                user.userRole(),
+                user.location().getCountry().toGlobalCountries()
         );
         final String refreshToken = tokenProvider.issueRefreshToken();
 
         redisService.saveKeyAndValue(
                 TOKEN_PREFIX + refreshToken,
-                user.getEmail(),
+                user.email(),
                 REFRESH_TOKEN_EXPIRE_TIME
         );
 
-        return UserSignInDTO.of(
+        return UserSignInResult.of(
                 user,
                 accessToken,
                 refreshToken,
@@ -105,7 +105,7 @@ public class UserSignInService {
             User user,
             Pair<String, String> countryPair
     ) {
-        Location location = user.getLocation();
+        Location location = user.location();
         String country = location.getCountry().getCountryName();
         String region = location.getRegion();
         return country.equals(countryPair.getFirst()) &&
@@ -115,7 +115,7 @@ public class UserSignInService {
     private static void validateIfUserStateIsActive(
             User user
     ) {
-        if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
+        if (!user.userStatus().equals(UserStatus.ACTIVE)) {
             throw new UserException(USER_STATUS_NOT_ACTIVE);
         }
     }
@@ -124,20 +124,20 @@ public class UserSignInService {
             UserSignInCommand userSignInCommand,
             User user
     ) {
-        if (!passwordEncoder.matches(userSignInCommand.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(userSignInCommand.password(), user.password())) {
             throw new UserException(PASSWORD_NOT_MATCH);
         }
     }
 
     private User getUser(String email) {
         return userRepository
-                .findByEmail(email)
+                .getByEmail(email)
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 
     private User getUser(Long id) {
         return userRepository
-                .findById(id)
+                .getById(id)
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

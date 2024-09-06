@@ -1,7 +1,7 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.user.application.dto.UserSignInDTO;
+import com.backend.immilog.user.application.result.UserSignInResult;
 import com.backend.immilog.user.application.services.LocationService;
 import com.backend.immilog.user.application.services.UserSignInService;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
@@ -44,12 +44,12 @@ public class AuthController {
 
         Long userSeq = (Long) request.getAttribute("userSeq");
 
-        UserSignInDTO userSignInDTO =
+        UserSignInResult userSignInResult =
                 userSignInService.getUserSignInDTO(userSeq, country);
 
         return ResponseEntity
                 .status(OK)
-                .body(UserApiResponse.of(userSignInDTO));
+                .body(UserApiResponse.of(userSignInResult));
     }
 
 }

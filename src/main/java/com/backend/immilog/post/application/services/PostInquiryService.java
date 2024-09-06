@@ -1,13 +1,13 @@
 package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.application.dtos.CommentDTO;
-import com.backend.immilog.post.application.dtos.PostDTO;
-import com.backend.immilog.post.model.enums.Categories;
-import com.backend.immilog.post.model.enums.Countries;
-import com.backend.immilog.post.model.enums.SortingMethods;
-import com.backend.immilog.post.model.repositories.CommentRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.application.result.CommentResult;
+import com.backend.immilog.post.application.result.PostResult;
+import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.enums.Countries;
+import com.backend.immilog.post.domain.enums.SortingMethods;
+import com.backend.immilog.post.domain.repositories.CommentRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ public class PostInquiryService {
     private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
-    public Page<PostDTO> getPosts(
+    public Page<PostResult> getPosts(
             Countries country,
             SortingMethods sortingMethod,
             String isPublic,
@@ -47,17 +47,17 @@ public class PostInquiryService {
     }
 
     @Transactional(readOnly = true)
-    public PostDTO getPost(
+    public PostResult getPost(
             Long postSeq
     ) {
-        PostDTO postDTO = getPostDTO(postSeq);
-        List<CommentDTO> comments = commentRepository.getComments(postSeq);
-        postDTO.setComments(comments);
-        return postDTO;
+        PostResult postResult = getPostDTO(postSeq);
+        List<CommentResult> comments = commentRepository.getComments(postSeq);
+        postResult.setComments(comments);
+        return postResult;
     }
 
     @Transactional(readOnly = true)
-    public Page<PostDTO> searchKeyword(
+    public Page<PostResult> searchKeyword(
             String keyword,
             Integer page
     ) {
@@ -67,7 +67,7 @@ public class PostInquiryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PostDTO> getUserPosts(
+    public Page<PostResult> getUserPosts(
             Long userSeq,
             Integer page
     ) {
@@ -76,7 +76,7 @@ public class PostInquiryService {
                 .getPostsByUserSeq(userSeq, pageable);
     }
 
-    private PostDTO getPostDTO(Long postSeq) {
+    private PostResult getPostDTO(Long postSeq) {
         return postRepository
                 .getPost(postSeq)
                 .orElseThrow(() -> new PostException(POST_NOT_FOUND));

@@ -3,13 +3,13 @@ package com.backend.immilog.post.application.services;
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.post.application.command.PostUpdateCommand;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.entities.InteractionUser;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.enums.ResourceType;
-import com.backend.immilog.post.model.repositories.BulkInsertRepository;
-import com.backend.immilog.post.model.repositories.InteractionUserRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.repositories.PostResourceRepository;
+import com.backend.immilog.post.domain.model.InteractionUser;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.enums.ResourceType;
+import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
+import com.backend.immilog.post.domain.repositories.InteractionUserRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
+import com.backend.immilog.post.domain.repositories.PostResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.backend.immilog.post.exception.PostErrorCode.*;
-import static com.backend.immilog.post.model.enums.InteractionType.LIKE;
-import static com.backend.immilog.post.model.enums.PostType.POST;
-import static com.backend.immilog.post.model.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.model.enums.ResourceType.TAG;
+import static com.backend.immilog.post.domain.enums.InteractionType.LIKE;
+import static com.backend.immilog.post.domain.enums.PostType.POST;
+import static com.backend.immilog.post.domain.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.domain.enums.ResourceType.TAG;
 
 @Slf4j
 @Service
@@ -44,10 +44,11 @@ public class PostUpdateService {
             Long postSeq,
             PostUpdateCommand postUpdateCommand
     ) {
-        final Post post = getPost(postSeq);
+        Post post = getPost(postSeq);
         validateAuthor(userId, post);
-        updatePostMetaData(post, postUpdateCommand);
+        post = updatePostMetaData(post, postUpdateCommand);
         updateResources(postSeq, postUpdateCommand);
+        postRepository.saveEntity(post);
     }
 
     @Async
@@ -58,8 +59,8 @@ public class PostUpdateService {
                 postSeq.toString(),
                 () -> {
                     Post post = getPost(postSeq);
-                    Long currentViewCount = post.getPostMetaData().getViewCount();
-                    post.getPostMetaData().setViewCount(currentViewCount + 1);
+                    Long currentViewCount = post.postMetaData().getViewCount();
+                    post.postMetaData().setViewCount(currentViewCount + 1);
                 }
         );
     }
@@ -76,13 +77,13 @@ public class PostUpdateService {
                 () -> {
                     List<InteractionUser> likeUsers = getLikeUsers(postSeq);
                     likeUsers.stream()
-                            .filter(likeUser -> likeUser.getUserSeq().equals(userSeq))
+                            .filter(likeUser -> likeUser.userSeq().equals(userSeq))
                             .findAny()
                             .ifPresentOrElse(
-                                    interactionUserRepository::delete,
+                                    interactionUserRepository::deleteEntity,
                                     () -> {
                                         InteractionUser likeUser = createLikeUser(userSeq, postSeq);
-                                        interactionUserRepository.save(likeUser);
+                                        interactionUserRepository.saveEntity(likeUser);
                                     }
                             );
                 }
@@ -119,7 +120,7 @@ public class PostUpdateService {
     private List<InteractionUser> getLikeUsers(
             Long postSeq
     ) {
-        return interactionUserRepository.findByPostSeq(postSeq);
+        return interactionUserRepository.getByPostSeq(postSeq);
     }
 
     private void updateResources(
@@ -181,26 +182,27 @@ public class PostUpdateService {
         }
     }
 
-    private void updatePostMetaData(
+    private Post updatePostMetaData(
             Post post,
             PostUpdateCommand request
     ) {
         if (request.title() != null) {
-            post.getPostMetaData().setTitle(request.title());
+            post = post.copyWithNewTitle(request.title());
         }
         if (request.content() != null) {
-            post.getPostMetaData().setContent(request.content());
+            post = post.copyWithNewContent(request.content());
         }
         if (request.isPublic() != null) {
-            post.setIsPublic(request.isPublic() ? "Y" : "N");
+            post = post.copyWithNewIsPublic(request.isPublic() ? "Y" : "N");
         }
+        return post;
     }
 
     private void validateAuthor(
             Long userId,
             Post post
     ) {
-        if (!Objects.equals(post.getPostUserData().getUserSeq(), userId)) {
+        if (!Objects.equals(post.postUserData().getUserSeq(), userId)) {
             throw new PostException(NO_AUTHORITY);
         }
     }
@@ -208,7 +210,7 @@ public class PostUpdateService {
     private Post getPost(
             Long postSeq
     ) {
-        return postRepository.findById(postSeq)
+        return postRepository.getById(postSeq)
                 .orElseThrow(() -> new PostException(POST_NOT_FOUND));
     }
 }

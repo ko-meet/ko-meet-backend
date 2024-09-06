@@ -6,7 +6,7 @@ import com.backend.immilog.notice.domain.repositories.NoticeRepository;
 import com.backend.immilog.notice.infrastructure.jpa.entities.NoticeEntity;
 import com.backend.immilog.notice.infrastructure.jpa.entities.QNoticeEntity;
 import com.backend.immilog.notice.infrastructure.jpa.repositories.NoticeJpaRepository;
-import com.backend.immilog.user.model.entities.QUser;
+import com.backend.immilog.user.infrastructure.jpa.entity.QUserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -31,7 +31,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
             Pageable pageable
     ) {
         QNoticeEntity notice = QNoticeEntity.noticeEntity;
-        QUser user = QUser.user;
+        QUserEntity user = QUserEntity.userEntity;
         BooleanBuilder predicateBuilder = new BooleanBuilder();
 
         predicateBuilder.and(
@@ -73,7 +73,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
     private Long getTotal(Predicate predicate) {
         QNoticeEntity notice = QNoticeEntity.noticeEntity;
-        QUser user = QUser.user;
+        QUserEntity user = QUserEntity.userEntity;
 
         return jpaQueryFactory
                 .select(notice.count())

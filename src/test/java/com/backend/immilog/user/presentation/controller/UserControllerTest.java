@@ -1,7 +1,7 @@
 package com.backend.immilog.user.presentation.controller;
 
 
-import com.backend.immilog.user.application.dto.UserSignInDTO;
+import com.backend.immilog.user.application.result.UserSignInResult;
 import com.backend.immilog.user.application.services.*;
 import com.backend.immilog.user.enums.EmailComponents;
 import com.backend.immilog.user.presentation.request.*;
@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.backend.immilog.user.enums.ReportReason.FRAUD;
-import static com.backend.immilog.user.model.enums.UserCountry.INDONESIA;
-import static com.backend.immilog.user.model.enums.UserCountry.JAPAN;
-import static com.backend.immilog.user.model.enums.UserStatus.ACTIVE;
+import static com.backend.immilog.user.domain.model.enums.ReportReason.FRAUD;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.INDONESIA;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.JAPAN;
+import static com.backend.immilog.user.domain.model.enums.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
@@ -128,7 +128,7 @@ class UserControllerTest {
         when(userSignInService.signIn(
                 param.toCommand(),
                 locationService.getCountry(param.latitude(), param.longitude()))
-        ).thenReturn(UserSignInDTO.builder().build());
+        ).thenReturn(UserSignInResult.builder().build());
         // when
         ResponseEntity<UserApiResponse> response = userController.signIn(param);
 

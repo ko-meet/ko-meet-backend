@@ -1,10 +1,10 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.CommentUploadService;
+import com.backend.immilog.post.domain.repositories.CommentRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.repositories.CommentRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.domain.model.Post;
 import com.backend.immilog.post.presentation.request.CommentUploadRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +46,7 @@ class CommentUploadServiceTest {
         CommentUploadRequest commentUploadRequest =
                 new CommentUploadRequest("content");
         Post post = Post.builder().commentCount(0L).build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
         // when
         commentUploadService.uploadComment(
                 userId,
@@ -55,8 +55,8 @@ class CommentUploadServiceTest {
                 commentUploadRequest.content()
         );
         // then
-        verify(postRepository, times(1)).findById(postSeq);
-        verify(commentRepository, times(1)).save(any());
+        verify(postRepository, times(1)).getById(postSeq);
+        verify(commentRepository, times(1)).saveEntity(any());
     }
 
     @Test
@@ -68,7 +68,7 @@ class CommentUploadServiceTest {
         String referenceType = "posts";
         CommentUploadRequest commentUploadRequest =
                 new CommentUploadRequest("content");
-        when(postRepository.findById(postSeq)).thenReturn(Optional.empty());
+        when(postRepository.getById(postSeq)).thenReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> commentUploadService.uploadComment(
                 userId,
@@ -90,7 +90,7 @@ class CommentUploadServiceTest {
         CommentUploadRequest commentUploadRequest =
                 new CommentUploadRequest("content");
         Post post = Post.builder().commentCount(0L).build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
         // when & then
         assertThatThrownBy(() -> commentUploadService.uploadComment(
                 userId,

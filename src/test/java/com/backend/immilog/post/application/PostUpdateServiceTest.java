@@ -2,17 +2,17 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.post.application.services.PostUpdateService;
+import com.backend.immilog.post.domain.repositories.InteractionUserRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
+import com.backend.immilog.post.domain.repositories.PostResourceRepository;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.embeddables.PostMetaData;
-import com.backend.immilog.post.model.embeddables.PostUserData;
-import com.backend.immilog.post.model.entities.InteractionUser;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.entities.PostResource;
-import com.backend.immilog.post.model.enums.ResourceType;
-import com.backend.immilog.post.model.repositories.BulkInsertRepository;
-import com.backend.immilog.post.model.repositories.InteractionUserRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.repositories.PostResourceRepository;
+import com.backend.immilog.post.domain.vo.PostMetaData;
+import com.backend.immilog.post.domain.vo.PostUserData;
+import com.backend.immilog.post.domain.model.InteractionUser;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.model.PostResource;
+import com.backend.immilog.post.domain.enums.ResourceType;
+import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -90,7 +90,7 @@ class PostUpdateServiceTest {
                 .postUserData(PostUserData.builder().userSeq(1L).build())
                 .postMetaData(PostMetaData.builder().build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
         doNothing().when(preparedStatement).setLong(eq(1), anyLong());
         doNothing().when(preparedStatement).setString(eq(2), anyString());
         doNothing().when(preparedStatement).setString(eq(3), anyString());
@@ -132,7 +132,7 @@ class PostUpdateServiceTest {
                 .postUserData(PostUserData.builder().userSeq(1L).build())
                 .postMetaData(PostMetaData.builder().build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
 
         doThrow(new SQLException("Mock SQL Exception"))
                 .when(preparedStatement).setLong(anyInt(), anyLong());
@@ -165,14 +165,14 @@ class PostUpdateServiceTest {
         Post post = Post.builder()
                 .postMetaData(PostMetaData.builder().viewCount(0L).build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
         when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
                 .thenReturn(true);
         // when
         postUpdateService.increaseViewCount(postSeq);
 
         // then
-        assertThat(post.getPostMetaData().getViewCount()).isEqualTo(1L);
+        assertThat(post.postMetaData().getViewCount()).isEqualTo(1L);
         verify(redisDistributedLock).releaseLock(anyString(), anyString());
     }
 
@@ -184,14 +184,14 @@ class PostUpdateServiceTest {
         Post post = Post.builder()
                 .postMetaData(PostMetaData.builder().viewCount(0L).build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
         when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
                 .thenReturn(false, false, false);
         // when
         postUpdateService.increaseViewCount(postSeq);
 
         // then
-        assertThat(post.getPostMetaData().getViewCount()).isEqualTo(0L);
+        assertThat(post.postMetaData().getViewCount()).isEqualTo(0L);
     }
 
     @Test
@@ -204,7 +204,7 @@ class PostUpdateServiceTest {
                 .userSeq(2L)
                 .postSeq(postSeq)
                 .build();
-        when(interactionUserRepository.findByPostSeq(postSeq))
+        when(interactionUserRepository.getByPostSeq(postSeq))
                 .thenReturn(List.of(likeUser));
         when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
                 .thenReturn(true);
@@ -212,7 +212,7 @@ class PostUpdateServiceTest {
         postUpdateService.likePost(userSeq, postSeq);
         // then
         verify(interactionUserRepository, times(1))
-                .delete(any(InteractionUser.class));
+                .deleteEntity(any(InteractionUser.class));
     }
 
     @Test
@@ -225,7 +225,7 @@ class PostUpdateServiceTest {
                 .userSeq(3L)
                 .postSeq(postSeq)
                 .build();
-        when(interactionUserRepository.findByPostSeq(postSeq))
+        when(interactionUserRepository.getByPostSeq(postSeq))
                 .thenReturn(List.of(likeUser));
         when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
                 .thenReturn(true);
@@ -233,7 +233,7 @@ class PostUpdateServiceTest {
         postUpdateService.likePost(userSeq, postSeq);
         // then
         verify(interactionUserRepository, times(1))
-                .save(any(InteractionUser.class));
+                .saveEntity(any(InteractionUser.class));
     }
 
 
