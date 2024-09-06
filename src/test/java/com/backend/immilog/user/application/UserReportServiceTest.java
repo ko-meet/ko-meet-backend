@@ -2,15 +2,15 @@ package com.backend.immilog.user.application;
 
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.user.application.services.UserReportService;
-import com.backend.immilog.user.enums.ReportReason;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.ReportReason;
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.embeddables.ReportInfo;
-import com.backend.immilog.user.model.entities.Report;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserStatus;
-import com.backend.immilog.user.model.repositories.ReportRepository;
-import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.vo.Location;
+import com.backend.immilog.user.domain.model.vo.ReportInfo;
+import com.backend.immilog.user.domain.model.Report;
+import com.backend.immilog.user.domain.model.enums.UserStatus;
+import com.backend.immilog.user.domain.repositories.ReportRepository;
 import com.backend.immilog.user.presentation.request.UserReportRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +25,8 @@ import java.util.Optional;
 import static com.backend.immilog.global.enums.UserRole.ROLE_USER;
 import static com.backend.immilog.user.exception.UserErrorCode.ALREADY_REPORTED;
 import static com.backend.immilog.user.exception.UserErrorCode.CANNOT_REPORT_MYSELF;
-import static com.backend.immilog.user.model.enums.UserCountry.MALAYSIA;
-import static com.backend.immilog.user.model.enums.UserCountry.SOUTH_KOREA;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.MALAYSIA;
+import static com.backend.immilog.user.domain.model.enums.UserCountry.SOUTH_KOREA;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -75,12 +75,12 @@ class UserReportServiceTest {
                 .description("test")
                 .reason(ReportReason.FRAUD)
                 .build();
-        when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
+        when(reportRepository.existsByUserSeqNumbers(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(false);
         when(redisDistributedLock.tryAcquireLock("reportUser : ", targetUserSeq.toString()))
                 .thenReturn(true);
-        when(userRepository.findById(targetUserSeq))
+        when(userRepository.getById(targetUserSeq))
                 .thenReturn(Optional.of(user));
         // when
         userReportService.reportUser(
@@ -95,7 +95,7 @@ class UserReportServiceTest {
         verify(redisDistributedLock, times(1))
                 .releaseLock("reportUser : ", targetUserSeq.toString());
         verify(reportRepository, times(1))
-                .save(any(Report.class));
+                .saveEntity(any(Report.class));
     }
 
     @Test
@@ -105,7 +105,7 @@ class UserReportServiceTest {
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 1L;
         UserReportRequest reportUserRequest = UserReportRequest.builder().build();
-        when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
+        when(reportRepository.existsByUserSeqNumbers(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(false);
         // when & then
@@ -125,7 +125,7 @@ class UserReportServiceTest {
         Long targetUserSeq = 1L;
         Long reporterUserSeq = 2L;
         UserReportRequest reportUserRequest = UserReportRequest.builder().build();
-        when(reportRepository.existsByReportedUserSeqAndReporterUserSeq(
+        when(reportRepository.existsByUserSeqNumbers(
                 targetUserSeq, reporterUserSeq
         )).thenReturn(true);
         // when & then

@@ -1,12 +1,12 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.PostDeleteService;
+import com.backend.immilog.post.domain.repositories.PostRepository;
+import com.backend.immilog.post.domain.repositories.PostResourceRepository;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.embeddables.PostMetaData;
-import com.backend.immilog.post.model.embeddables.PostUserData;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.repositories.PostRepository;
-import com.backend.immilog.post.model.repositories.PostResourceRepository;
+import com.backend.immilog.post.domain.vo.PostMetaData;
+import com.backend.immilog.post.domain.vo.PostUserData;
+import com.backend.immilog.post.domain.model.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
-import static com.backend.immilog.post.model.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.domain.enums.PostStatus.DELETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
@@ -50,15 +50,15 @@ class PostDeleteServiceTest {
                 .postMetaData(PostMetaData.builder().build())
                 .postUserData(PostUserData.builder().userSeq(userId).build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
 
         // when
         postDeleteService.deletePost(userId, postSeq);
 
         // then
-        verify(postRepository).findById(postSeq);
+        verify(postRepository).getById(postSeq);
         verify(postResourceRepository).deleteAllByPostSeq(postSeq);
-        assertThat(post.getPostMetaData().getStatus()).isEqualTo(DELETED);
+        assertThat(post.postMetaData().getStatus()).isEqualTo(DELETED);
     }
 
     @Test
@@ -72,7 +72,7 @@ class PostDeleteServiceTest {
                 .postMetaData(PostMetaData.builder().build())
                 .postUserData(PostUserData.builder().userSeq(2L).build())
                 .build();
-        when(postRepository.findById(postSeq)).thenReturn(Optional.of(post));
+        when(postRepository.getById(postSeq)).thenReturn(Optional.of(post));
 
         // when & then
         assertThatThrownBy(() -> postDeleteService.deletePost(userId, postSeq))

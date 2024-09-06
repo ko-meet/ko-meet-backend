@@ -1,7 +1,7 @@
 package com.backend.immilog.user.application.services;
 
+import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.exception.UserException;
-import com.backend.immilog.user.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -24,23 +24,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(
             String email
     ) throws UsernameNotFoundException {
-        com.backend.immilog.user.model.entities.User userEntity = getUser(email);
+        com.backend.immilog.user.domain.model.User userDomain = getUser(email);
 
         List<GrantedAuthority> authorities =
-                new ArrayList<>(userEntity.getUserRole().getAuthorities());
+                new ArrayList<>(userDomain.userRole().getAuthorities());
 
         return User.builder()
-                .username(userEntity.getEmail())
-                .password(userEntity.getPassword())
+                .username(userDomain.email())
+                .password(userDomain.password())
                 .authorities(authorities)
                 .build();
     }
 
-    private com.backend.immilog.user.model.entities.User getUser(
+    private com.backend.immilog.user.domain.model.User getUser(
             String email
     ) {
         return userRepository
-                .findByEmail(email)
+                .getByEmail(email)
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 }

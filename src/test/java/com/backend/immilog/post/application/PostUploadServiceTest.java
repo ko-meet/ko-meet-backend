@@ -1,17 +1,17 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.PostUploadService;
+import com.backend.immilog.post.domain.repositories.PostRepository;
 import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.model.entities.Post;
-import com.backend.immilog.post.model.entities.PostResource;
-import com.backend.immilog.post.model.enums.Categories;
-import com.backend.immilog.post.model.repositories.BulkInsertRepository;
-import com.backend.immilog.post.model.repositories.PostRepository;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.model.PostResource;
+import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
-import com.backend.immilog.user.model.embeddables.Location;
-import com.backend.immilog.user.model.entities.User;
-import com.backend.immilog.user.model.enums.UserCountry;
-import com.backend.immilog.user.model.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
+import com.backend.immilog.user.domain.repositories.UserRepository;
+import com.backend.immilog.user.domain.model.vo.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,8 +28,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
-import static com.backend.immilog.post.model.enums.PostType.POST;
-import static com.backend.immilog.post.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.domain.enums.PostType.POST;
+import static com.backend.immilog.post.domain.enums.ResourceType.ATTACHMENT;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -85,8 +85,8 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(postRepository.save(any(Post.class))).thenReturn(post);
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(postRepository.saveEntity(any(Post.class))).thenReturn(post);
 
         doNothing().when(preparedStatement).setLong(eq(1), anyLong());
         doNothing().when(preparedStatement).setString(eq(2), anyString());
@@ -100,7 +100,7 @@ class PostUploadServiceTest {
         postUploadService.uploadPost(userSeq, postUploadRequest.toCommand());
 
         // then
-        verify(postRepository).save(any(Post.class));
+        verify(postRepository).saveEntity(any(Post.class));
         verify(bulkInsertRepository).saveAll(
                 anyList(),
                 anyString(),
@@ -114,10 +114,10 @@ class PostUploadServiceTest {
                 .content("attachment")
                 .build();
         captor.getValue().accept(preparedStatement, capturedPostResource);
-        verify(preparedStatement).setLong(1, capturedPostResource.getPostSeq());
-        verify(preparedStatement).setString(2, capturedPostResource.getPostType().name());
-        verify(preparedStatement).setString(3, capturedPostResource.getResourceType().name());
-        verify(preparedStatement).setString(4, capturedPostResource.getContent());
+        verify(preparedStatement).setLong(1, capturedPostResource.postSeq());
+        verify(preparedStatement).setString(2, capturedPostResource.postType().name());
+        verify(preparedStatement).setString(3, capturedPostResource.resourceType().name());
+        verify(preparedStatement).setString(4, capturedPostResource.content());
     }
 
     @Test
@@ -141,14 +141,14 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(postRepository.save(any(Post.class))).thenReturn(post);
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(postRepository.saveEntity(any(Post.class))).thenReturn(post);
 
         // when
         postUploadService.uploadPost(userSeq, postUploadRequest.toCommand());
 
         // then
-        verify(postRepository).save(any(Post.class));
+        verify(postRepository).saveEntity(any(Post.class));
     }
 
     @Test
@@ -172,8 +172,8 @@ class PostUploadServiceTest {
                 .seq(userSeq)
                 .location(location)
                 .build();
-        when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
-        when(postRepository.save(any(Post.class))).thenReturn(Post.builder().seq(1L).build());
+        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(postRepository.saveEntity(any(Post.class))).thenReturn(Post.builder().seq(1L).build());
         doThrow(new SQLException("Mock SQL Exception"))
                 .when(preparedStatement).setLong(anyInt(), anyLong());
 

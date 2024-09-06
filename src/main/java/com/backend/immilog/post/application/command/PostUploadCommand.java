@@ -1,6 +1,6 @@
 package com.backend.immilog.post.application.command;
 
-import com.backend.immilog.post.model.enums.Categories;
+import com.backend.immilog.post.domain.enums.Categories;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 
