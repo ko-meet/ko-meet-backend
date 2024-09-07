@@ -11,6 +11,7 @@ import com.backend.immilog.post.infrastructure.jpa.entities.QInteractionUserEnti
 import com.backend.immilog.post.infrastructure.jpa.entities.QPostEntity;
 import com.backend.immilog.post.infrastructure.jpa.entities.QPostResourceEntity;
 import com.backend.immilog.post.infrastructure.jpa.repository.PostJpaRepository;
+import com.backend.immilog.post.infrastructure.result.PostEntityResult;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -66,13 +67,15 @@ public class PostRepositoryImpl implements PostRepository {
                 .transform(
                         groupBy(post.seq).list(
                                 Projections.constructor(
-                                        PostResult.class,
+                                        PostEntityResult.class,
                                         post,
                                         list(interUser),
                                         list(resource)
                                 )
                         )
-                );
+                ).stream()
+                .map(PostEntityResult::toPostResult)
+                .toList();
 
         long total = getSize(post, predicate);
         return new PageImpl<>(postResults, pageable, total);
@@ -99,7 +102,7 @@ public class PostRepositoryImpl implements PostRepository {
                         groupBy(post.seq)
                                 .list(
                                         Projections.constructor(
-                                                PostResult.class,
+                                                PostEntityResult.class,
                                                 post,
                                                 list(interUser),
                                                 list(resource)
@@ -107,6 +110,7 @@ public class PostRepositoryImpl implements PostRepository {
                                 )
                 )
                 .stream()
+                .map(PostEntityResult::toPostResult)
                 .findFirst();
     }
 
@@ -132,13 +136,17 @@ public class PostRepositoryImpl implements PostRepository {
                         groupBy(post.seq)
                                 .list(
                                         Projections.constructor(
-                                                PostResult.class,
+                                                PostEntityResult.class,
                                                 post,
                                                 list(interUser),
                                                 list(resource)
                                         )
                                 )
-                );
+                )
+                .stream()
+                .map(PostEntityResult::toPostResult)
+                .toList();
+
         long total = getSize(post, resource, interUser, predicate);
         return new PageImpl<>(postResults, pageable, total);
     }
@@ -165,13 +173,16 @@ public class PostRepositoryImpl implements PostRepository {
                         groupBy(post.seq)
                                 .list(
                                         Projections.constructor(
-                                                PostResult.class,
+                                                PostEntityResult.class,
                                                 post,
                                                 list(interUser),
                                                 list(resource)
                                         )
                                 )
-                );
+                )
+                .stream()
+                .map(PostEntityResult::toPostResult)
+                .toList();
         long total = getSize(post, resource, interUser, predicate);
         return new PageImpl<>(postResults, pageable, total);
     }

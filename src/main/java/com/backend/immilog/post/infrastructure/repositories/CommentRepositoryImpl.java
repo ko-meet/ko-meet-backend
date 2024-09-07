@@ -6,6 +6,7 @@ import com.backend.immilog.post.domain.repositories.CommentRepository;
 import com.backend.immilog.post.infrastructure.jpa.entities.CommentEntity;
 import com.backend.immilog.post.infrastructure.jpa.entities.QCommentEntity;
 import com.backend.immilog.post.infrastructure.jpa.repository.CommentJpaRepository;
+import com.backend.immilog.post.infrastructure.result.CommentEntityResult;
 import com.backend.immilog.user.infrastructure.jpa.entity.QUserEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -52,14 +53,17 @@ public class CommentRepositoryImpl implements CommentRepository {
                 .transform(
                         groupBy(comment.postSeq).list(
                                 Projections.constructor(
-                                        CommentResult.class,
+                                        CommentEntityResult.class,
                                         comment,
                                         user,
                                         Projections.list(childComment),
                                         Projections.list(childCommentUser)
                                 )
                         )
-                );
+                )
+                .stream()
+                .map(CommentEntityResult::toCommentResult)
+                .toList();
     }
 
     @Override
