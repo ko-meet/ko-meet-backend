@@ -52,7 +52,7 @@ public class PostInquiryService {
     ) {
         PostResult postResult = getPostDTO(postSeq);
         List<CommentResult> comments = commentRepository.getComments(postSeq);
-        postResult.setComments(comments);
+        postResult = postResult.copyWithNewComments(comments);
         return postResult;
     }
 
