@@ -207,7 +207,7 @@ class PostControllerTest {
         Long postSeq = 1L;
         PostResult postResult = mock(PostResult.class);
         when(postInquiryService.getPost(postSeq)).thenReturn(postResult);
-        when(postResult.getSeq()).thenReturn(postSeq);
+        when(postResult.seq()).thenReturn(postSeq);
 
         // when
         ResponseEntity<PostApiResponse> response = postController.getPost(postSeq);
@@ -215,7 +215,7 @@ class PostControllerTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(Objects.requireNonNull(response.getBody()).data()).isEqualTo(postResult);
-        assertThat(((PostResult) (response.getBody()).data()).getSeq()).isEqualTo(postSeq);
+        assertThat(((PostResult) (response.getBody()).data()).seq()).isEqualTo(postSeq);
     }
 
     @Test
