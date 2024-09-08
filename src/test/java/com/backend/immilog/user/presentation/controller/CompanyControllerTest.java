@@ -1,5 +1,6 @@
 package com.backend.immilog.user.presentation.controller;
 
+import com.backend.immilog.user.application.CompanyInquiryService;
 import com.backend.immilog.user.application.CompanyRegisterService;
 import com.backend.immilog.user.application.command.CompanyRegisterCommand;
 import com.backend.immilog.user.domain.model.enums.Industry;
@@ -11,12 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.backend.immilog.user.domain.model.enums.UserCountry.SOUTH_KOREA;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -25,12 +24,17 @@ import static org.mockito.Mockito.*;
 class CompanyControllerTest {
     @Mock
     private CompanyRegisterService companyRegisterService;
+    @Mock
+    private CompanyInquiryService companyInquiryService;
     private CompanyController companyController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        companyController = new CompanyController(companyRegisterService);
+        companyController = new CompanyController(
+                companyRegisterService,
+                companyInquiryService
+        );
     }
 
     @Test
@@ -55,5 +59,17 @@ class CompanyControllerTest {
         ResponseEntity<UserApiResponse> response = companyController.registerCompany(request, param);
         // then
         verify(companyRegisterService).registerOrEditCompany(anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("본인 회사정보 조회 - 성공")
+    void getCompany() {
+        // given
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(1L);
+        // when
+        ResponseEntity<UserApiResponse> response = companyController.getCompany(request);
+        // then
+        verify(companyInquiryService).getCompany(anyLong());
     }
 }
