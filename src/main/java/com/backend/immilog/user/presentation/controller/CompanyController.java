@@ -1,21 +1,22 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
+import com.backend.immilog.user.application.CompanyInquiryService;
 import com.backend.immilog.user.application.CompanyRegisterService;
+import com.backend.immilog.user.application.result.CompanyResult;
 import com.backend.immilog.user.presentation.request.CompanyRegisterRequest;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = "Company API", description = "회사정보 관련 API")
 @RequestMapping("/api/v1/companies")
@@ -23,6 +24,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 public class CompanyController {
     private final CompanyRegisterService companyRegisterService;
+    private final CompanyInquiryService companyInquiryService;
 
     @PostMapping
     @ExtractUserId
@@ -35,5 +37,17 @@ public class CompanyController {
         companyRegisterService.registerOrEditCompany(userSeq, param.toCommand());
 
         return ResponseEntity.status(CREATED).build();
+    }
+
+    @GetMapping("/my")
+    @ExtractUserId
+    @ApiOperation(value = "본인 회사정보 조회", notes = "본인 회사정보를 조회합니다.")
+    public ResponseEntity<UserApiResponse> getCompany(
+            HttpServletRequest request
+    ) {
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        CompanyResult result = companyInquiryService.getCompany(userSeq);
+
+        return ResponseEntity.status(OK).body(UserApiResponse.of(result));
     }
 }
