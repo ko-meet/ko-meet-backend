@@ -1,7 +1,7 @@
 package com.backend.immilog.user.presentation.controller;
 
-import com.backend.immilog.user.application.CompanyInquiryService;
-import com.backend.immilog.user.application.CompanyRegisterService;
+import com.backend.immilog.user.application.services.CompanyInquiryService;
+import com.backend.immilog.user.application.services.CompanyRegisterService;
 import com.backend.immilog.user.application.command.CompanyRegisterCommand;
 import com.backend.immilog.user.domain.model.enums.Industry;
 import com.backend.immilog.user.presentation.request.CompanyRegisterRequest;
