@@ -1,4 +1,4 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.user.application.result.CompanyResult;
 import com.backend.immilog.user.domain.repositories.CompanyRepository;

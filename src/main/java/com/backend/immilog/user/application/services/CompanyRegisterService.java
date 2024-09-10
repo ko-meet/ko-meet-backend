@@ -1,4 +1,4 @@
-package com.backend.immilog.user.application;
+package com.backend.immilog.user.application.services;
 
 import com.backend.immilog.user.application.command.CompanyRegisterCommand;
 import com.backend.immilog.user.domain.model.Company;
