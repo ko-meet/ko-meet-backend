@@ -1,9 +1,9 @@
 package com.backend.immilog.user.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.user.application.CompanyInquiryService;
-import com.backend.immilog.user.application.CompanyRegisterService;
 import com.backend.immilog.user.application.result.CompanyResult;
+import com.backend.immilog.user.application.services.CompanyInquiryService;
+import com.backend.immilog.user.application.services.CompanyRegisterService;
 import com.backend.immilog.user.presentation.request.CompanyRegisterRequest;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
