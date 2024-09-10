@@ -174,7 +174,18 @@ class PostControllerTest {
         String isPublic = "Y";
         Categories category = Categories.ALL;
         Integer page = 0;
-        PostResult postResult = mock(PostResult.class);
+        PostResult postResult = PostResult.builder()
+                .seq(1L)
+                .attachments(List.of("attachment"))
+                .tags(List.of("tag"))
+                .title("title")
+                .content("content")
+                .isPublic("Y")
+                .viewCount(0L)
+                .likeCount(0L)
+                .commentCount(0L)
+                .createdAt("2021-08-01T:00:00:00")
+                .build();
         Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.getPosts(
                 com.backend.immilog.post.domain.enums.Countries.SOUTH_KOREA,
@@ -205,9 +216,19 @@ class PostControllerTest {
     void getPost() {
         // given
         Long postSeq = 1L;
-        PostResult postResult = mock(PostResult.class);
+        PostResult postResult = PostResult.builder()
+                .seq(1L)
+                .attachments(List.of("attachment"))
+                .tags(List.of("tag"))
+                .title("title")
+                .content("content")
+                .isPublic("Y")
+                .viewCount(0L)
+                .likeCount(0L)
+                .commentCount(0L)
+                .createdAt("2021-08-01T:00:00:00")
+                .build();
         when(postInquiryService.getPost(postSeq)).thenReturn(postResult);
-        when(postResult.seq()).thenReturn(postSeq);
 
         // when
         ResponseEntity<PostApiResponse> response = postController.getPost(postSeq);
@@ -224,7 +245,18 @@ class PostControllerTest {
         // given
         String keyword = "keyword";
         Integer page = 0;
-        PostResult postResult = mock(PostResult.class);
+        PostResult postResult = PostResult.builder()
+                .seq(1L)
+                .attachments(List.of("attachment"))
+                .tags(List.of("tag"))
+                .title("title")
+                .content("content")
+                .isPublic("Y")
+                .viewCount(0L)
+                .likeCount(0L)
+                .commentCount(0L)
+                .createdAt("2021-08-01T:00:00:00")
+                .build();
         Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.searchKeyword(
                 keyword,
@@ -249,7 +281,18 @@ class PostControllerTest {
         // given
         Long userSeq = 1L;
         Integer page = 0;
-        PostResult postResult = mock(PostResult.class);
+        PostResult postResult = PostResult.builder()
+                .seq(1L)
+                .attachments(List.of("attachment"))
+                .tags(List.of("tag"))
+                .title("title")
+                .content("content")
+                .isPublic("Y")
+                .viewCount(0L)
+                .likeCount(0L)
+                .commentCount(0L)
+                .createdAt("2021-08-01T:00:00:00")
+                .build();
         Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.getUserPosts(
                 userSeq,
