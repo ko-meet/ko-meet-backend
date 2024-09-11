@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import static com.backend.immilog.post.exception.PostErrorCode.NO_AUTHORITY;
 import static com.backend.immilog.post.exception.PostErrorCode.POST_NOT_FOUND;
-import static com.backend.immilog.post.domain.enums.PostStatus.DELETED;
+import static com.backend.immilog.post.domain.model.enums.PostStatus.DELETED;
 
 @Slf4j
 @Service

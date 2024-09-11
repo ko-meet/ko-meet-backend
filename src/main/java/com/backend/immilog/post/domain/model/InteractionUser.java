@@ -1,7 +1,7 @@
 package com.backend.immilog.post.domain.model;
 
-import com.backend.immilog.post.domain.enums.InteractionType;
-import com.backend.immilog.post.domain.enums.PostType;
+import com.backend.immilog.post.domain.model.enums.InteractionType;
+import com.backend.immilog.post.domain.model.enums.PostType;
 import lombok.Builder;
 
 @Builder

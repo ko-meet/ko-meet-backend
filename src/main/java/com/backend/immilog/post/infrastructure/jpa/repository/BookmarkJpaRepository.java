@@ -1,6 +1,6 @@
-package com.backend.immilog.user.infrastructure.jpa.repositories;
+package com.backend.immilog.post.infrastructure.jpa.repository;
 
-import com.backend.immilog.user.infrastructure.jpa.entity.BookmarkEntity;
+import com.backend.immilog.post.infrastructure.jpa.entity.BookmarkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -3,7 +3,7 @@ package com.backend.immilog.post.application.services;
 import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.domain.model.Comment;
 import com.backend.immilog.post.domain.model.Post;
-import com.backend.immilog.post.domain.enums.ReferenceType;
+import com.backend.immilog.post.domain.model.enums.ReferenceType;
 import com.backend.immilog.post.domain.repositories.CommentRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;

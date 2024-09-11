@@ -1,6 +1,6 @@
-package com.backend.immilog.user.domain.model;
+package com.backend.immilog.post.domain.model;
 
-import com.backend.immilog.user.domain.model.enums.BookmarkType;
+import com.backend.immilog.post.domain.model.enums.PostType;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public record Bookmark(
         Long bookmarkSeq,
-        BookmarkType bookmarkType,
+        PostType postType,
         Long userSeq,
         Long postSeq,
         LocalDateTime createdAt,
@@ -17,12 +17,12 @@ public record Bookmark(
     public static Bookmark of(
             Long userSeq,
             Long postSeq,
-            BookmarkType bookmarkType
+            PostType postType
     ) {
         return Bookmark.builder()
                 .userSeq(userSeq)
                 .postSeq(postSeq)
-                .bookmarkType(bookmarkType)
+                .postType(postType)
                 .build();
     }
 }

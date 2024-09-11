@@ -1,8 +1,8 @@
-package com.backend.immilog.user.application.services;
+package com.backend.immilog.post.application.services;
 
-import com.backend.immilog.user.domain.model.Bookmark;
-import com.backend.immilog.user.domain.model.enums.BookmarkType;
-import com.backend.immilog.user.domain.repositories.BookmarkRepository;
+import com.backend.immilog.post.domain.model.Bookmark;
+import com.backend.immilog.post.domain.model.enums.PostType;
+import com.backend.immilog.post.domain.repositories.BookmarkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class BookmarkCreationService {
             Long postSeq,
             String bookmarkTypeString
     ) {
-        BookmarkType bookmarkType = BookmarkType.convertToEnum(bookmarkTypeString);
+        PostType bookmarkType = PostType.convertToEnum(bookmarkTypeString);
         Bookmark bookmark = Bookmark.of(userSeq, postSeq, bookmarkType);
         bookmarkRepository.saveEntity(bookmark);
     }

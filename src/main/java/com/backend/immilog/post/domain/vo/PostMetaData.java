@@ -1,8 +1,8 @@
 package com.backend.immilog.post.domain.vo;
 
 import com.backend.immilog.post.application.command.PostUploadCommand;
-import com.backend.immilog.post.domain.enums.Countries;
-import com.backend.immilog.post.domain.enums.PostStatus;
+import com.backend.immilog.post.domain.model.enums.Countries;
+import com.backend.immilog.post.domain.model.enums.PostStatus;
 import lombok.*;
 
 import javax.persistence.Embeddable;

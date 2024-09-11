@@ -4,7 +4,7 @@ import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.post.domain.vo.PostMetaData;
 import com.backend.immilog.post.domain.vo.PostUserData;
 import com.backend.immilog.post.domain.model.Post;
-import com.backend.immilog.post.domain.enums.Categories;
+import com.backend.immilog.post.domain.model.enums.Categories;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 

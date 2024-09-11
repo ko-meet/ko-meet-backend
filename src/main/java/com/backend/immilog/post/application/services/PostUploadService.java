@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
-import static com.backend.immilog.post.domain.enums.PostType.POST;
-import static com.backend.immilog.post.domain.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.domain.enums.ResourceType.TAG;
+import static com.backend.immilog.post.domain.model.enums.PostType.POST;
+import static com.backend.immilog.post.domain.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.domain.model.enums.ResourceType.TAG;
 import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
