@@ -1,9 +1,9 @@
-package com.backend.immilog.user.infrastructure.repositories;
+package com.backend.immilog.post.infrastructure.repositories;
 
-import com.backend.immilog.user.domain.model.Bookmark;
-import com.backend.immilog.user.domain.repositories.BookmarkRepository;
-import com.backend.immilog.user.infrastructure.jpa.entity.BookmarkEntity;
-import com.backend.immilog.user.infrastructure.jpa.repositories.BookmarkJpaRepository;
+import com.backend.immilog.post.domain.model.Bookmark;
+import com.backend.immilog.post.domain.repositories.BookmarkRepository;
+import com.backend.immilog.post.infrastructure.jpa.entity.BookmarkEntity;
+import com.backend.immilog.post.infrastructure.jpa.repository.BookmarkJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

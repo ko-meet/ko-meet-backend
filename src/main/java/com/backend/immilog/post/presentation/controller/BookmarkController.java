@@ -1,7 +1,7 @@
-package com.backend.immilog.user.presentation.controller;
+package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.user.application.services.BookmarkCreationService;
+import com.backend.immilog.post.application.services.BookmarkCreationService;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,7 +1,7 @@
 package com.backend.immilog.post.domain.model;
 
-import com.backend.immilog.post.domain.enums.PostStatus;
-import com.backend.immilog.post.domain.enums.ReferenceType;
+import com.backend.immilog.post.domain.model.enums.PostStatus;
+import com.backend.immilog.post.domain.model.enums.ReferenceType;
 import lombok.*;
 
 import java.time.LocalDateTime;

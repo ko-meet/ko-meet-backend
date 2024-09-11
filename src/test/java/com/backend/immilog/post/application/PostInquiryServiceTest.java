@@ -1,10 +1,10 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.PostInquiryService;
-import com.backend.immilog.post.domain.enums.Categories;
-import com.backend.immilog.post.domain.enums.SortingMethods;
+import com.backend.immilog.post.domain.model.enums.Categories;
+import com.backend.immilog.post.domain.model.enums.SortingMethods;
 import com.backend.immilog.post.application.result.PostResult;
-import com.backend.immilog.post.domain.enums.Countries;
+import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.repositories.CommentRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;

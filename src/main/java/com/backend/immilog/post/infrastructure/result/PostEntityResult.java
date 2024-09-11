@@ -1,10 +1,10 @@
 package com.backend.immilog.post.infrastructure.result;
 
 import com.backend.immilog.post.application.result.PostResult;
-import com.backend.immilog.post.domain.enums.Categories;
-import com.backend.immilog.post.domain.enums.InteractionType;
-import com.backend.immilog.post.domain.enums.PostStatus;
-import com.backend.immilog.post.domain.enums.ResourceType;
+import com.backend.immilog.post.domain.model.enums.Categories;
+import com.backend.immilog.post.domain.model.enums.InteractionType;
+import com.backend.immilog.post.domain.model.enums.PostStatus;
+import com.backend.immilog.post.domain.model.enums.ResourceType;
 import com.backend.immilog.post.domain.vo.PostMetaData;
 import com.backend.immilog.post.domain.vo.PostUserData;
 import com.backend.immilog.post.infrastructure.jpa.entities.InteractionUserEntity;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.backend.immilog.post.domain.enums.InteractionType.BOOKMARK;
-import static com.backend.immilog.post.domain.enums.InteractionType.LIKE;
-import static com.backend.immilog.post.domain.enums.ResourceType.ATTACHMENT;
-import static com.backend.immilog.post.domain.enums.ResourceType.TAG;
+import static com.backend.immilog.post.domain.model.enums.InteractionType.BOOKMARK;
+import static com.backend.immilog.post.domain.model.enums.InteractionType.LIKE;
+import static com.backend.immilog.post.domain.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.domain.model.enums.ResourceType.TAG;
 
 @Getter
 @Setter

@@ -1,7 +1,7 @@
-package com.backend.immilog.user.infrastructure.jpa.entity;
+package com.backend.immilog.post.infrastructure.jpa.entity;
 
-import com.backend.immilog.user.domain.model.Bookmark;
-import com.backend.immilog.user.domain.model.enums.BookmarkType;
+import com.backend.immilog.post.domain.model.Bookmark;
+import com.backend.immilog.post.domain.model.enums.PostType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class BookmarkEntity {
     private Long bookmarkSeq;
 
     @Enumerated(EnumType.STRING)
-    private BookmarkType bookmarkType;
+    private PostType postType;
 
     private Long userSeq;
 
@@ -38,7 +38,7 @@ public class BookmarkEntity {
         LocalDateTime now = LocalDateTime.now();
         return BookmarkEntity.builder()
                 .bookmarkSeq(bookmark.bookmarkSeq())
-                .bookmarkType(bookmark.bookmarkType())
+                .postType(bookmark.postType())
                 .userSeq(bookmark.userSeq())
                 .createdAt(now)
                 .updatedAt(now)
@@ -48,7 +48,7 @@ public class BookmarkEntity {
     public Bookmark toDomain() {
         return Bookmark.builder()
                 .bookmarkSeq(bookmarkSeq)
-                .bookmarkType(bookmarkType)
+                .postType(postType)
                 .userSeq(userSeq)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
