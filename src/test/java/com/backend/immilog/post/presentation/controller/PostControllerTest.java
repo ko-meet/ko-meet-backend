@@ -5,8 +5,9 @@ import com.backend.immilog.post.application.services.PostDeleteService;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.application.services.PostUpdateService;
 import com.backend.immilog.post.application.services.PostUploadService;
-import com.backend.immilog.post.domain.enums.Categories;
-import com.backend.immilog.post.domain.enums.SortingMethods;
+import com.backend.immilog.post.domain.model.enums.Categories;
+import com.backend.immilog.post.domain.model.enums.Countries;
+import com.backend.immilog.post.domain.model.enums.SortingMethods;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
@@ -188,7 +189,7 @@ class PostControllerTest {
                 .build();
         Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postInquiryService.getPosts(
-                com.backend.immilog.post.domain.enums.Countries.SOUTH_KOREA,
+                Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,
@@ -197,7 +198,7 @@ class PostControllerTest {
 
         // when
         ResponseEntity<PostApiResponse> response = postController.getPosts(
-                com.backend.immilog.post.domain.enums.Countries.SOUTH_KOREA,
+                Countries.SOUTH_KOREA,
                 sortingMethod,
                 isPublic,
                 category,

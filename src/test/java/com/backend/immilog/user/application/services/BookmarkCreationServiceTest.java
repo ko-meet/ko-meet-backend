@@ -1,6 +1,7 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.user.domain.repositories.BookmarkRepository;
+import com.backend.immilog.post.application.services.BookmarkCreationService;
+import com.backend.immilog.post.domain.repositories.BookmarkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

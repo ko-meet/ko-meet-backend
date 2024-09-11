@@ -11,7 +11,7 @@ import com.backend.immilog.post.domain.vo.PostUserData;
 import com.backend.immilog.post.domain.model.InteractionUser;
 import com.backend.immilog.post.domain.model.Post;
 import com.backend.immilog.post.domain.model.PostResource;
-import com.backend.immilog.post.domain.enums.ResourceType;
+import com.backend.immilog.post.domain.model.enums.ResourceType;
 import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
