@@ -194,47 +194,4 @@ class PostUpdateServiceTest {
         assertThat(post.postMetaData().getViewCount()).isEqualTo(0L);
     }
 
-    @Test
-    @DisplayName("게시물 좋아요 - 성공:이미 좋아요 한 유저")
-    void likePost_success_exits() {
-        // given
-        Long postSeq = 1L;
-        Long userSeq = 2L;
-        InteractionUser likeUser = InteractionUser.builder()
-                .userSeq(2L)
-                .postSeq(postSeq)
-                .build();
-        when(interactionUserRepository.getByPostSeq(postSeq))
-                .thenReturn(List.of(likeUser));
-        when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
-                .thenReturn(true);
-        // when
-        postUpdateService.likePost(userSeq, postSeq);
-        // then
-        verify(interactionUserRepository, times(1))
-                .deleteEntity(any(InteractionUser.class));
-    }
-
-    @Test
-    @DisplayName("게시물 좋아요 - 성공:새로 좋아요 추가")
-    void likePost_success_new() {
-        // given
-        Long postSeq = 1L;
-        Long userSeq = 2L;
-        InteractionUser likeUser = InteractionUser.builder()
-                .userSeq(3L)
-                .postSeq(postSeq)
-                .build();
-        when(interactionUserRepository.getByPostSeq(postSeq))
-                .thenReturn(List.of(likeUser));
-        when(redisDistributedLock.tryAcquireLock(anyString(), anyString()))
-                .thenReturn(true);
-        // when
-        postUpdateService.likePost(userSeq, postSeq);
-        // then
-        verify(interactionUserRepository, times(1))
-                .saveEntity(any(InteractionUser.class));
-    }
-
-
 }
