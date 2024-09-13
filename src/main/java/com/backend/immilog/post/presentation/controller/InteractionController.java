@@ -1,8 +1,7 @@
 package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.global.security.ExtractUserId;
-import com.backend.immilog.post.application.services.BookmarkCreationService;
-import com.backend.immilog.user.presentation.response.UserApiResponse;
+import com.backend.immilog.post.application.services.InteractionCreationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,30 +13,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-@Api(tags = "Bookmark API", description = "즐겨찾기 관련 API")
-@RequestMapping("/api/v1/bookmarks")
+@Api(tags = "Interaction API", description = "북마크/좋아요 관련 API")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @RestController
-public class BookmarkController {
+public class InteractionController {
+    private final InteractionCreationService interactionCreationService;
 
-    private final BookmarkCreationService bookmarkCreationService;
-
+    @PostMapping("/{interactionType}/{postType}/{postSeq}")
     @ExtractUserId
-    @PostMapping("/{postType}/{postSeq}")
-    @ApiOperation(value = "북마크 등록", notes = "게시물을 북마크에 등록합니다.")
-    public ResponseEntity<UserApiResponse> createComment(
-            @PathVariable Long postSeq,
+    @ApiOperation(value = "인터랙션 등록", notes = "게시물 좋아요/북마크 등록")
+    public ResponseEntity<?> createInteraction(
+            @PathVariable String interactionType,
             @PathVariable String postType,
+            @PathVariable Long postSeq,
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
-        bookmarkCreationService.createBookmark(
+        interactionCreationService.createInteraction(
                 userSeq,
                 postSeq,
-                postType
+                postType,
+                interactionType
         );
-        return ResponseEntity.status(CREATED).build();
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }

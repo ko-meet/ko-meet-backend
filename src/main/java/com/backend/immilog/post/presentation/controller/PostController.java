@@ -80,18 +80,6 @@ public class PostController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
-    @PatchMapping("/{postSeq}/like")
-    @ExtractUserId
-    @ApiOperation(value = "게시물 좋아요", notes = "게시물에 좋아요를 누릅니다.")
-    public ResponseEntity<PostApiResponse> likePost(
-            @PathVariable Long postSeq,
-            HttpServletRequest request
-    ) {
-        Long userSeq = (Long) request.getAttribute("userSeq");
-        postUpdateService.likePost(userSeq, postSeq);
-        return ResponseEntity.status(NO_CONTENT).build();
-    }
-
     @GetMapping
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
     public ResponseEntity<PostApiResponse> getPosts(
