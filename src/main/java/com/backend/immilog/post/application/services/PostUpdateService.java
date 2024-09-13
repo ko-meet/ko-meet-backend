@@ -35,7 +35,6 @@ public class PostUpdateService {
     private final InteractionUserRepository interactionUserRepository;
 
     private final RedisDistributedLock redisDistributedLock;
-    final String LIKE_LOCK_KEY = "likePost : ";
     final String VIEW_LOCK_KEY = "viewPost : ";
 
     @Transactional
@@ -65,31 +64,6 @@ public class PostUpdateService {
         );
     }
 
-    @Async
-    @Transactional
-    public void likePost(
-            Long userSeq,
-            Long postSeq
-    ) {
-        executeWithLock(
-                LIKE_LOCK_KEY,
-                postSeq.toString(),
-                () -> {
-                    List<InteractionUser> likeUsers = getLikeUsers(postSeq);
-                    likeUsers.stream()
-                            .filter(likeUser -> likeUser.userSeq().equals(userSeq))
-                            .findAny()
-                            .ifPresentOrElse(
-                                    interactionUserRepository::deleteEntity,
-                                    () -> {
-                                        InteractionUser likeUser = createLikeUser(userSeq, postSeq);
-                                        interactionUserRepository.saveEntity(likeUser);
-                                    }
-                            );
-                }
-        );
-    }
-
     private void executeWithLock(
             String lockKey,
             String subKey,
@@ -108,19 +82,6 @@ public class PostUpdateService {
                 redisDistributedLock.releaseLock(lockKey, subKey);
             }
         }
-    }
-
-    private static InteractionUser createLikeUser(
-            Long userSeq,
-            Long postSeq
-    ) {
-        return InteractionUser.of(postSeq, POST, LIKE, userSeq);
-    }
-
-    private List<InteractionUser> getLikeUsers(
-            Long postSeq
-    ) {
-        return interactionUserRepository.getByPostSeq(postSeq);
     }
 
     private void updateResources(

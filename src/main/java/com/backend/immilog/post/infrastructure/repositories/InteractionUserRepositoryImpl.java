@@ -1,5 +1,7 @@
 package com.backend.immilog.post.infrastructure.repositories;
 
+import com.backend.immilog.post.domain.model.enums.InteractionType;
+import com.backend.immilog.post.domain.model.enums.PostType;
 import com.backend.immilog.post.infrastructure.jpa.entities.InteractionUserEntity;
 import com.backend.immilog.post.infrastructure.jpa.repository.InteractionUserJpaRepository;
 import com.backend.immilog.post.domain.model.InteractionUser;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,5 +39,15 @@ public class InteractionUserRepositoryImpl implements InteractionUserRepository 
             InteractionUser likeUser
     ) {
         interactionUserJpaRepository.save(InteractionUserEntity.from(likeUser));
+    }
+
+    @Override
+    public Optional<InteractionUser> getByPostSeqAndUserSeqAndPostTypeAndInteractionType(
+            Long postSeq,
+            Long userSeq,
+            PostType postType,
+            InteractionType interactionType
+    ) {
+        return Optional.empty();
     }
 }
