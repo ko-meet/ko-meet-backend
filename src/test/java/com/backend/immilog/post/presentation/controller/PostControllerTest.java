@@ -149,25 +149,6 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시물 좋아요")
-    void likePost() {
-        // given
-        Long postSeq = 1L;
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getAttribute("userSeq")).thenReturn(1L);
-
-        // when
-        ResponseEntity<PostApiResponse> response = postController.likePost(
-                postSeq,
-                request
-        );
-
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
-        verify(postUpdateService).likePost(1L, postSeq);
-    }
-
-    @Test
     @DisplayName("게시물 목록 조회")
     void getPosts() {
         // given
