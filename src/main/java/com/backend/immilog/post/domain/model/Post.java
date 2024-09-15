@@ -2,7 +2,6 @@ package com.backend.immilog.post.domain.model;
 
 import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.domain.model.enums.Categories;
-import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.vo.PostMetaData;
 import com.backend.immilog.post.domain.vo.PostUserData;
 import com.backend.immilog.user.domain.model.User;
@@ -26,8 +25,9 @@ public record Post(
             User user
     ) {
         PostMetaData postMetaData = PostMetaData.of(
-                postUploadCommand,
-                Countries.valueOf(user.location().getCountry().toString()),
+                postUploadCommand.title(),
+                postUploadCommand.content(),
+                user.location().getCountry(),
                 user.location().getRegion()
         );
 

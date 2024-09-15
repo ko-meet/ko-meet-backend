@@ -70,6 +70,14 @@ public class UserInformationService {
         userRepository.saveEntity(userDomain);
     }
 
+    @Transactional(readOnly = true)
+    public User getUser(
+            Long userSeq
+    ) {
+        return userRepository.getById(userSeq)
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+    }
+
     private void validateAdminUser(
             Long userSeq
     ) {
@@ -143,13 +151,6 @@ public class UserInformationService {
             return userDomain.copyWithNewImageUrl(profileUrl.isEmpty() ? null : profileUrl);
         }
         return userDomain;
-    }
-
-    private User getUser(
-            Long userSeq
-    ) {
-        return userRepository.getById(userSeq)
-                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
 
 }

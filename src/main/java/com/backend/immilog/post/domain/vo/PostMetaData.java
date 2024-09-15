@@ -1,6 +1,5 @@
 package com.backend.immilog.post.domain.vo;
 
-import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.model.enums.PostStatus;
 import lombok.*;
@@ -37,19 +36,21 @@ public class PostMetaData {
     @Enumerated(EnumType.STRING)
     private Countries country;
 
-    public static PostMetaData of(
-            PostUploadCommand postUploadCommand,
-            Countries country,
+    public static <T extends Enum<T>> PostMetaData of(
+            String title,
+            String content,
+            T country,
             String region
     ) {
         return PostMetaData.builder()
-                .title(postUploadCommand.title())
-                .content(postUploadCommand.content())
+                .title(title)
+                .content(content)
                 .viewCount(0L)
                 .likeCount(0L)
                 .status(PostStatus.NORMAL)
-                .country(country)
+                .country(Countries.valueOf(country.name()))
                 .region(region)
                 .build();
     }
+
 }
