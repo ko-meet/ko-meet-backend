@@ -35,4 +35,19 @@ public record CompanyResult(
                 .companyManagerUserSeq(company.companyManagerUserSeq())
                 .build();
     }
+
+    public Company toDomain() {
+        return Company.builder()
+                .industry(industry)
+                .companyName(companyName)
+                .companyEmail(companyEmail)
+                .companyPhone(companyPhone)
+                .companyAddress(companyAddress)
+                .companyHomepage(companyHomepage)
+                .companyCountry(companyCountry)
+                .companyRegion(companyRegion)
+                .companyLogo(companyLogo)
+                .companyManagerUserSeq(companyManagerUserSeq)
+                .build();
+    }
 }

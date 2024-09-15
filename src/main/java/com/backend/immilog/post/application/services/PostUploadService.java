@@ -1,13 +1,13 @@
 package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.post.application.command.PostUploadCommand;
-import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.domain.model.Post;
 import com.backend.immilog.post.domain.model.PostResource;
 import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
+import com.backend.immilog.post.exception.PostException;
+import com.backend.immilog.user.application.services.UserInformationService;
 import com.backend.immilog.user.domain.model.User;
-import com.backend.immilog.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
 import static com.backend.immilog.post.domain.model.enums.PostType.POST;
 import static com.backend.immilog.post.domain.model.enums.ResourceType.ATTACHMENT;
 import static com.backend.immilog.post.domain.model.enums.ResourceType.TAG;
-import static com.backend.immilog.user.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostUploadService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final UserInformationService userInformationService;
     private final BulkInsertRepository bulkInsertRepository;
 
     @Transactional
@@ -37,7 +36,7 @@ public class PostUploadService {
             Long userSeq,
             PostUploadCommand postUploadCommand
     ) {
-        User user = getUser(userSeq);
+        User user = userInformationService.getUser(userSeq);
         Post post = postRepository.saveEntity(
                 createPostEntity(userSeq, postUploadCommand, user)
         );
@@ -124,14 +123,6 @@ public class PostUploadService {
                 .stream()
                 .map(url -> PostResource.of(POST, ATTACHMENT, url, postSeq))
                 .toList();
-    }
-
-    private User getUser(
-            Long userSeq
-    ) {
-        return userRepository
-                .getById(userSeq)
-                .orElseThrow(() -> new PostException(USER_NOT_FOUND));
     }
 
 }
