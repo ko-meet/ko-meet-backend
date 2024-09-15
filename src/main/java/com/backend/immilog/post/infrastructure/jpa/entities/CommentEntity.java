@@ -48,7 +48,7 @@ public class CommentEntity extends BaseDateEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(value = CascadeType.ALL)
-    private List<Long> likeUsers = new ArrayList<>();
+    private List<Long> likeUsers;
 
     public static CommentEntity from(
             Comment comment
