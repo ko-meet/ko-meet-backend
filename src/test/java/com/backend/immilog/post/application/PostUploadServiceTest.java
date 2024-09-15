@@ -1,16 +1,16 @@
 package com.backend.immilog.post.application;
 
 import com.backend.immilog.post.application.services.PostUploadService;
-import com.backend.immilog.post.domain.repositories.PostRepository;
-import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.domain.model.Post;
 import com.backend.immilog.post.domain.model.PostResource;
 import com.backend.immilog.post.domain.model.enums.Categories;
 import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
+import com.backend.immilog.post.domain.repositories.PostRepository;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.presentation.request.PostUploadRequest;
+import com.backend.immilog.user.application.services.UserInformationService;
 import com.backend.immilog.user.domain.model.User;
 import com.backend.immilog.user.domain.model.enums.UserCountry;
-import com.backend.immilog.user.domain.repositories.UserRepository;
 import com.backend.immilog.user.domain.model.vo.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +24,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
 import static com.backend.immilog.post.domain.model.enums.PostType.POST;
 import static com.backend.immilog.post.domain.model.enums.ResourceType.ATTACHMENT;
+import static com.backend.immilog.post.exception.PostErrorCode.FAILED_TO_SAVE_POST;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +37,7 @@ class PostUploadServiceTest {
     @Mock
     private PostRepository postRepository;
     @Mock
-    private UserRepository userRepository;
+    private UserInformationService userInformationService;
     @Mock
     private BulkInsertRepository bulkInsertRepository;
     @Mock
@@ -55,7 +54,7 @@ class PostUploadServiceTest {
         MockitoAnnotations.openMocks(this);
         postUploadService = new PostUploadService(
                 postRepository,
-                userRepository,
+                userInformationService,
                 bulkInsertRepository
         );
         when(dataSource.getConnection()).thenReturn(connection);
@@ -85,7 +84,7 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(userInformationService.getUser(userSeq)).thenReturn(user);
         when(postRepository.saveEntity(any(Post.class))).thenReturn(post);
 
         doNothing().when(preparedStatement).setLong(eq(1), anyLong());
@@ -141,7 +140,7 @@ class PostUploadServiceTest {
                 .build();
         Post post = Post.builder().seq(1L).build();
 
-        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(userInformationService.getUser(userSeq)).thenReturn(user);
         when(postRepository.saveEntity(any(Post.class))).thenReturn(post);
 
         // when
@@ -172,7 +171,7 @@ class PostUploadServiceTest {
                 .seq(userSeq)
                 .location(location)
                 .build();
-        when(userRepository.getById(userSeq)).thenReturn(Optional.of(user));
+        when(userInformationService.getUser(userSeq)).thenReturn(user);
         when(postRepository.saveEntity(any(Post.class))).thenReturn(Post.builder().seq(1L).build());
         doThrow(new SQLException("Mock SQL Exception"))
                 .when(preparedStatement).setLong(anyInt(), anyLong());
