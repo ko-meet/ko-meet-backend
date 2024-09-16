@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 @Embeddable
 public class CompanyMetaData {
+    private Long companySeq;
+
     @Enumerated(EnumType.STRING)
     private Industry industry;
 
@@ -32,6 +34,7 @@ public class CompanyMetaData {
     private String companyLogo;
 
     public static CompanyMetaData of(
+            Long companySeq,
             Industry industry,
             Experience experience,
             LocalDateTime deadline,
@@ -44,6 +47,7 @@ public class CompanyMetaData {
             String companyLogo
     ) {
         return CompanyMetaData.builder()
+                .companySeq(companySeq)
                 .industry(industry)
                 .experience(experience)
                 .deadline(deadline)

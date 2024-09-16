@@ -1,6 +1,9 @@
 package com.backend.immilog.post.presentation.controller;
 
+import com.backend.immilog.post.application.result.JobBoardResult;
+import com.backend.immilog.post.application.services.JobBoardInquiryService;
 import com.backend.immilog.post.application.services.JobBoardUploadService;
+import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.model.enums.Experience;
 import com.backend.immilog.post.domain.model.enums.PostStatus;
 import com.backend.immilog.post.presentation.request.JobBoardUploadRequest;
@@ -10,10 +13,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,13 +29,18 @@ import static org.mockito.Mockito.when;
 class JobBoardControllerTest {
     @Mock
     private JobBoardUploadService jobBoardUploadService;
+    @Mock
+    private JobBoardInquiryService jobBoardInquiryService;
 
     private JobBoardController jobBoardController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        jobBoardController = new JobBoardController(jobBoardUploadService);
+        jobBoardController = new JobBoardController(
+                jobBoardUploadService,
+                jobBoardInquiryService
+        );
     }
 
     @Test
@@ -57,6 +67,54 @@ class JobBoardControllerTest {
         // when
         ResponseEntity<PostApiResponse> result =
                 jobBoardController.uploadJobBoard(request, param);
+        // then
+        assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    @DisplayName("구인구직 게시글 목록 조회 : 성공")
+    void searchJobBoard() {
+        // given
+        String country = "SOUTH_KOREA";
+        String sortingMethod = "CREATED_DATE";
+        String industry = "IT";
+        String experience = "JUNIOR";
+        int page = 0;
+        LocalDateTime now = LocalDateTime.now();
+        JobBoardResult jobBoardResult = JobBoardResult.builder()
+                .seq(1L)
+                .title("title")
+                .content("content")
+                .viewCount(0L)
+                .likeCount(0L)
+                .tags(Collections.emptyList())
+                .attachments(Collections.emptyList())
+                .likeUsers(Collections.emptyList())
+                .bookmarkUsers(Collections.emptyList())
+                .country(Countries.SOUTH_KOREA)
+                .region("region")
+                .industry(com.backend.immilog.user.domain.model.enums.Industry.IT)
+                .deadline(now)
+                .experience(Experience.JUNIOR)
+                .salary("salary")
+                .companyName("companyName")
+                .companyEmail("companyEmail")
+                .companyPhone("companyPhone")
+                .companyAddress("companyAddress")
+                .companyHomepage("companyHomepage")
+                .companyLogo("companyLogo")
+                .companyManagerUserSeq(1L)
+                .status(PostStatus.NORMAL)
+                .createdAt(now)
+                .build();
+
+        when(jobBoardInquiryService.getJobBoards(country, sortingMethod, industry, experience, page))
+                .thenReturn(new PageImpl<>(List.of(jobBoardResult)));
+        // when
+        ResponseEntity<PostApiResponse> result =
+                jobBoardController.searchJobBoard(
+                        country, sortingMethod, industry, experience, page
+                );
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
     }
