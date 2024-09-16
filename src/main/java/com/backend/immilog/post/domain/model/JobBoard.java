@@ -29,6 +29,7 @@ public record JobBoard(
                 company.companyRegion()
         );
         CompanyMetaData companyMetaData = CompanyMetaData.of(
+                company.seq(),
                 company.industry(),
                 command.experience(),
                 command.deadline(),
