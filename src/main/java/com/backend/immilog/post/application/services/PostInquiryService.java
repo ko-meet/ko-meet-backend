@@ -11,6 +11,7 @@ import com.backend.immilog.post.domain.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -62,8 +63,12 @@ public class PostInquiryService {
             Integer page
     ) {
         PageRequest pageRequest = PageRequest.of(page, 10);
-        return postRepository
-                .getPostsByKeyword(keyword, pageRequest);
+        List<PostResult> postResults = postRepository.getPostsByKeyword(keyword, pageRequest)
+                .getContent()
+                .stream()
+                .map(postResult -> postResult.copyWithKeyword(keyword))
+                .toList();
+        return new PageImpl<>(postResults, pageRequest, postResults.size());
     }
 
     @Transactional(readOnly = true)
@@ -72,11 +77,12 @@ public class PostInquiryService {
             Integer page
     ) {
         Pageable pageable = PageRequest.of(page, 10);
-        return postRepository
-                .getPostsByUserSeq(userSeq, pageable);
+        return postRepository.getPostsByUserSeq(userSeq, pageable);
     }
 
-    private PostResult getPostDTO(Long postSeq) {
+    private PostResult getPostDTO(
+            Long postSeq
+    ) {
         return postRepository
                 .getPost(postSeq)
                 .orElseThrow(() -> new PostException(POST_NOT_FOUND));
