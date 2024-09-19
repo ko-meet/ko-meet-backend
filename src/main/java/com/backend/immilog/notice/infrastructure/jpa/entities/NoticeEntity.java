@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @DynamicUpdate
 @Entity
-@Table(name = "notice")
+@Table(name = "notice_entity")
 public class NoticeEntity extends BaseDateEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)

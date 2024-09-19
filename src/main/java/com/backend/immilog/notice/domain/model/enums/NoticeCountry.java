@@ -1,10 +1,7 @@
 package com.backend.immilog.notice.domain.model.enums;
 
-import com.backend.immilog.global.enums.GlobalCountry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
@@ -32,26 +29,4 @@ public enum NoticeCountry {
 
     private final String countryCode;
     private final String countryKoreanName;
-
-    public static NoticeCountry getCountry(
-            String countryName
-    ) {
-        return Arrays.stream(NoticeCountry.values())
-                .filter(country -> country.name().equals(countryName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public static NoticeCountry getCountryByKoreanName(
-            String countryKoreanName
-    ) {
-        return Arrays.stream(NoticeCountry.values())
-                .filter(country -> country.getCountryKoreanName().equals(countryKoreanName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public GlobalCountry toGlobalCountries() {
-        return GlobalCountry.valueOf(this.name());
-    }
 }
