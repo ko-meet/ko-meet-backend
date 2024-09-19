@@ -1,10 +1,10 @@
 package com.backend.immilog.post.application;
 
+import com.backend.immilog.post.application.result.PostResult;
 import com.backend.immilog.post.application.services.PostInquiryService;
 import com.backend.immilog.post.domain.model.enums.Categories;
-import com.backend.immilog.post.domain.model.enums.SortingMethods;
-import com.backend.immilog.post.application.result.PostResult;
 import com.backend.immilog.post.domain.model.enums.Countries;
+import com.backend.immilog.post.domain.model.enums.SortingMethods;
 import com.backend.immilog.post.domain.repositories.CommentRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("PostInquiryService 테스트")
@@ -94,7 +93,11 @@ class PostInquiryServiceTest {
         String keyword = "keyword";
         int page = 0;
         Pageable pageable = PageRequest.of(page, 10);
-        PostResult postResult = PostResult.builder().build();
+        PostResult postResult = PostResult.builder()
+                .content("keyword123")
+                .title("content123")
+                .tags(List.of("tag1", "tag2"))
+                .build();
         Page<PostResult> posts = new PageImpl<>(List.of(postResult));
         when(postRepository.getPostsByKeyword(keyword, pageable)).thenReturn(posts);
         // when
