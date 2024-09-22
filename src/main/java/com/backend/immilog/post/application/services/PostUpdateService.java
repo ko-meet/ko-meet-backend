@@ -2,14 +2,14 @@ package com.backend.immilog.post.application.services;
 
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.post.application.command.PostUpdateCommand;
-import com.backend.immilog.post.exception.PostException;
-import com.backend.immilog.post.domain.model.InteractionUser;
 import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.model.enums.PostType;
 import com.backend.immilog.post.domain.model.enums.ResourceType;
 import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.domain.repositories.InteractionUserRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
 import com.backend.immilog.post.domain.repositories.PostResourceRepository;
+import com.backend.immilog.post.exception.PostException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -19,11 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-import static com.backend.immilog.post.exception.PostErrorCode.*;
-import static com.backend.immilog.post.domain.model.enums.InteractionType.LIKE;
 import static com.backend.immilog.post.domain.model.enums.PostType.POST;
 import static com.backend.immilog.post.domain.model.enums.ResourceType.ATTACHMENT;
 import static com.backend.immilog.post.domain.model.enums.ResourceType.TAG;
+import static com.backend.immilog.post.exception.PostErrorCode.*;
 
 @Slf4j
 @Service
@@ -98,22 +97,29 @@ public class PostUpdateService {
             List<String> addResources,
             ResourceType resourceType
     ) {
-        deleteResourceIfExists(postSeq, deleteResources, resourceType);
-        addResourceIfExists(postSeq, addResources, resourceType);
+        deleteResourceIfExists(postSeq, POST, deleteResources, resourceType);
+        addResourceIfExists(postSeq, POST, addResources, resourceType);
     }
 
     private void deleteResourceIfExists(
             Long postSeq,
+            PostType postType,
             List<String> deleteResources,
             ResourceType resourceType
     ) {
         if (deleteResources != null && !deleteResources.isEmpty()) {
-            postResourceRepository.deleteAllEntities(postSeq, resourceType, deleteResources);
+            postResourceRepository.deleteAllEntities(
+                    postSeq,
+                    postType,
+                    resourceType,
+                    deleteResources
+            );
         }
     }
 
     private void addResourceIfExists(
             Long postSeq,
+            PostType postType,
             List<String> addResources,
             ResourceType resourceType
     ) {
@@ -131,7 +137,7 @@ public class PostUpdateService {
                     (ps, resource) -> {
                         try {
                             ps.setLong(1, postSeq);
-                            ps.setString(2, POST.name());
+                            ps.setString(2, postType.name());
                             ps.setString(3, resourceType.name());
                             ps.setString(4, resource);
                         } catch (Exception e) {

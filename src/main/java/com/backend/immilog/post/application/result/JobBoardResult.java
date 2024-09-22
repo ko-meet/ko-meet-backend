@@ -26,6 +26,7 @@ public record JobBoardResult(
         LocalDateTime deadline,
         Experience experience,
         String salary,
+        Long companySeq,
         String companyName,
         String companyEmail,
         String companyPhone,

@@ -139,6 +139,7 @@ public class JobBoardEntityResult {
                 .deadline(deadline)
                 .experience(experience)
                 .salary(salary)
+                .companySeq(companySeq)
                 .companyName(companyName)
                 .companyEmail(companyEmail)
                 .companyPhone(companyPhone)

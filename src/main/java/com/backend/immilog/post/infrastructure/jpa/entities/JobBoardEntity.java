@@ -39,4 +39,15 @@ public class JobBoardEntity extends BaseDateEntity {
                 .companyMetaData(jobBoard.companyMetaData())
                 .build();
     }
+
+    public JobBoard toDomain() {
+        return JobBoard.builder()
+                .seq(seq)
+                .userSeq(userSeq)
+                .postMetaData(postMetaData)
+                .companyMetaData(companyMetaData)
+                .createdAt(getCreatedAt())
+                .updatedAt(getUpdatedAt())
+                .build();
+    }
 }

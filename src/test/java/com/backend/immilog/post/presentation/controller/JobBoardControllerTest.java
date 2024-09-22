@@ -2,10 +2,12 @@ package com.backend.immilog.post.presentation.controller;
 
 import com.backend.immilog.post.application.result.JobBoardResult;
 import com.backend.immilog.post.application.services.JobBoardInquiryService;
+import com.backend.immilog.post.application.services.JobBoardUpdateService;
 import com.backend.immilog.post.application.services.JobBoardUploadService;
 import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.model.enums.Experience;
 import com.backend.immilog.post.domain.model.enums.PostStatus;
+import com.backend.immilog.post.presentation.request.JobBoardUpdateRequest;
 import com.backend.immilog.post.presentation.request.JobBoardUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +33,8 @@ class JobBoardControllerTest {
     private JobBoardUploadService jobBoardUploadService;
     @Mock
     private JobBoardInquiryService jobBoardInquiryService;
+    @Mock
+    private JobBoardUpdateService jobBoardUpdateService;
 
     private JobBoardController jobBoardController;
 
@@ -39,7 +43,8 @@ class JobBoardControllerTest {
         MockitoAnnotations.openMocks(this);
         jobBoardController = new JobBoardController(
                 jobBoardUploadService,
-                jobBoardInquiryService
+                jobBoardInquiryService,
+                jobBoardUpdateService
         );
     }
 
@@ -115,6 +120,32 @@ class JobBoardControllerTest {
                 jobBoardController.searchJobBoard(
                         country, sortingMethod, industry, experience, page
                 );
+        // then
+        assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    @DisplayName("구인구직 게시글 수정 : 성공")
+    void updateJobBoard() {
+        // given
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        Long userSeq = 1L;
+        when(request.getAttribute("userSeq")).thenReturn(userSeq);
+
+        JobBoardUpdateRequest param = new JobBoardUpdateRequest(
+                "title",
+                "content",
+                List.of("tag1", "tag2"),
+                List.of("tag3", "tag4"),
+                List.of("attachment1", "attachment2"),
+                List.of("attachment3", "attachment4"),
+                LocalDateTime.now(),
+                Experience.JUNIOR,
+                "salary"
+        );
+
+        // when
+        ResponseEntity<Void> result = jobBoardController.updateJobBoard(request, 1L, param);
         // then
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
     }
