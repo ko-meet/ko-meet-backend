@@ -26,6 +26,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.backend.immilog.post.domain.model.enums.PostType.JOB_BOARD;
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -118,6 +119,56 @@ public class JobBoardRepositoryImpl implements JobBoardRepository {
                 .toList();
 
         return new PageImpl<>(jobBoards, pageable, total);
+    }
+
+    @Override
+    public Optional<JobBoardResult> getJobBoardBySeq(
+            Long jobBoardSeq
+    ) {
+        QJobBoardEntity jobBoard = QJobBoardEntity.jobBoardEntity;
+        QPostResourceEntity resource = QPostResourceEntity.postResourceEntity;
+        QInteractionUserEntity interUser = QInteractionUserEntity.interactionUserEntity;
+
+        return jpaQueryFactory
+                .select(jobBoard, list(interUser), list(resource))
+                .from(jobBoard)
+                .leftJoin(resource)
+                .on(resource.postSeq.eq(jobBoard.seq).and(resource.postType.eq(JOB_BOARD)))
+                .leftJoin(interUser)
+                .on(interUser.postSeq.eq(jobBoard.seq).and(interUser.postType.eq(JOB_BOARD)))
+                .where(jobBoard.seq.eq(jobBoardSeq))
+                .transform(
+                        groupBy(jobBoard.seq).list(
+                                Projections.constructor(
+                                        JobBoardEntityResult.class,
+                                        jobBoard.seq,
+                                        jobBoard.postMetaData.title,
+                                        jobBoard.postMetaData.content,
+                                        jobBoard.postMetaData.viewCount,
+                                        jobBoard.postMetaData.likeCount,
+                                        list(resource),
+                                        list(interUser),
+                                        jobBoard.postMetaData.country,
+                                        jobBoard.postMetaData.region,
+                                        jobBoard.companyMetaData.companySeq,
+                                        jobBoard.companyMetaData.industry,
+                                        jobBoard.companyMetaData.deadline,
+                                        jobBoard.companyMetaData.experience,
+                                        jobBoard.companyMetaData.salary,
+                                        jobBoard.companyMetaData.company,
+                                        jobBoard.companyMetaData.companyEmail,
+                                        jobBoard.companyMetaData.companyPhone,
+                                        jobBoard.companyMetaData.companyAddress,
+                                        jobBoard.companyMetaData.companyHomepage,
+                                        jobBoard.companyMetaData.companyLogo,
+                                        jobBoard.postMetaData.status,
+                                        jobBoard.createdAt
+                                )
+                        )
+                )
+                .stream()
+                .findFirst()
+                .map(JobBoardEntityResult::toResult);
     }
 
     private Long getLength(

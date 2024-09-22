@@ -3,7 +3,9 @@ package com.backend.immilog.post.presentation.controller;
 import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.post.application.result.JobBoardResult;
 import com.backend.immilog.post.application.services.JobBoardInquiryService;
+import com.backend.immilog.post.application.services.JobBoardUpdateService;
 import com.backend.immilog.post.application.services.JobBoardUploadService;
+import com.backend.immilog.post.presentation.request.JobBoardUpdateRequest;
 import com.backend.immilog.post.presentation.request.JobBoardUploadRequest;
 import com.backend.immilog.post.presentation.response.PostApiResponse;
 import io.swagger.annotations.Api;
@@ -15,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Api(tags = "JobBoard API", description = "구인구직 업로드 관련 API")
 @RequestMapping("/api/v1/job-boards")
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class JobBoardController {
     private final JobBoardUploadService jobBoardUploadService;
     private final JobBoardInquiryService jobBoardInquiryService;
+    private final JobBoardUpdateService jobBoardUpdateService;
 
     @PostMapping
     @ExtractUserId
@@ -55,6 +57,24 @@ public class JobBoardController {
                 page
         );
         return ResponseEntity.status(OK).body(PostApiResponse.of(jobBoards));
+    }
+
+    @PatchMapping("/{jobBoardSeq}")
+    @ExtractUserId
+    @ApiOperation(value = "구인구직 게시글 수정", notes = "구인구직 게시글을 수정합니다.")
+    public ResponseEntity<Void> updateJobBoard(
+            HttpServletRequest request,
+            @PathVariable Long jobBoardSeq,
+            @RequestBody JobBoardUpdateRequest jobBoardRequest
+    ) {
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        jobBoardUpdateService.updateJobBoard(
+                userSeq,
+                jobBoardSeq,
+                jobBoardRequest.toCommand()
+        );
+
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }

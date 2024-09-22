@@ -2,17 +2,17 @@ package com.backend.immilog.post.application;
 
 import com.backend.immilog.global.infrastructure.lock.RedisDistributedLock;
 import com.backend.immilog.post.application.services.PostUpdateService;
+import com.backend.immilog.post.domain.model.Post;
+import com.backend.immilog.post.domain.model.PostResource;
+import com.backend.immilog.post.domain.model.enums.PostType;
+import com.backend.immilog.post.domain.model.enums.ResourceType;
+import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
 import com.backend.immilog.post.domain.repositories.InteractionUserRepository;
 import com.backend.immilog.post.domain.repositories.PostRepository;
 import com.backend.immilog.post.domain.repositories.PostResourceRepository;
-import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.domain.vo.PostMetaData;
 import com.backend.immilog.post.domain.vo.PostUserData;
-import com.backend.immilog.post.domain.model.InteractionUser;
-import com.backend.immilog.post.domain.model.Post;
-import com.backend.immilog.post.domain.model.PostResource;
-import com.backend.immilog.post.domain.model.enums.ResourceType;
-import com.backend.immilog.post.domain.repositories.BulkInsertRepository;
+import com.backend.immilog.post.exception.PostException;
 import com.backend.immilog.post.presentation.request.PostUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -104,7 +104,8 @@ class PostUpdateServiceTest {
 
         // then
         verify(postResourceRepository, times(2))
-                .deleteAllEntities(anyLong(), any(ResourceType.class), anyList());
+                .deleteAllEntities(anyLong(), any(PostType.class), any(ResourceType.class),
+                        anyList());
         verify(bulkInsertRepository, times(2)).saveAll(
                 anyList(),
                 anyString(),
