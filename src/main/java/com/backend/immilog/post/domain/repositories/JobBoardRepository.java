@@ -8,6 +8,8 @@ import com.backend.immilog.post.domain.model.enums.Industry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface JobBoardRepository {
     void saveEntity(
             JobBoard jobBoard
@@ -19,5 +21,9 @@ public interface JobBoardRepository {
             Industry industry,
             Experience experience,
             Pageable pageable
+    );
+
+    Optional<JobBoardResult> getJobBoardBySeq(
+            Long jobBoardSeq
     );
 }
