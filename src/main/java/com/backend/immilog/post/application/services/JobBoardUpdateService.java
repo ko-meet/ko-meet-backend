@@ -42,6 +42,23 @@ public class JobBoardUpdateService {
         jobBoardRepository.saveEntity(updatedJobBoard);
     }
 
+    @Transactional
+    public void deactivateJobBoard(
+            Long userSeq,
+            Long jobBoardSeq
+    ) {
+        JobBoardResult jobBoard = getJobBoard(jobBoardSeq);
+        verifyIfUserIsOwner(userSeq, jobBoard);
+        JobBoard deletedJobBoard = createDeletedJobBoard(jobBoard);
+        jobBoardRepository.saveEntity(deletedJobBoard);
+    }
+
+    private JobBoard createDeletedJobBoard(
+            JobBoardResult jobBoard
+    ) {
+        return jobBoard.toDomain().toDeleteDomain();
+    }
+
     private JobBoard createUpdatedJobBoard(
             Long userSeq,
             JobBoardUpdateCommand command,

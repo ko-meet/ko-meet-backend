@@ -150,4 +150,17 @@ class JobBoardControllerTest {
         assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
     }
 
+    @Test
+    @DisplayName("구인구직 게시글 삭제 : 성공")
+    void deleteJobBoard() {
+        // given
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        Long userSeq = 1L;
+        when(request.getAttribute("userSeq")).thenReturn(userSeq);
+        // when
+        ResponseEntity<Void> result = jobBoardController.deleteJobBoard(request, 1L);
+        // then
+        assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
 }

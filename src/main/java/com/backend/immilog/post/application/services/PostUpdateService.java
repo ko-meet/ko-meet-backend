@@ -31,7 +31,6 @@ public class PostUpdateService {
     private final PostRepository postRepository;
     private final PostResourceRepository postResourceRepository;
     private final BulkInsertRepository bulkInsertRepository;
-    private final InteractionUserRepository interactionUserRepository;
 
     private final RedisDistributedLock redisDistributedLock;
     final String VIEW_LOCK_KEY = "viewPost : ";
