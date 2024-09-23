@@ -77,4 +77,16 @@ public class JobBoardController {
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
+    @PatchMapping("/{jobBoardSeq}/delete")
+    @ExtractUserId
+    @ApiOperation(value = "구인구직 게시글 삭제", notes = "구인구직 게시글을 삭제합니다.")
+    public ResponseEntity<Void> deleteJobBoard(
+            HttpServletRequest request,
+            @PathVariable Long jobBoardSeq
+    ) {
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        jobBoardUpdateService.deactivateJobBoard(userSeq, jobBoardSeq);
+        return ResponseEntity.status(NO_CONTENT).build();
+    }
+
 }
