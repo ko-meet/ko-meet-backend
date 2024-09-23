@@ -1,6 +1,7 @@
 package com.backend.immilog.post.domain.model;
 
 import com.backend.immilog.post.application.command.JobBoardUploadCommand;
+import com.backend.immilog.post.domain.model.enums.PostStatus;
 import com.backend.immilog.post.domain.vo.CompanyMetaData;
 import com.backend.immilog.post.domain.vo.PostMetaData;
 import com.backend.immilog.user.domain.model.Company;
@@ -45,6 +46,17 @@ public record JobBoard(
                 .userSeq(userSeq)
                 .postMetaData(postMetaData)
                 .companyMetaData(companyMetaData)
+                .build();
+    }
+
+    public JobBoard toDeleteDomain() {
+        PostMetaData postMetaData = this.postMetaData;
+        postMetaData.setStatus(PostStatus.DELETED);
+        return JobBoard.builder()
+                .seq(this.seq)
+                .userSeq(this.userSeq)
+                .postMetaData(postMetaData)
+                .companyMetaData(this.companyMetaData)
                 .build();
     }
 }
