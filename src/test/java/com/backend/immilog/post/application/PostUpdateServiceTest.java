@@ -43,8 +43,6 @@ class PostUpdateServiceTest {
     private PostResourceRepository postResourceRepository;
     @Mock
     private BulkInsertRepository bulkInsertRepository;
-    @Mock
-    private InteractionUserRepository interactionUserRepository;
 
     @Mock
     private RedisDistributedLock redisDistributedLock;
@@ -64,7 +62,6 @@ class PostUpdateServiceTest {
                 postRepository,
                 postResourceRepository,
                 bulkInsertRepository,
-                interactionUserRepository,
                 redisDistributedLock
         );
         when(dataSource.getConnection()).thenReturn(connection);

@@ -156,4 +156,39 @@ class JobBoardUpdateServiceTest {
                 .isInstanceOf(PostException.class)
                 .hasMessage(NO_AUTHORITY.getMessage());
     }
+
+    @Test
+    @DisplayName("구인구직 게시글 삭제 - 성공")
+    void deleteJobBoard_deletesJobBoard() {
+        JobBoardResult jobBoard = JobBoardResult.builder()
+                .seq(1L)
+                .title("Title")
+                .content("Content")
+                .viewCount(0L)
+                .likeCount(0L)
+                .tags(List.of("tag1", "tag3"))
+                .attachments(List.of("att1", "att3"))
+                .likeUsers(List.of())
+                .bookmarkUsers(List.of())
+                .country(null)
+                .region(null)
+                .industry(null)
+                .deadline(null)
+                .experience(null)
+                .salary(null)
+                .companySeq(1L)
+                .companyName(null)
+                .companyEmail(null)
+                .companyPhone(null)
+                .companyAddress(null)
+                .companyHomepage(null)
+                .companyLogo(null)
+                .companyManagerUserSeq(1L)
+                .status(null)
+                .createdAt(null)
+                .build();
+        when(jobBoardRepository.getJobBoardBySeq(anyLong())).thenReturn(Optional.of(jobBoard));
+        jobBoardUpdateService.deactivateJobBoard(1L, 1L);
+        verify(jobBoardRepository).saveEntity(any());
+    }
 }
