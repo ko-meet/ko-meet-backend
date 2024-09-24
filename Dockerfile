@@ -10,7 +10,7 @@ ARG JAR_FILE=/build/libs/*-SNAPSHOT.jar
 ENV CUSTOM_NAME default
 
 # jar 파일을 컨테이너 내부에 복사
-COPY ${JAR_FILE} ko-meet.jar
+COPY ${JAR_FILE} immilog.jar
 
 # 로그 디렉토리 생성
 RUN mkdir -p /var/log/api
@@ -19,4 +19,4 @@ RUN mkdir -p /var/log/api
 EXPOSE 8080
 
 # 실행 명령어
-CMD ["java", "-Dtest.customName=${CUSTOM_NAME}", "-jar", "ko-meet.jar"]
+CMD ["java", "-Dtest.customName=${CUSTOM_NAME}", "-jar", "immilog.jar"]
