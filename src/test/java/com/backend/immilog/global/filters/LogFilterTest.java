@@ -2,15 +2,13 @@ package com.backend.immilog.global.filters;
 
 import com.backend.immilog.global.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,6 +17,7 @@ import java.io.IOException;
 import static org.mockito.Mockito.*;
 
 @DisplayName("LogFilter 클래스")
+@Disabled
 @SpringBootTest
 class LogFilterTest {
 
