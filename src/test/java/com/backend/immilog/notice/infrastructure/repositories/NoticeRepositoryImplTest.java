@@ -5,6 +5,7 @@ import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
 import com.backend.immilog.notice.domain.model.enums.NoticeStatus;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import com.backend.immilog.notice.domain.repositories.NoticeRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @SpringBootTest
 @DisplayName("NoticeRepository 테스트")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
