@@ -111,7 +111,6 @@ public class UserController {
     }
 
     @GetMapping("/nicknames")
-    @ExtractUserId
     @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
     public ResponseEntity<UserApiResponse> checkNickname(
             @RequestParam String nickname
