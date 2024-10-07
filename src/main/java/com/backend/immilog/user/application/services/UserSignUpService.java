@@ -67,7 +67,7 @@ public class UserSignUpService {
     ) {
         boolean isLoginAvailable = true;
         switch (userStatus) {
-            case PENDING -> user.copyWithNewUserStatus(ACTIVE);
+            case PENDING -> userRepository.saveEntity(user.copyWithNewUserStatus(ACTIVE));
             case ACTIVE -> resultString = "이미 인증된 사용자입니다.";
             case BLOCKED -> {
                 resultString = "차단된 사용자입니다.";
