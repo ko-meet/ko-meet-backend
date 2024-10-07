@@ -55,7 +55,7 @@ class LocationServiceTest {
         Pair<String, String> result = resultFuture.join();
 
         // then
-        assertThat(result.getFirst()).isEqualTo(SOUTH_KOREA.getCountryName());
+        assertThat(result.getFirst()).isEqualTo(SOUTH_KOREA.getCountryKoreanName());
         assertThat(result.getSecond()).isEqualTo("서울특별시");
     }
 
