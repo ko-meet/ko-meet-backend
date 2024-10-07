@@ -106,7 +106,8 @@ public class UserSignInService {
             Pair<String, String> countryPair
     ) {
         Location location = user.location();
-        String country = location.getCountry().getCountryName();
+
+        String country = location.getCountry().getCountryKoreanName();
         String region = location.getRegion();
         return country.equals(countryPair.getFirst()) &&
                 region.equals(countryPair.getSecond());

@@ -11,6 +11,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(
             CorsRegistry registry
     ) {
+        registry.addMapping("/api/v1/users/*/verification")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*");
+
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173","https://ko-meet-front.vercel.app/")
                 .allowedMethods("*")

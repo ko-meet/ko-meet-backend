@@ -1,6 +1,6 @@
 package com.backend.immilog.user.application.services;
 
-import com.backend.immilog.global.enums.GlobalCountry;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class LocationService {
             String compoundCode = extractCompoundCode(response.join());
             String[] parts = Objects.requireNonNull(compoundCode).split(" ");
             if (parts.length >= 3) {
-                String country = GlobalCountry.getCountryByKoreanName(parts[1]).getCountryName();
+                String country = UserCountry.getCountryByKoreanName(parts[1]).getCountryKoreanName();
                 String city = parts[2];
                 return CompletableFuture.completedFuture(Pair.of(country, city));
             }
