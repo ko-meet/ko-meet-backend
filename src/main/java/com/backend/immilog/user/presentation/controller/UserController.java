@@ -49,18 +49,6 @@ public class UserController {
         return ResponseEntity.status(CREATED).build();
     }
 
-    @GetMapping("/{userSeq}/verification")
-    @ApiOperation(value = "사용자 이메일 인증", notes = "사용자 이메일 인증 진행")
-    public String verifyEmail(
-            @PathVariable Long userSeq,
-            Model model
-    ) {
-        final Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
-        model.addAttribute("message", result.getFirst());
-        model.addAttribute("isLoginAvailable", result.getSecond());
-        return "verification-result";
-    }
-
     @PostMapping("/sign-in")
     @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
     public ResponseEntity<UserApiResponse> signIn(

@@ -31,7 +31,7 @@ public record User(
     ) {
         String countryString = userSignUpCommand.interestCountry();
         UserCountry interestCountry = countryString != null ? UserCountry.getCountry(countryString) : null;
-        UserCountry country = UserCountry.getCountryByKoreanName(userSignUpCommand.country());
+        UserCountry country = UserCountry.getCountry(userSignUpCommand.country());
 
         return User.builder()
                 .nickName(userSignUpCommand.nickName())
