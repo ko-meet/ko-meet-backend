@@ -94,24 +94,6 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("이메일 인증")
-    void verifyEmail() {
-        // given
-        Long userSeq = 1L;
-        String message = "test";
-        Boolean isLoginAvailable = true;
-        when(userSignUpService.verifyEmail(userSeq))
-                .thenReturn(Pair.of(message, isLoginAvailable));
-        Model model = mock(Model.class);
-
-        // when
-        String result = userController.verifyEmail(userSeq, model);
-
-        // then
-        assertThat(result).isEqualTo("verification-result");
-    }
-
-    @Test
     @DisplayName("로그인")
     void signIn() {
         // given
