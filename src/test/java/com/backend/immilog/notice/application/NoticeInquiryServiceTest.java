@@ -5,6 +5,10 @@ import com.backend.immilog.notice.application.services.NoticeInquiryService;
 import com.backend.immilog.notice.domain.model.Notice;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import com.backend.immilog.notice.domain.repositories.NoticeRepository;
+import com.backend.immilog.user.application.services.UserInformationService;
+import com.backend.immilog.user.domain.model.User;
+import com.backend.immilog.user.domain.model.enums.UserCountry;
+import com.backend.immilog.user.domain.model.vo.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,22 +23,18 @@ import java.util.List;
 import static com.backend.immilog.notice.domain.model.enums.NoticeCountry.SOUTH_KOREA;
 import static com.backend.immilog.notice.domain.model.enums.NoticeStatus.NORMAL;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("공지사항 조회 테스트")
 class NoticeInquiryServiceTest {
-    @Mock
-    private NoticeRepository noticeRepository;
+    private final NoticeRepository noticeRepository = mock(NoticeRepository.class);
+    private final UserInformationService userInformationService = mock(UserInformationService.class);
 
-    private NoticeInquiryService noticeInquiryService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        noticeInquiryService = new NoticeInquiryService(
-                noticeRepository
-        );
-    }
+    private final NoticeInquiryService noticeInquiryService = new NoticeInquiryService(
+            noticeRepository,
+            userInformationService
+    );
 
     @Test
     @DisplayName("공지사항 조회 - 성공")
@@ -98,4 +98,24 @@ class NoticeInquiryServiceTest {
         assertThat(noticeDTO.content()).isEqualTo("content");
     }
 
+    @Test
+    @DisplayName("안읽은 공지사항 여부 체크")
+    void areUnreadNoticesExist() {
+        // given
+        Long userSeq = 1L;
+        User user = User.builder()
+                .seq(1L)
+                .location(Location.of(UserCountry.SOUTH_KOREA, "서울"))
+                .build();
+
+        when(noticeRepository.areUnreadNoticesExist(SOUTH_KOREA, userSeq))
+                .thenReturn(true);
+        when(userInformationService.getUser(userSeq)).thenReturn(user);
+
+        // when
+        boolean result = noticeInquiryService.isUnreadNoticeExist(userSeq);
+
+        // then
+        assertThat(result).isTrue();
+    }
 }

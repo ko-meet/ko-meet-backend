@@ -2,6 +2,7 @@ package com.backend.immilog.notice.infrastructure.repositories;
 
 import com.backend.immilog.notice.application.result.NoticeResult;
 import com.backend.immilog.notice.domain.model.Notice;
+import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
 import com.backend.immilog.notice.domain.repositories.NoticeRepository;
 import com.backend.immilog.notice.infrastructure.jpa.entities.NoticeEntity;
 import com.backend.immilog.notice.infrastructure.jpa.entities.QNoticeEntity;
@@ -69,6 +70,17 @@ public class NoticeRepositoryImpl implements NoticeRepository {
     @Override
     public Optional<Notice> findBySeq(Long noticeSeq) {
         return noticeJpaRepository.findById(noticeSeq).map(NoticeEntity::toDomain);
+    }
+
+    @Override
+    public Boolean areUnreadNoticesExist(
+            NoticeCountry country,
+            Long seq
+    ) {
+        return noticeJpaRepository.existsByTargetCountriesContainingAndReadUsersNotContaining(
+                country,
+                seq
+        );
     }
 
     private Long getTotal(Predicate predicate) {

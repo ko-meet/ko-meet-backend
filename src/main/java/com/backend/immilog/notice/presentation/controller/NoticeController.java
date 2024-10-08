@@ -63,4 +63,14 @@ public class NoticeController {
         return ResponseEntity.status(OK).body(NoticeApiResponse.of(notices));
     }
 
+    @GetMapping("/unread")
+    @ExtractUserId
+    @ApiOperation(value = "공지사항 존재 여부 조회", notes = "공지사항이 존재하는지 여부를 조회합니다.")
+    public ResponseEntity<NoticeApiResponse> isNoticeExist(
+            HttpServletRequest request
+    ) {
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        return ResponseEntity.status(OK).body(NoticeApiResponse.of(noticeInquiryService.isUnreadNoticeExist(userSeq)));
+    }
+
 }
