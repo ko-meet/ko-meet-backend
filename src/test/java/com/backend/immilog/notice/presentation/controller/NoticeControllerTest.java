@@ -96,4 +96,21 @@ class NoticeControllerTest {
         verify(noticeInquiryService).getNoticeDetail(noticeSeq);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
+
+    @Test
+    @DisplayName("안읽은 공지사항 여부 체크 테스트")
+    void isNoticeExist_success() {
+        // given
+        Long userSeq = 1L;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(userSeq);
+        when(noticeInquiryService.isUnreadNoticeExist(userSeq)).thenReturn(true);
+
+        // when
+        ResponseEntity<NoticeApiResponse> response = noticeController.isNoticeExist(request);
+
+        // then
+        verify(noticeInquiryService).isUnreadNoticeExist(userSeq);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+    }
 }
