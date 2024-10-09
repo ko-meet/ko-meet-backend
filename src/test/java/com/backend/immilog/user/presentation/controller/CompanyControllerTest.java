@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static com.backend.immilog.user.domain.model.enums.UserCountry.SOUTH_KOREA;
 import static org.mockito.ArgumentMatchers.any;
