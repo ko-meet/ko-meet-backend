@@ -1,15 +1,15 @@
 package com.backend.immilog.user.presentation.request;
 
 import com.backend.immilog.user.application.command.UserSignInCommand;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Builder
-@ApiModel(value = "UserSignInRequest", description = "사용자 로그인 요청 DTO")
+@Schema(description = "사용자 로그인 요청 DTO")
 public record UserSignInRequest(
         @NotBlank(message = "이메일을 입력해주세요.")
         @Email(message = "이메일 형식에 맞게 입력해주세요.")

@@ -2,7 +2,7 @@ package com.backend.immilog.user.domain.model.vo;
 
 import lombok.*;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 import java.sql.Date;
 
 @Getter
