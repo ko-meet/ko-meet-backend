@@ -1,16 +1,16 @@
 package com.backend.immilog.user.presentation.request;
 
 import com.backend.immilog.user.application.command.UserSignUpCommand;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Builder
-@ApiModel(value = "UserSignUpRequest", description = "사용자 회원가입 요청 DTO")
+@Schema(description = "사용자 회원가입 요청 DTO")
 public record UserSignUpRequest(
         @NotBlank(message = "닉네임을 입력해주세요.")
         String nickName,

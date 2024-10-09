@@ -6,22 +6,21 @@ import com.backend.immilog.user.application.services.*;
 import com.backend.immilog.user.domain.model.enums.UserStatus;
 import com.backend.immilog.user.presentation.request.*;
 import com.backend.immilog.user.presentation.response.UserApiResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 import static com.backend.immilog.user.enums.EmailComponents.*;
 import static org.springframework.http.HttpStatus.*;
 
-@Api(tags = "User API", description = "사용자 관련 API")
+@Tag(name = "User API", description = "사용자 관련 API")
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @RestController
@@ -35,7 +34,7 @@ public class UserController {
     private final EmailService emailService;
 
     @PostMapping
-    @ApiOperation(value = "사용자 회원가입", notes = "사용자 회원가입 진행")
+    @Operation(summary = "사용자 회원가입", description = "사용자 회원가입 진행")
     public ResponseEntity<UserApiResponse> signUp(
             @Valid @RequestBody UserSignUpRequest request
     ) {
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    @ApiOperation(value = "사용자 로그인", notes = "사용자 로그인 진행")
+    @Operation(summary = "사용자 로그인", description = "사용자 로그인 진행")
     public ResponseEntity<UserApiResponse> signIn(
             @Valid @RequestBody UserSignInRequest request
     ) {
@@ -65,7 +64,7 @@ public class UserController {
 
     @PatchMapping("/information")
     @ExtractUserId
-    @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보 수정 진행")
+    @Operation(summary = "사용자 정보 수정", description = "사용자 정보 수정 진행")
     public ResponseEntity<UserApiResponse> updateInformation(
             HttpServletRequest request,
             @RequestBody UserInfoUpdateRequest userInfoUpdateRequest
@@ -84,7 +83,7 @@ public class UserController {
 
     @PatchMapping("/password/change")
     @ExtractUserId
-    @ApiOperation(value = "비밀번호 변경", notes = "비밀번호 변경 진행")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 진행")
     public ResponseEntity<UserApiResponse> changePassword(
             HttpServletRequest request,
             @RequestBody UserPasswordChangeRequest userPasswordChangeRequest
@@ -99,7 +98,7 @@ public class UserController {
     }
 
     @GetMapping("/nicknames")
-    @ApiOperation(value = "닉네임 중복 체크", notes = "닉네임 중복 체크 진행")
+    @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복 체크 진행")
     public ResponseEntity<UserApiResponse> checkNickname(
             @RequestParam String nickname
     ) {
@@ -108,7 +107,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userSeq}/{status}")
-    @ApiOperation(value = "사용자 차단/해제", notes = "사용자 차단/해제 진행")
+    @Operation(summary = "사용자 차단/해제", description = "사용자 차단/해제 진행")
     public ResponseEntity<Void> blockUser(
             HttpServletRequest request,
             @PathVariable Long userSeq,
@@ -122,7 +121,7 @@ public class UserController {
 
     @PatchMapping("/{userSeq}/report")
     @ExtractUserId
-    @ApiOperation(value = "사용자 신고", notes = "사용자 신고 진행")
+    @Operation(summary = "사용자 신고", description = "사용자 신고 진행")
     public ResponseEntity<Void> reportUser(
             HttpServletRequest request,
             @PathVariable Long userSeq,

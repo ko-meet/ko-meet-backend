@@ -1,13 +1,13 @@
 package com.backend.immilog.post.presentation.request;
 
 import com.backend.immilog.post.application.command.PostUpdateCommand;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder
-@ApiModel(value = "PostUpdateRequest", description = "게시물 수정 요청 DTO")
+@Schema(description = "게시물 수정 요청 DTO")
 public record PostUpdateRequest(
         String title,
         String content,
