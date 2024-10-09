@@ -2,7 +2,7 @@ package com.backend.immilog.post.domain.vo;
 
 import lombok.*;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Getter
 @Setter

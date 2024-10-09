@@ -1,10 +1,10 @@
 package com.backend.immilog.post.presentation.request;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
-@ApiModel(value = "CommentUploadRequest", description = "댓글 업로드 요청 DTO")
+@Schema(description = "댓글 업로드 요청 DTO")
 public record CommentUploadRequest(
         @NotNull(message = "댓글 내용을 입력해주세요.") String content
 ) {

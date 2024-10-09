@@ -2,15 +2,15 @@ package com.backend.immilog.post.presentation.request;
 
 import com.backend.immilog.post.application.command.PostUploadCommand;
 import com.backend.immilog.post.domain.model.enums.Categories;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Builder
-@ApiModel(value = "PostUploadRequest", description = "게시물 생성 요청 DTO")
+@Schema(description = "게시물 생성 요청 DTO")
 public record PostUploadRequest(
         @NotBlank(message = "제목을 입력해주세요.") String title,
         @NotBlank(message = "내용을 입력해주세요.") String content,
