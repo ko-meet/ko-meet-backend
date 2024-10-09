@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers(
+                        .requestMatchers(
                                 "/**",
                                 "/swagger-ui/index.html",
                                 "/swagger-ui/**",
@@ -49,3 +49,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+

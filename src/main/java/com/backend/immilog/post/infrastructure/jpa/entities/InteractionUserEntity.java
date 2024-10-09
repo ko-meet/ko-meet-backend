@@ -6,7 +6,7 @@ import com.backend.immilog.post.domain.model.enums.PostType;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

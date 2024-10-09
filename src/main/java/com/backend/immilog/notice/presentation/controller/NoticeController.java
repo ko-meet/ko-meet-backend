@@ -7,19 +7,18 @@ import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-@Api(tags = "Notice API", description = "공지사항 관련 API")
+@Tag(name = "Notice API", description = "공지사항 관련 API")  
 @RequestMapping("/api/v1/notices")
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +28,7 @@ public class NoticeController {
 
     @PostMapping
     @ExtractUserId
-    @ApiOperation(value = "공지사항 등록", notes = "공지사항을 등록합니다.")
+    @Operation(summary = "공지사항 등록", description = "공지사항을 등록합니다.")
     public ResponseEntity<NoticeApiResponse> registerNotice(
             @RequestBody NoticeRegisterRequest noticeRegisterRequest,
             HttpServletRequest request
@@ -44,7 +43,7 @@ public class NoticeController {
 
     @GetMapping
     @ExtractUserId
-    @ApiOperation(value = "공지사항 조회", notes = "공지사항을 조회합니다.")
+    @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
     public ResponseEntity<NoticeApiResponse> getNotices(
             @RequestParam Integer page,
             HttpServletRequest request
@@ -55,7 +54,7 @@ public class NoticeController {
     }
 
     @GetMapping("/{noticeSeq}")
-    @ApiOperation(value = "공지사항 조회", notes = "공지사항을 조회합니다.")
+    @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
     public ResponseEntity<NoticeApiResponse> getNoticeDetail(
             @PathVariable Long noticeSeq
     ) {
@@ -65,7 +64,7 @@ public class NoticeController {
 
     @GetMapping("/unread")
     @ExtractUserId
-    @ApiOperation(value = "공지사항 존재 여부 조회", notes = "공지사항이 존재하는지 여부를 조회합니다.")
+    @Operation(summary = "공지사항 존재 여부 조회", description = "공지사항이 존재하는지 여부를 조회합니다.")
     public ResponseEntity<NoticeApiResponse> isNoticeExist(
             HttpServletRequest request
     ) {

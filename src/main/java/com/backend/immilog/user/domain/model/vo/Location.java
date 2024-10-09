@@ -3,9 +3,9 @@ package com.backend.immilog.user.domain.model.vo;
 import com.backend.immilog.user.domain.model.enums.UserCountry;
 import lombok.*;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Getter
 @Setter

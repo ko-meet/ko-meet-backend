@@ -2,11 +2,10 @@ package com.backend.immilog.post.domain.vo;
 
 import com.backend.immilog.post.domain.model.enums.Countries;
 import com.backend.immilog.post.domain.model.enums.PostStatus;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
-
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Getter
 @Setter

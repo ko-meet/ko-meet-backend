@@ -6,7 +6,7 @@ import com.backend.immilog.user.domain.model.enums.UserCountry;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @AllArgsConstructor

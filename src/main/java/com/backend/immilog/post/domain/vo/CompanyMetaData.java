@@ -4,9 +4,9 @@ import com.backend.immilog.post.domain.model.enums.Experience;
 import com.backend.immilog.user.domain.model.enums.Industry;
 import lombok.*;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Getter

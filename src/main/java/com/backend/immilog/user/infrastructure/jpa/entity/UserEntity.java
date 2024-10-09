@@ -10,7 +10,7 @@ import com.backend.immilog.user.domain.model.vo.ReportInfo;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
