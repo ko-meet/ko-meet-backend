@@ -3,8 +3,8 @@ package com.backend.immilog.global.presentation.controller;
 import com.backend.immilog.global.application.ImageService;
 import com.backend.immilog.global.presentation.request.ImageRequest;
 import com.backend.immilog.global.presentation.response.GlobalApiResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-@Api(tags = "Imgae API", description = "이미지 업로드 관련 API")
+@Tag(name = "Image API", description = "이미지 업로드 관련 API")
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
 @RestController
@@ -24,7 +24,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    @ApiOperation(value = "이미지 업로드", notes = "이미지를 업로드합니다.")
+    @Operation(summary = "이미지 업로드", description = "이미지를 업로드합니다.")
     public ResponseEntity<GlobalApiResponse> uploadImage(
             List<MultipartFile> multipartFile,
             @RequestParam String imagePath
@@ -37,7 +37,7 @@ public class ImageController {
     }
 
     @DeleteMapping
-    @ApiOperation(value = "이미지 삭제", notes = "이미지를 삭제합니다.")
+    @Operation(summary = "이미지 삭제", description = "이미지를 삭제합니다.")
     public ResponseEntity<GlobalApiResponse> deleteImage(
             ImageRequest imageRequest
     ) {
