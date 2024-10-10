@@ -1,15 +1,17 @@
-package com.backend.immilog.notice.infrastructure.jpa.entities;
+package com.backend.immilog.notice.infrastructure.jpa;
 
-import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.notice.domain.model.Notice;
 import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
 import com.backend.immilog.notice.domain.model.enums.NoticeStatus;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -20,8 +22,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @DynamicUpdate
 @Entity
-@Table(name = "notice_entity")
-public class NoticeEntity extends BaseDateEntity {
+@Table(name = "notice")
+public class NoticeEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long seq;
@@ -47,6 +49,13 @@ public class NoticeEntity extends BaseDateEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Long> readUsers;
+
+    @Setter
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     public static NoticeEntity from(
             Notice notice
