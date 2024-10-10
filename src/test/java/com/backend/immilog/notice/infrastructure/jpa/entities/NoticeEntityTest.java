@@ -4,12 +4,13 @@ import com.backend.immilog.notice.domain.model.Notice;
 import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
 import com.backend.immilog.notice.domain.model.enums.NoticeStatus;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
+import com.backend.immilog.notice.infrastructure.jpa.NoticeEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("NoticeEntity 테스트")
 class NoticeEntityTest {
@@ -121,11 +122,12 @@ class NoticeEntityTest {
     @Test
     @DisplayName("NoticeEntity Setter 테스트")
     void setter_test() {
-        NoticeEntity noticeEntity = new NoticeEntity();
-        noticeEntity.setTitle("Title");
-        noticeEntity.setContent("Content");
-        noticeEntity.setType(NoticeType.NOTICE);
-        noticeEntity.setStatus(NoticeStatus.NORMAL);
+        NoticeEntity noticeEntity = NoticeEntity.builder()
+                .title("Title")
+                .content("Content")
+                .type(NoticeType.NOTICE)
+                .status(NoticeStatus.NORMAL)
+                .build();
 
         assertThat(noticeEntity.getTitle()).isEqualTo("Title");
         assertThat(noticeEntity.getContent()).isEqualTo("Content");
