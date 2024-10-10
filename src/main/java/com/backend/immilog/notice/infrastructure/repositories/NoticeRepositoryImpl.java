@@ -4,13 +4,9 @@ import com.backend.immilog.notice.application.result.NoticeResult;
 import com.backend.immilog.notice.domain.model.Notice;
 import com.backend.immilog.notice.domain.model.enums.NoticeCountry;
 import com.backend.immilog.notice.domain.repositories.NoticeRepository;
-import com.backend.immilog.notice.infrastructure.jpa.entities.NoticeEntity;
-import com.backend.immilog.notice.infrastructure.jpa.entities.QNoticeEntity;
-import com.backend.immilog.notice.infrastructure.jpa.repositories.NoticeJpaRepository;
-import com.backend.immilog.user.infrastructure.jpa.entity.QUserEntity;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.backend.immilog.notice.infrastructure.jdbc.NoticeJdbcRepository;
+import com.backend.immilog.notice.infrastructure.jpa.NoticeEntity;
+import com.backend.immilog.notice.infrastructure.jpa.NoticeJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +20,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class NoticeRepositoryImpl implements NoticeRepository {
-    private final JPAQueryFactory jpaQueryFactory;
+    private final NoticeJdbcRepository noticeJdbcRepository;
     private final NoticeJpaRepository noticeJpaRepository;
     private final JdbcClient jdbcClient;
 
@@ -33,34 +29,12 @@ public class NoticeRepositoryImpl implements NoticeRepository {
             Long userSeq,
             Pageable pageable
     ) {
-        QNoticeEntity notice = QNoticeEntity.noticeEntity;
-        QUserEntity user = QUserEntity.userEntity;
-        BooleanBuilder predicateBuilder = new BooleanBuilder();
-
-        predicateBuilder.and(
-                notice.targetCountries.any().stringValue()
-                        .eq(user.location.country.stringValue())
-                        .or(notice.targetCountries.any().stringValue().eq("ALL"))
+        List<NoticeResult> result = noticeJdbcRepository.getNotices(
+                userSeq,
+                pageable.getPageSize(),
+                pageable.getOffset()
         );
-        Long total = getTotal(predicateBuilder.getValue());
-        List<NoticeResult> result =
-                jpaQueryFactory
-                        .selectFrom(notice)
-                        .leftJoin(user)
-                        .on(
-                                notice.targetCountries.any().stringValue()
-                                        .eq(user.location.country.stringValue())
-                        )
-                        .where(predicateBuilder.getValue())
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-                        .orderBy(notice.createdAt.desc())
-                        .fetch()
-                        .stream()
-                        .map(NoticeEntity::toDomain)
-                        .map(NoticeResult::from)
-                        .toList();
-
+        Long total = noticeJdbcRepository.getTotal(userSeq);
         return new PageImpl<>(result, pageable, total);
     }
 
@@ -85,19 +59,15 @@ public class NoticeRepositoryImpl implements NoticeRepository {
         );
     }
 
-    private Long getTotal(Predicate predicate) {
-        QNoticeEntity notice = QNoticeEntity.noticeEntity;
-        QUserEntity user = QUserEntity.userEntity;
-
-        return jpaQueryFactory
-                .select(notice.count())
-                .from(notice)
-                .leftJoin(user)
-                .on(
-                        user.location.country.stringValue()
-                                .eq(notice.targetCountries.any().stringValue())
-                )
-                .where(predicate)
-                .fetchOne();
+    private Long getTotal(
+            Long userSeq
+    ) {
+        String sql = """
+                     SELECT COUNT(*) FROM notices n
+                         LEFT JOIN users u ON n.target_countries @> ARRAY[u.location_country]::varchar[]
+                         WHERE n.target_countries @> ARRAY[u.location_country]::varchar[]
+                         OR n.target_countries @> ARRAY['ALL']::varchar[]
+                     """;
+        return jdbcClient.sql(sql).query((rs, rowNum) -> rs.getLong(1)).single();
     }
 }

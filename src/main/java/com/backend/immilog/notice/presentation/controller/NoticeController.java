@@ -45,7 +45,7 @@ public class NoticeController {
     @ExtractUserId
     @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
     public ResponseEntity<NoticeApiResponse> getNotices(
-            @RequestParam Integer page,
+            @RequestParam("page") Integer page,
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
@@ -56,7 +56,7 @@ public class NoticeController {
     @GetMapping("/{noticeSeq}")
     @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
     public ResponseEntity<NoticeApiResponse> getNoticeDetail(
-            @PathVariable Long noticeSeq
+            @PathVariable("noticeSeq") Long noticeSeq
     ) {
         NoticeResult notices = noticeInquiryService.getNoticeDetail(noticeSeq);
         return ResponseEntity.status(OK).body(NoticeApiResponse.of(notices));
