@@ -1,4 +1,4 @@
-package com.backend.immilog.post.infrastructure.jpa.entities;
+package com.backend.immilog.post.infrastructure.jpa;
 
 import com.backend.immilog.post.domain.model.PostResource;
 import com.backend.immilog.post.domain.model.enums.PostType;

@@ -1,7 +1,6 @@
-package com.backend.immilog.post.infrastructure.jpa.repository;
+package com.backend.immilog.post.infrastructure.jpa;
 
 import com.backend.immilog.post.domain.model.PostResource;
-import com.backend.immilog.post.infrastructure.jpa.entities.PostResourceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

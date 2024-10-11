@@ -101,7 +101,7 @@ public class PostController {
     @GetMapping("/{postSeq}")
     @Operation(summary = "게시물 상세 조회", description = "게시물 상세 정보를 조회합���다.")
     public ResponseEntity<PostApiResponse> getPost(
-            @PathVariable Long postSeq
+            @PathVariable("postSeq") Long postSeq
     ) {
         PostResult post = postInquiryService.getPost(postSeq);
         return ResponseEntity

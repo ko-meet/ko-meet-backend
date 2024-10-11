@@ -2,8 +2,8 @@ package com.backend.immilog.post.infrastructure.result;
 
 import com.backend.immilog.post.application.result.JobBoardResult;
 import com.backend.immilog.post.domain.model.enums.*;
-import com.backend.immilog.post.infrastructure.jpa.entities.InteractionUserEntity;
-import com.backend.immilog.post.infrastructure.jpa.entities.PostResourceEntity;
+import com.backend.immilog.post.infrastructure.jpa.InteractionUserEntity;
+import com.backend.immilog.post.infrastructure.jpa.PostResourceEntity;
 import com.backend.immilog.user.domain.model.enums.Industry;
 import lombok.Getter;
 import lombok.Setter;
