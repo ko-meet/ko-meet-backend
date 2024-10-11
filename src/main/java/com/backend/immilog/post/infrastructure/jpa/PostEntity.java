@@ -1,4 +1,4 @@
-package com.backend.immilog.post.infrastructure.jpa.entities;
+package com.backend.immilog.post.infrastructure.jpa;
 
 import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.post.domain.vo.PostMetaData;

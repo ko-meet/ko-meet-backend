@@ -2,8 +2,8 @@ package com.backend.immilog.post.infrastructure.repositories;
 
 import com.backend.immilog.post.domain.model.enums.InteractionType;
 import com.backend.immilog.post.domain.model.enums.PostType;
-import com.backend.immilog.post.infrastructure.jpa.entities.InteractionUserEntity;
-import com.backend.immilog.post.infrastructure.jpa.repository.InteractionUserJpaRepository;
+import com.backend.immilog.post.infrastructure.jpa.InteractionUserEntity;
+import com.backend.immilog.post.infrastructure.jpa.InteractionUserJpaRepository;
 import com.backend.immilog.post.domain.model.InteractionUser;
 import com.backend.immilog.post.domain.repositories.InteractionUserRepository;
 import lombok.RequiredArgsConstructor;

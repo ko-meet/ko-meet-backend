@@ -58,16 +58,4 @@ public class NoticeRepositoryImpl implements NoticeRepository {
                 seq
         );
     }
-
-    private Long getTotal(
-            Long userSeq
-    ) {
-        String sql = """
-                     SELECT COUNT(*) FROM notices n
-                         LEFT JOIN users u ON n.target_countries @> ARRAY[u.location_country]::varchar[]
-                         WHERE n.target_countries @> ARRAY[u.location_country]::varchar[]
-                         OR n.target_countries @> ARRAY['ALL']::varchar[]
-                     """;
-        return jdbcClient.sql(sql).query((rs, rowNum) -> rs.getLong(1)).single();
-    }
 }
