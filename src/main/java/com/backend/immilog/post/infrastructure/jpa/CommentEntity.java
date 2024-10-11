@@ -1,4 +1,4 @@
-package com.backend.immilog.post.infrastructure.jpa.entities;
+package com.backend.immilog.post.infrastructure.jpa;
 
 import com.backend.immilog.global.model.BaseDateEntity;
 import com.backend.immilog.post.domain.model.Comment;
@@ -10,7 +10,7 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Getter

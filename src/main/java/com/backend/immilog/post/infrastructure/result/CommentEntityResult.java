@@ -31,23 +31,9 @@ public class CommentEntityResult {
     private PostStatus status;
     private LocalDateTime createdAt;
 
-    public CommentEntityResult(
-            Comment comment,
-            User user,
-            List<Comment> replies,
-            List<User> replyUsers
-    ) {
-        List<CommentEntityResult> replyList = combineReplies(replies, replyUsers);
-
-        this.seq = comment.seq();
-        this.user = UserInfoResult.from(user);
-        this.content = comment.content();
-        this.replies = replyList;
-        this.upVotes = comment.likeCount();
-        this.replyCount = comment.replyCount();
-        this.likeUsers = comment.likeUsers();
-        this.status = comment.status();
-        this.createdAt = comment.createdAt();
+    public void addChildComment(CommentEntityResult childComment) {
+        this.replies.add(childComment);
+        this.replyCount = this.replies.size(); // 자식 댓글 수 업데이트
     }
 
     public static CommentEntityResult of(
@@ -65,27 +51,6 @@ public class CommentEntityResult {
                 .status(comment.status())
                 .createdAt(comment.createdAt())
                 .build();
-    }
-
-    private List<CommentEntityResult> combineReplies(
-            List<Comment> replies,
-            List<User> replyUsers
-    ) {
-        if (replies.isEmpty() || replyUsers.isEmpty()) {
-            return List.of();
-        }
-        return replies
-                .stream()
-                .map(reply -> {
-                    return replyUsers.stream()
-                            .filter(Objects::nonNull)
-                            .filter(u -> u.seq().equals(reply.userSeq()))
-                            .findFirst()
-                            .map(replyUser -> CommentEntityResult.of(reply, replyUser))
-                            .orElse(null);
-                })
-                .filter(Objects::nonNull)
-                .toList();
     }
 
     public CommentResult toCommentResult() {

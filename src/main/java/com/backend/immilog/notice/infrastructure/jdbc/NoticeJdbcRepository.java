@@ -21,12 +21,12 @@ public class NoticeJdbcRepository {
                      SELECT n.* 
                      FROM notice n
                      LEFT JOIN notice_entity_target_countries ntc ON n.seq = ntc.notice_entity_seq
-                     LEFT JOIN user u ON JSON_CONTAINS(ntc.target_countries, JSON_QUOTE(u.country))
+                     LEFT JOIN user u ON u.country = ntc.target_countries 
                      LEFT JOIN notice_entity_read_users nru ON n.seq = nru.notice_entity_seq
-                     WHERE (JSON_CONTAINS(ntc.target_countries, JSON_QUOTE(u.country))
-                        OR JSON_CONTAINS(ntc.target_countries, JSON_QUOTE('ALL')))
+                     WHERE (u.country = ntc.target_countries
+                        OR ntc.target_countries = 'ALL')
                         AND n.status = 'NORMAL'
-                        AND NOT (JSON_CONTAINS(nru.read_users, CAST(? AS JSON)))
+                        AND (nru.read_users IS NULL OR nru.read_users != ?)
                      ORDER BY n.created_at DESC
                      LIMIT ? OFFSET ?
                      """;
@@ -43,15 +43,15 @@ public class NoticeJdbcRepository {
             Long userSeq
     ) {
         String sql = """
-                     SELECT COUNT(*)
+                     SELECT n.*
                      FROM notice n
                      LEFT JOIN notice_entity_target_countries ntc ON n.seq = ntc.notice_entity_seq
-                     LEFT JOIN user u ON JSON_CONTAINS(ntc.target_countries, JSON_QUOTE(u.country))
+                     LEFT JOIN user u ON u.country = ntc.target_countries 
                      LEFT JOIN notice_entity_read_users nru ON n.seq = nru.notice_entity_seq
-                     WHERE (JSON_CONTAINS(ntc.target_countries, JSON_QUOTE(u.country))
-                        OR JSON_CONTAINS(ntc.target_countries, JSON_QUOTE('ALL')))
+                     WHERE (u.country = ntc.target_countries
+                        OR ntc.target_countries = 'ALL')
                         AND n.status = 'NORMAL'
-                        AND NOT (JSON_CONTAINS(nru.read_users, CAST(? AS JSON)))
+                        AND (nru.read_users IS NULL OR nru.read_users != ?)
                      """;
         return jdbcClient.sql(sql)
                 .param(userSeq)

@@ -15,12 +15,18 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     private final CompanyJpaRepository companyJpaRepository;
 
     @Override
-    public Optional<Company> getByCompanyManagerUserSeq(Long userSeq) {
-        return companyJpaRepository.findByCompanyManagerUserSeq(userSeq).map(CompanyEntity::toDomain);
+    public Optional<Company> getByCompanyManagerUserSeq(
+            Long userSeq
+    ) {
+        return companyJpaRepository
+                .findByCompanyManagerUserSeq(userSeq)
+                .map(CompanyEntity::toDomain);
     }
 
     @Override
-    public void saveEntity(Company company) {
+    public void saveEntity(
+            Company company
+    ) {
         companyJpaRepository.save(CompanyEntity.from(company));
     }
 }
