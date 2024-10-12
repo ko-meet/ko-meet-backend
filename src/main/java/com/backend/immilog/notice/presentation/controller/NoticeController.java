@@ -5,6 +5,8 @@ import com.backend.immilog.global.security.ExtractUserId;
 import com.backend.immilog.notice.application.result.NoticeResult;
 import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
+import com.backend.immilog.notice.application.services.NoticeModifyService;
+import com.backend.immilog.notice.presentation.request.NoticeModifyRequest;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.*;
 
 @Tag(name = "Notice API", description = "공지사항 관련 API")  
 @RequestMapping("/api/v1/notices")
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class NoticeController {
     private final NoticeCreateService noticeRegisterService;
     private final NoticeInquiryService noticeInquiryService;
+    private final NoticeModifyService noticeModifyService;
 
     @PostMapping
     @ExtractUserId
@@ -69,7 +72,21 @@ public class NoticeController {
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
-        return ResponseEntity.status(OK).body(NoticeApiResponse.of(noticeInquiryService.isUnreadNoticeExist(userSeq)));
+        Boolean unreadNoticeExist = noticeInquiryService.isUnreadNoticeExist(userSeq);
+        return ResponseEntity.status(OK).body(NoticeApiResponse.of(unreadNoticeExist));
+    }
+
+    @PatchMapping("/{noticeSeq}")
+    @ExtractUserId
+    @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다.")
+    public ResponseEntity<Void> modifyNotice(
+            HttpServletRequest request,
+            @PathVariable Long noticeSeq,
+            @RequestBody NoticeModifyRequest param
+    ) {
+        Long userSeq = (Long) request.getAttribute("userSeq");
+        noticeModifyService.modifyNotice(userSeq, noticeSeq, param.toCommand());
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
 }
