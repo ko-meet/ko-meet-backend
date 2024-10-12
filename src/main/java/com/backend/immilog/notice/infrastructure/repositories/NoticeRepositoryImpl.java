@@ -58,4 +58,11 @@ public class NoticeRepositoryImpl implements NoticeRepository {
                 seq
         );
     }
+
+    @Override
+    public Optional<Notice> getNotice(
+            Long noticeSeq
+    ) {
+        return noticeJpaRepository.findById(noticeSeq).map(NoticeEntity::toDomain);
+    }
 }
