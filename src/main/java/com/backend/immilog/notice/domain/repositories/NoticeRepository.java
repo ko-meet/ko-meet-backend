@@ -22,4 +22,6 @@ public interface NoticeRepository {
             NoticeCountry country,
             Long seq
     );
+
+    Optional<Notice> getNotice(Long noticeSeq);
 }
