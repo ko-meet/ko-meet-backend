@@ -41,7 +41,7 @@ public class NoticeModifyService {
             Long userSeq
     ) {
         Optional.ofNullable(userInformationService.getUser(userSeq))
-                .filter(user -> !user.userRole().name().equals("ROLE_ADMIN"))
+                .filter(user -> user.userRole().name().equals("ROLE_ADMIN"))
                 .orElseThrow(() -> new NoticeException(NOT_AN_ADMIN_USER));
     }
 
