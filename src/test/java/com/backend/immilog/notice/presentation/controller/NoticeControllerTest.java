@@ -3,39 +3,29 @@ package com.backend.immilog.notice.presentation.controller;
 import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
+import com.backend.immilog.notice.application.services.NoticeModifyService;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @DisplayName("공지사항 컨트롤러 테스트")
 class NoticeControllerTest {
-    @Mock
-    private NoticeCreateService noticeRegisterService;
+    private final NoticeCreateService noticeRegisterService = mock(NoticeCreateService.class);
+    private final NoticeInquiryService noticeInquiryService = mock(NoticeInquiryService.class);
+    private final NoticeModifyService noticeModifyService = mock(NoticeModifyService.class);
 
-    @Mock
-    private NoticeInquiryService noticeInquiryService;
-
-    private NoticeController noticeController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        noticeController = new NoticeController(
-                noticeRegisterService,
-                noticeInquiryService
-        );
-    }
+    private final NoticeController noticeController = new NoticeController(
+            noticeRegisterService,
+            noticeInquiryService,
+            noticeModifyService
+    );
 
     @Test
     @DisplayName("공지사항 등록 테스트")
@@ -111,6 +101,6 @@ class NoticeControllerTest {
 
         // then
         verify(noticeInquiryService).isUnreadNoticeExist(userSeq);
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
     }
 }
