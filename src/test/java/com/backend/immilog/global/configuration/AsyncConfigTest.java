@@ -5,52 +5,41 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
-@Disabled
-@SpringBootTest
-@EnableAsync
-@DisplayName("AsyncConfig 클래스")
+@DisplayName("AsyncConfig 클래스 테스트")
 class AsyncConfigTest {
 
-    @Autowired
-    private AsyncConfigurer asyncConfigurer;
+    private final AsyncConfig asyncConfig = new AsyncConfig();
 
-    private Executor executor;
-
-    @BeforeEach
-    void setUp() {
-        executor = asyncConfigurer.getAsyncExecutor();
+    @Test
+    @DisplayName("AsyncConfig 객체가 정상적으로 생성되는지 테스트")
+    void asyncExecutorIsNotNull() {
+        Executor executor = asyncConfig.getAsyncExecutor();
+        assertNotNull(executor);
     }
 
     @Test
-    @DisplayName("AsyncExecutor 설정")
-    void asyncExecutorIsConfiguredCorrectly() {
-        assertThat(executor).isNotNull();
+    @DisplayName("예외 핸들러가 null이 아닌지 테스트")
+    void asyncUncaughtExceptionHandlerIsNotNull() {
+        AsyncUncaughtExceptionHandler exceptionHandler = asyncConfig.getAsyncUncaughtExceptionHandler();
+        assertNotNull(exceptionHandler);
     }
 
     @Test
-    @DisplayName("비동기 실행")
-    void asyncExecutionWorks() throws ExecutionException, InterruptedException {
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello, Async", executor);
-
-        assertThat(future.get()).isEqualTo("Hello, Async");
-    }
-
-    @Test
-    @DisplayName("AsyncUncaughtExceptionHandler 설정")
-    void asyncUncaughtExceptionHandlerIsConfigured() {
-        AsyncUncaughtExceptionHandler exceptionHandler = asyncConfigurer.getAsyncUncaughtExceptionHandler();
-        assertThat(exceptionHandler).isInstanceOf(AsyncUncaughtExceptionHandlerCustom.class);
+    @DisplayName("예외 핸들러가 AsyncUncaughtExceptionHandlerCustom 클래스의 인스턴스인지 테스트")
+    void asyncUncaughtExceptionHandlerIsCustomHandler() {
+        AsyncUncaughtExceptionHandler exceptionHandler = asyncConfig.getAsyncUncaughtExceptionHandler();
+        assertNotNull(exceptionHandler);
+        assert(exceptionHandler instanceof AsyncUncaughtExceptionHandlerCustom);
     }
 }
