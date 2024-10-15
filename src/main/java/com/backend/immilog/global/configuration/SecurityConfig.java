@@ -21,13 +21,13 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain filterChain(
-            HttpSecurity http
-    ) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults()) // CORS 설정 허용
-                .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
-                        .disable())
+                .cors(Customizer.withDefaults())
+                .headers(headers -> headers
+                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -49,4 +49,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
