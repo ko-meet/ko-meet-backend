@@ -4,51 +4,26 @@ import com.backend.immilog.post.domain.model.Comment;
 import com.backend.immilog.post.domain.model.enums.PostStatus;
 import com.backend.immilog.user.application.result.UserInfoResult;
 import com.backend.immilog.user.domain.model.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class CommentResult {
-    private Long seq;
-    private UserInfoResult user;
-    private String content;
-    private List<CommentResult> replies;
-    private int upVotes;
-    private int downVotes;
-    private int replyCount;
-    private List<Long> likeUsers;
-    private PostStatus status;
-    private LocalDateTime createdAt;
-
-    public CommentResult(
-            Comment comment,
-            User user,
-            List<Comment> replies,
-            List<User> replyUsers
-    ) {
-        List<CommentResult> replyList = combineReplies(replies, replyUsers);
-
-        this.seq = comment.seq();
-        this.user = UserInfoResult.from(user);
-        this.content = comment.content();
-        this.replies = replyList;
-        this.upVotes = comment.likeCount();
-        this.replyCount = comment.replyCount();
-        this.likeUsers = comment.likeUsers();
-        this.status = comment.status();
-        this.createdAt = comment.createdAt();
-    }
-
+public record CommentResult(
+        Long seq,
+        UserInfoResult user,
+        String content,
+        List<CommentResult> replies,
+        int upVotes,
+        int downVotes,
+        int replyCount,
+        List<Long> likeUsers,
+        PostStatus status,
+        LocalDateTime createdAt
+) {
     public static CommentResult of(
             Comment comment,
             User user
