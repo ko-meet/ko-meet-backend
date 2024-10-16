@@ -48,7 +48,7 @@ public class RedisConfig {
             RedisConnectionFactory redisConnectionFactory
     ) {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(3)) // 캐시 만료 기간 4시간
+                .entryTtl(Duration.ofHours(3))
                 .serializeKeysWith(
                         RedisSerializationContext
                                 .SerializationPair

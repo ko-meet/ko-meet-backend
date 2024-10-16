@@ -19,6 +19,7 @@ public abstract class BaseDateEntity {
     @Setter
     @CreatedDate
     private LocalDateTime createdAt;
+    @Setter
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }

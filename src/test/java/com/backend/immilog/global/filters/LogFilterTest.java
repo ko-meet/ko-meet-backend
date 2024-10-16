@@ -1,35 +1,25 @@
 package com.backend.immilog.global.filters;
 
-import com.backend.immilog.global.security.JwtProvider;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
 @DisplayName("LogFilter 클래스")
-@Disabled
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class LogFilterTest {
 
-    private LogFilter logFilter;
-
-    @MockBean
-    private JwtProvider jwtProvider;
-
-    @BeforeEach
-    void setUp() {
-        logFilter = new LogFilter();
-    }
+    private final LogFilter logFilter = new LogFilter();
 
     @Test
     @DisplayName("요청 응답 로깅")
