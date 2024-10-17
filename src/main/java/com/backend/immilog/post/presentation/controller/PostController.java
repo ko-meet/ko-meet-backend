@@ -82,11 +82,11 @@ public class PostController {
     @GetMapping
     @Operation(summary = "게시물 목록 조회", description = "게시물 목록을 조회합니다.")
     public ResponseEntity<PostApiResponse> getPosts(
-            @RequestParam(required = false) Countries country,
-            @RequestParam(required = false) SortingMethods sortingMethod,
-            @RequestParam(required = false) String isPublic,
-            @RequestParam(required = false) Categories category,
-            @RequestParam(required = false) Integer page
+            @RequestParam(required = false, name = "country") Countries country,
+            @RequestParam(required = false, name = "sortingMethod") SortingMethods sortingMethod,
+            @RequestParam(required = false, name = "isPublic") String isPublic,
+            @RequestParam(required = false, name = "category") Categories category,
+            @RequestParam(required = false, name = "page") Integer page
     ) {
         Page<PostResult> posts = postInquiryService.getPosts(
                 country,
