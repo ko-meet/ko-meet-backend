@@ -27,7 +27,7 @@ public class ImageController {
     @Operation(summary = "이미지 업로드", description = "이미지를 업로드합니다.")
     public ResponseEntity<GlobalApiResponse> uploadImage(
             List<MultipartFile> multipartFile,
-            @RequestParam String imagePath
+            @RequestParam("imagePath") String imagePath
     ) {
         List<String> data = imageService.saveFiles(multipartFile, imagePath);
 
