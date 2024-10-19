@@ -51,8 +51,4 @@ public enum Countries {
                 .findFirst()
                 .orElse(null);
     }
-
-    public GlobalCountry toGlobalCountries() {
-        return GlobalCountry.valueOf(this.name());
-    }
 }

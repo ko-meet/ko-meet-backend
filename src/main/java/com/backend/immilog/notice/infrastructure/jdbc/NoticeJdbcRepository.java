@@ -18,7 +18,7 @@ public class NoticeJdbcRepository {
             long offset
     ) {
         String sql = """
-                     SELECT n.* 
+                     SELECT n.*
                      FROM notice n
                      LEFT JOIN notice_entity_target_countries ntc ON n.seq = ntc.notice_entity_seq
                      LEFT JOIN user u ON u.country = ntc.target_countries 
@@ -35,7 +35,7 @@ public class NoticeJdbcRepository {
                 .param(userSeq)
                 .param(pageSize)
                 .param(offset)
-                .query((rs, rowNum) -> new NoticeResult(rs))
+                .query((rs, rowNum) -> NoticeResult.from(rs))
                 .list();
     }
 

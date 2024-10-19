@@ -80,7 +80,7 @@ public class NoticeController {
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다.")
     public ResponseEntity<Void> modifyNotice(
             HttpServletRequest request,
-            @PathVariable Long noticeSeq,
+            @PathVariable("noticeSeq") Long noticeSeq,
             @RequestBody NoticeModifyRequest param
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");

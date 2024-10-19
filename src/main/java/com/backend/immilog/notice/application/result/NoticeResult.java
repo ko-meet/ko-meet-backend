@@ -7,6 +7,7 @@ import com.backend.immilog.notice.domain.model.enums.NoticeType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -41,17 +42,18 @@ public record NoticeResult(
                 .build();
     }
 
-    public NoticeResult(
+    public static NoticeResult from(
             @NotNull ResultSet rs
     ) throws SQLException {
-        this(
+        Array targetCountries1 = rs.getArray("target_countries");
+        return new NoticeResult(
                 rs.getLong("seq"),
                 rs.getLong("user_seq"),
                 rs.getString("title"),
                 rs.getString("content"),
                 NoticeType.valueOf(rs.getString("type")),
                 NoticeStatus.valueOf(rs.getString("status")),
-                Arrays.asList((NoticeCountry[]) rs.getArray("target_countries").getArray()),
+                Arrays.asList((NoticeCountry[]) targetCountries1.getArray()),
                 Arrays.asList((Long[]) rs.getArray("read_users").getArray()),
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
