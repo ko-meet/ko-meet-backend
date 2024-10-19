@@ -29,8 +29,8 @@ public class LocationController {
     @GetMapping
     @Operation(summary = "위치 정보", description = "위치 정보를 가져옵니다.")
     public ResponseEntity<UserApiResponse> getLocation(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude
     ) {
         Pair<String, String> country =
                 locationService.getCountry(latitude, longitude).join();

@@ -110,8 +110,8 @@ public class UserController {
     @Operation(summary = "사용자 차단/해제", description = "사용자 차단/해제 진행")
     public ResponseEntity<Void> blockUser(
             HttpServletRequest request,
-            @PathVariable Long userSeq,
-            @PathVariable String status
+            @PathVariable("userSeq") Long userSeq,
+            @PathVariable("status") String status
     ) {
         Long adminSeq = (Long) request.getAttribute("userSeq");
         UserStatus userStatus = UserStatus.valueOf(status);
@@ -124,7 +124,7 @@ public class UserController {
     @Operation(summary = "사용자 신고", description = "사용자 신고 진행")
     public ResponseEntity<Void> reportUser(
             HttpServletRequest request,
-            @PathVariable Long userSeq,
+            @PathVariable("userSeq") Long userSeq,
             @Valid @RequestBody UserReportRequest userReportRequest
     ) {
         Long reporterSeq = (Long) request.getAttribute("userSeq");
