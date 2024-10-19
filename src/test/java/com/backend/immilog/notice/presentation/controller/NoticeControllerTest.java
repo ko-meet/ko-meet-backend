@@ -4,7 +4,9 @@ import com.backend.immilog.global.enums.UserRole;
 import com.backend.immilog.notice.application.services.NoticeCreateService;
 import com.backend.immilog.notice.application.services.NoticeInquiryService;
 import com.backend.immilog.notice.application.services.NoticeModifyService;
+import com.backend.immilog.notice.domain.model.enums.NoticeStatus;
 import com.backend.immilog.notice.domain.model.enums.NoticeType;
+import com.backend.immilog.notice.presentation.request.NoticeModifyRequest;
 import com.backend.immilog.notice.presentation.request.NoticeRegisterRequest;
 import com.backend.immilog.notice.presentation.response.NoticeApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -101,6 +103,28 @@ class NoticeControllerTest {
 
         // then
         verify(noticeInquiryService).isUnreadNoticeExist(userSeq);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    @DisplayName("공지사항 수정 테스트")
+    void modifyNotice_success() {
+        // given
+        Long userSeq = 1L;
+        Long noticeSeq = 1L;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("userSeq")).thenReturn(userSeq);
+        NoticeModifyRequest param = new NoticeModifyRequest(
+                "제목",
+                "내용",
+                NoticeType.NOTICE,
+                NoticeStatus.NORMAL
+        );
+        // when
+        ResponseEntity<Void> response = noticeController.modifyNotice(request, noticeSeq, param);
+
+        // then
+        verify(noticeModifyService).modifyNotice(userSeq, noticeSeq, param.toCommand());
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
     }
 }

@@ -49,7 +49,7 @@ public class PostController {
     @ExtractUserId
     @Operation(summary = "게시물 수정", description = "게시물을 수정합니다.")
     public ResponseEntity<PostApiResponse> updatePost(
-            @PathVariable Long postSeq,
+            @PathVariable("postSeq") Long postSeq,
             HttpServletRequest request,
             @Valid @RequestBody PostUpdateRequest postUpdateRequest
     ) {
@@ -62,7 +62,7 @@ public class PostController {
     @ExtractUserId
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     public ResponseEntity<Void> deletePost(
-            @PathVariable Long postSeq,
+            @PathVariable("postSeq") Long postSeq,
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
@@ -112,8 +112,8 @@ public class PostController {
     @GetMapping("/search")
     @Operation(summary = "게시물 검색", description = "게시물을 검색합니다.")
     public ResponseEntity<PostApiResponse> searchPosts(
-            @RequestParam(required = true) String keyword,
-            @RequestParam(required = true) Integer page
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "page") Integer page
     ) {
         Page<PostResult> posts = postInquiryService.searchKeyword(keyword, page);
         return ResponseEntity.status(OK).body(PostApiResponse.of(posts));
@@ -122,8 +122,8 @@ public class PostController {
     @GetMapping("/users/{userSeq}/page/{page}")
     @Operation(summary = "사용자 게시물 목록 조회", description = "사용자 게시물 목록을 조회합니다.")
     public ResponseEntity<PostApiResponse> getUserPosts(
-            @PathVariable Long userSeq,
-            @PathVariable Integer page
+            @PathVariable("userSeq") Long userSeq,
+            @PathVariable("page") Integer page
     ) {
         Page<PostResult> posts = postInquiryService.getUserPosts(userSeq, page);
         return ResponseEntity.status(OK).body(PostApiResponse.of(posts));

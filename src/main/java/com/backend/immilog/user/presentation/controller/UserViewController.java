@@ -21,7 +21,7 @@ public class UserViewController {
     @GetMapping("/{userSeq}/verification")
     @Operation(summary = "사용자 이메일 인증", description = "사용자 이메일 인증 진행")
     public String verifyEmail(
-            @PathVariable Long userSeq,
+            @PathVariable("userSeq") Long userSeq,
             Model model
     ) {
         final Pair<String, Boolean> result = userSignUpService.verifyEmail(userSeq);
