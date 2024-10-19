@@ -42,11 +42,11 @@ public class JobBoardController {
     @GetMapping
     @Operation(summary = "구인구직 게시글 조회", description = "구인구직 게시글을 조회합니다.")
     public ResponseEntity<PostApiResponse> searchJobBoard(
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) String sortingMethod,
-            @RequestParam(required = false) String industry,
-            @RequestParam(required = false) String experience,
-            @RequestParam(required = false) Integer page
+            @RequestParam(required = false, name = "country") String country,
+            @RequestParam(required = false, name = "sortingMethod") String sortingMethod,
+            @RequestParam(required = false, name = "industry") String industry,
+            @RequestParam(required = false, name = "experience") String experience,
+            @RequestParam(required = false, name = "page") Integer page
     ) {
         Page<JobBoardResult> jobBoards = jobBoardInquiryService.getJobBoards(
                 country,
@@ -63,7 +63,7 @@ public class JobBoardController {
     @Operation(summary = "구인구직 게시글 수정", description = "구인구직 게시글을 수정합니다.")
     public ResponseEntity<Void> updateJobBoard(
             HttpServletRequest request,
-            @PathVariable Long jobBoardSeq,
+            @PathVariable("jobBoardSeq") Long jobBoardSeq,
             @RequestBody JobBoardUpdateRequest jobBoardRequest
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
@@ -81,7 +81,7 @@ public class JobBoardController {
     @Operation(summary = "구인구직 게시글 삭제", description = "구인구직 게시글을 삭제합니다.")
     public ResponseEntity<Void> deleteJobBoard(
             HttpServletRequest request,
-            @PathVariable Long jobBoardSeq
+            @PathVariable("jobBoardSeq") Long jobBoardSeq
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
         jobBoardUpdateService.deactivateJobBoard(userSeq, jobBoardSeq);

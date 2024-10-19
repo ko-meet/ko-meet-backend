@@ -25,8 +25,8 @@ public class CommentController {
     @ExtractUserId
     @Operation(summary = "댓글 작성", description = "댓글을 작성합니다.")
     public ResponseEntity<PostApiResponse> createComment(
-            @PathVariable String referenceType,
-            @PathVariable Long postSeq,
+            @PathVariable("referenceType") String referenceType,
+            @PathVariable("postSeq") Long postSeq,
             HttpServletRequest request,
             @Valid @RequestBody CommentUploadRequest commentUploadRequest
     ) {

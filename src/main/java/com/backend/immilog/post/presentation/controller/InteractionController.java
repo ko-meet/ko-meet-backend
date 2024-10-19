@@ -25,9 +25,9 @@ public class InteractionController {
     @ExtractUserId
     @Operation(summary = "인터랙션 등록", description = "게시물 좋아요/북마크 등록")
     public ResponseEntity<?> createInteraction(
-            @PathVariable String interactionType,
-            @PathVariable String postType,
-            @PathVariable Long postSeq,
+            @PathVariable("interactionType") String interactionType,
+            @PathVariable("postType") String postType,
+            @PathVariable("postSeq") Long postSeq,
             HttpServletRequest request
     ) {
         Long userSeq = (Long) request.getAttribute("userSeq");
