@@ -71,7 +71,7 @@ public class ChatReadStatusService {
                 .flatMap(readStatus -> {
                     // 가장 최근 메시지 ID 조회
                     return messageRepository.findFirstByChatRoomIdOrderBySentAtDesc(chatRoomId)
-                            .map(latestMessage -> {
+                            .flatMap(latestMessage -> {
                                 var updatedStatus = readStatus.resetUnreadCount(latestMessage.id());
                                 return readStatusRepository.save(updatedStatus);
                             });
