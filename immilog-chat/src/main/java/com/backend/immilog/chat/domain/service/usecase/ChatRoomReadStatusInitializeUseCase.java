@@ -30,7 +30,6 @@ public interface ChatRoomReadStatusInitializeUseCase {
         public Mono<ChatRoomReadStatus> initializeReadStatus(String chatRoomId, String userId) {
             return chatRoomReadStatusRepository.findByChatRoomIdAndUserId(chatRoomId, userId)
                     .switchIfEmpty(Mono.defer(() -> chatRoomReadStatusRepository.save(ChatRoomReadStatus.create(chatRoomId, userId))))
-                    .publishOn(Schedulers.boundedElastic())
                     .flatMap(result -> userNotificationService.notifyUnreadCountUpdate(userId, chatRoomId).thenReturn(result))
                     .doOnError(signal -> {
                         log.error("Failed to initialize read status for user {} in chat room {}: {}", userId, chatRoomId, signal.getMessage());
